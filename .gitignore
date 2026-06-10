@@ -1,0 +1,9 @@
+.env
+# target clones are reproducible from CHOICE.md (URL + pinned commit); manifests are tracked
+targets/*/repo/
+results/*
+__pycache__/
+*.pyc
+seed/deepseek_oracle.py
+.venv/
+.seer/
