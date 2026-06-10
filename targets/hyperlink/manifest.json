@@ -1,0 +1,877 @@
+{
+  "target": "hyperlink",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/hyperlink/repo",
+  "commit": "978f2e645578aad856fe5e03e2e2c017c8c0f7ca",
+  "package_dir": "src/hyperlink",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "make_sentinel",
+      "signature": "(name='_MISSING', var_name='')",
+      "span": [
+        79,
+        135
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 123 words",
+      "intent": "Creates and returns a new **instance** of a new class, suitable for"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "register_scheme",
+      "signature": "(text, uses_netloc=True, default_port=None, query_plus_is_space=True)",
+      "span": [
+        478,
+        527
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: NO_NETLOC_SCHEMES.add()",
+        "mutation of enclosing-scope name: NO_QUERY_PLUS_SCHEMES.add()",
+        "mutation of enclosing-scope name: SCHEME_PORT_MAP[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 111 words",
+      "intent": "Registers new scheme information, resulting in correct port and"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "scheme_uses_netloc",
+      "signature": "(scheme, default=None)",
+      "span": [
+        530,
+        559
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 131 words",
+      "intent": "Whether or not a URL uses :code:`:` or :code:`://` to separate the"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "iter_pairs",
+      "signature": "(iterable)",
+      "span": [
+        612,
+        623
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Iterate over the (key, value) pairs in ``iterable``."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "parse_host",
+      "signature": "(host)",
+      "span": [
+        873,
+        912
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 70 words",
+      "intent": "Parse the host into a tuple of ``(family, host)``, where family"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.get_decoded_url",
+      "signature": "(self, lazy=False)",
+      "span": [
+        1064,
+        1070
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "get decoded url (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.scheme",
+      "signature": "(self)",
+      "span": [
+        1073,
+        1081
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "The scheme is a string, and the first part of an absolute URL, the"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.host",
+      "signature": "(self)",
+      "span": [
+        1084,
+        1091
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 45 words",
+      "intent": "The host is a string, and the second standard part of an absolute"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.port",
+      "signature": "(self)",
+      "span": [
+        1094,
+        1115
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 88 words",
+      "intent": "The port is an integer that is commonly used in connecting to the"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.path",
+      "signature": "(self)",
+      "span": [
+        1118,
+        1125
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 31 words",
+      "intent": "A tuple of strings, created by splitting the slash-separated"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.query",
+      "signature": "(self)",
+      "span": [
+        1128,
+        1141
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Tuple of pairs, created by splitting the ampersand-separated"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.fragment",
+      "signature": "(self)",
+      "span": [
+        1144,
+        1151
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "A string, the last part of the URL, indicated by the first \"#\""
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.rooted",
+      "signature": "(self)",
+      "span": [
+        1154,
+        1164
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 50 words",
+      "intent": "Whether or not the path starts with a forward slash (``/``)."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.userinfo",
+      "signature": "(self)",
+      "span": [
+        1167,
+        1172
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The colon-separated string forming the username-password"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.uses_netloc",
+      "signature": "(self)",
+      "span": [
+        1175,
+        1181
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 22 words",
+      "intent": "Indicates whether ``://`` (the \"netloc separator\") will appear to"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.user",
+      "signature": "(self)",
+      "span": [
+        1184,
+        1189
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The user portion of :attr:`~hyperlink.URL.userinfo`."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.authority",
+      "signature": "(self, with_password=False, **kw)",
+      "span": [
+        1191,
+        1228
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Compute and return the appropriate host/port/userinfo combination."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.absolute",
+      "signature": "(self)",
+      "span": [
+        1276,
+        1289
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 42 words",
+      "intent": "Whether or not the URL is \"absolute\". Absolute URLs are complete"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.replace",
+      "signature": "(self, scheme=_UNSET, host=_UNSET, path=_UNSET, query=_UNSET, fragment=_UNSET, port=_UNSET, rooted=_UNSET, userinfo=_UNSET, uses_netloc=_UNSET)",
+      "span": [
+        1291,
+        1355
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 247 words",
+      "intent": ":class:`URL` objects are immutable, which means that attributes"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.from_text",
+      "signature": "(cls, text)",
+      "span": [
+        1358,
+        1452
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 120 words",
+      "intent": "Whereas the :class:`URL` constructor is useful for constructing"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.normalize",
+      "signature": "(self, scheme=True, host=True, path=True, query=True, fragment=True, userinfo=True, percents=True)",
+      "span": [
+        1454,
+        1532
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 186 words",
+      "intent": "Return a new URL object with several standard normalizations"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.child",
+      "signature": "(self, *segments)",
+      "span": [
+        1534,
+        1565
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 76 words",
+      "intent": "Make a new :class:`URL` where the given path segments are a child"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.sibling",
+      "signature": "(self, segment)",
+      "span": [
+        1567,
+        1582
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Make a new :class:`URL` with a single path segment that is a"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.click",
+      "signature": "(self, href=u'')",
+      "span": [
+        1584,
+        1646
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 77 words",
+      "intent": "Resolve the given URL relative to this URL."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.to_uri",
+      "signature": "(self)",
+      "span": [
+        1648,
+        1691
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 55 words",
+      "intent": "Make a new :class:`URL` instance with all non-ASCII characters"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.to_iri",
+      "signature": "(self)",
+      "span": [
+        1693,
+        1734
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 96 words",
+      "intent": "Make a new :class:`URL` instance with all but a few reserved"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.to_text",
+      "signature": "(self, with_password=False)",
+      "span": [
+        1736,
+        1810
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 110 words",
+      "intent": "Render this URL to its textual representation."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.fromText",
+      "signature": "(cls, s)",
+      "span": [
+        1841,
+        1843
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "fromText (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.asText",
+      "signature": "(self, includeSecrets=False)",
+      "span": [
+        1845,
+        1847
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "asText (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.add",
+      "signature": "(self, name, value=None)",
+      "span": [
+        1861,
+        1881
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 72 words",
+      "intent": "Make a new :class:`URL` instance with a given query argument,"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.set",
+      "signature": "(self, name, value=None)",
+      "span": [
+        1883,
+        1910
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 77 words",
+      "intent": "Make a new :class:`URL` instance with the query parameter *name*"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.get",
+      "signature": "(self, name)",
+      "span": [
+        1912,
+        1932
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 70 words",
+      "intent": "Get a list of values for the given query parameter, *name*::"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "URL.remove",
+      "signature": "(self, name, value=_UNSET, limit=None)",
+      "span": [
+        1934,
+        1978
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 80 words",
+      "intent": "Make a new :class:`URL` instance with occurrences of the query"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.from_text",
+      "signature": "(cls, text, lazy=False, query_plus_is_space=None)",
+      "span": [
+        2055,
+        2067
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Make a `DecodedURL` instance from any text string containing a URL."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.encoded_url",
+      "signature": "(self)",
+      "span": [
+        2070,
+        2075
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Access the underlying :class:`URL` object, which has any special"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.to_text",
+      "signature": "(self, with_password=False)",
+      "span": [
+        2077,
+        2080
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with from_text",
+      "intent": "Passthrough to :meth:`~hyperlink.URL.to_text()`"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.to_uri",
+      "signature": "(self)",
+      "span": [
+        2082,
+        2085
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Passthrough to :meth:`~hyperlink.URL.to_uri()`"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.to_iri",
+      "signature": "(self)",
+      "span": [
+        2087,
+        2090
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Passthrough to :meth:`~hyperlink.URL.to_iri()`"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.click",
+      "signature": "(self, href=u'')",
+      "span": [
+        2100,
+        2109
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return a new DecodedURL wrapping the result of"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.sibling",
+      "signature": "(self, segment)",
+      "span": [
+        2111,
+        2119
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Automatically encode any reserved characters in *segment* and"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.child",
+      "signature": "(self, *segments)",
+      "span": [
+        2121,
+        2130
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Automatically encode any reserved characters in *segments* and"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.normalize",
+      "signature": "(self, scheme=True, host=True, path=True, query=True, fragment=True, userinfo=True, percents=True)",
+      "span": [
+        2132,
+        2150
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "idempotent-by-name transform",
+      "intent": "Return a new `DecodedURL` wrapping the result of"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.absolute",
+      "signature": "(self)",
+      "span": [
+        2153,
+        2155
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "absolute (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.scheme",
+      "signature": "(self)",
+      "span": [
+        2158,
+        2160
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scheme (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.host",
+      "signature": "(self)",
+      "span": [
+        2163,
+        2165
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "host (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.port",
+      "signature": "(self)",
+      "span": [
+        2168,
+        2170
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "port (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.rooted",
+      "signature": "(self)",
+      "span": [
+        2173,
+        2175
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rooted (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.path",
+      "signature": "(self)",
+      "span": [
+        2178,
+        2187
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "path (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.query",
+      "signature": "(self)",
+      "span": [
+        2190,
+        2212
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "query (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.fragment",
+      "signature": "(self)",
+      "span": [
+        2215,
+        2220
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "fragment (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.userinfo",
+      "signature": "(self)",
+      "span": [
+        2223,
+        2235
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "userinfo (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.user",
+      "signature": "(self)",
+      "span": [
+        2238,
+        2240
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "user (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.uses_netloc",
+      "signature": "(self)",
+      "span": [
+        2243,
+        2245
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "uses netloc (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.replace",
+      "signature": "(self, scheme=_UNSET, host=_UNSET, path=_UNSET, query=_UNSET, fragment=_UNSET, port=_UNSET, rooted=_UNSET, userinfo=_UNSET, uses_netloc=_UNSET)",
+      "span": [
+        2247,
+        2300
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 61 words",
+      "intent": "While the signature is the same, this `replace()` differs a little"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.get",
+      "signature": "(self, name)",
+      "span": [
+        2302,
+        2305
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Get the value of all query parameters whose name matches *name*"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.add",
+      "signature": "(self, name, value=None)",
+      "span": [
+        2307,
+        2311
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return a new DecodedURL with the query parameter *name* and *value*"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.set",
+      "signature": "(self, name, value=None)",
+      "span": [
+        2313,
+        2320
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return a new DecodedURL with query parameter *name* set to *value*"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.remove",
+      "signature": "(self, name, value=_UNSET, limit=None)",
+      "span": [
+        2322,
+        2355
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Return a new DecodedURL with query parameter *name* removed."
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.fromText",
+      "signature": "(cls, s, lazy=False)",
+      "span": [
+        2402,
+        2404
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "fromText (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "DecodedURL.asText",
+      "signature": "(self, includeSecrets=False)",
+      "span": [
+        2406,
+        2408
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "asText (no docstring)"
+    },
+    {
+      "module": "src/hyperlink/_url.py",
+      "qualname": "parse",
+      "signature": "(url, decoded=True, lazy=False)",
+      "span": [
+        2442,
+        2472
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 99 words",
+      "intent": "Automatically turn text into a structured URL object."
+    }
+  ],
+  "summary": {
+    "total_public_functions": 61,
+    "auditability": {
+      "spec": 34,
+      "invariant": 2,
+      "none": 25
+    },
+    "deterministic": 60,
+    "auditable": 35
+  }
+}
