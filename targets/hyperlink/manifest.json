@@ -17,7 +17,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 123 words",
-      "intent": "Creates and returns a new **instance** of a new class, suitable for"
+      "intent": "Creates and returns a new **instance** of a new class, suitable for",
+      "doc": "Creates and returns a new **instance** of a new class, suitable for\nusage as a \"sentinel\", a kind of singleton often used to indicate\na value is missing when ``None`` is a valid input.\n\nArgs:\n    name: Name of the Sentinel\n    var_name: Set this name to the name of the variable in its respective\n        module enable pickle-ability.\n\n>>> make_sentinel(var_name='_MISSING')\n_MISSING\n\nThe most common use cases here in boltons are as default values\nfor optional function arguments, partly because of its\nless-confusing appearance in automatically generated\ndocumentation. Sentinels also function well as placeholders in queues\nand linked lists.\n\n.. note::\n\n    By design, additional calls to ``make_sentinel`` with the same\n    values will not produce equivalent objects.\n\n    >>> make_sentinel('TEST') == make_sentinel('TEST')\n    False\n    >>> type(make_sentinel('TEST')) == type(make_sentinel('TEST'))\n    False"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -35,7 +36,8 @@
       ],
       "auditability": "spec",
       "auditability_why": "docstring of 111 words",
-      "intent": "Registers new scheme information, resulting in correct port and"
+      "intent": "Registers new scheme information, resulting in correct port and",
+      "doc": "Registers new scheme information, resulting in correct port and\nslash behavior from the URL object. There are dozens of standard\nschemes preregistered, so this function is mostly meant for\nproprietary internal customizations or stopgaps on missing\nstandards information. If a scheme seems to be missing, please\n`file an issue`_!\n\nArgs:\n    text: A string representation of the scheme.\n        (the 'http' in 'http://hatnote.com')\n    uses_netloc: Does the scheme support specifying a\n        network host? For instance, \"http\" does, \"mailto\" does\n        not. Defaults to True.\n    default_port: The default port, if any, for\n        netloc-using schemes.\n    query_plus_is_space: If true, a \"+\" in the query string should be\n        decoded as a space by DecodedURL.\n\n.. _file an issue: https://github.com/mahmoud/hyperlink/issues"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -49,7 +51,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 131 words",
-      "intent": "Whether or not a URL uses :code:`:` or :code:`://` to separate the"
+      "intent": "Whether or not a URL uses :code:`:` or :code:`://` to separate the",
+      "doc": "Whether or not a URL uses :code:`:` or :code:`://` to separate the\nscheme from the rest of the URL depends on the scheme's own\nstandard definition. There is no way to infer this behavior\nfrom other parts of the URL. A scheme either supports network\nlocations or it does not.\n\nThe URL type's approach to this is to check for explicitly\nregistered schemes, with common schemes like HTTP\npreregistered. This is the same approach taken by\n:mod:`urlparse`.\n\nURL adds two additional heuristics if the scheme as a whole is\nnot registered. First, it attempts to check the subpart of the\nscheme after the last ``+`` character. This adds intuitive\nbehavior for schemes like ``git+ssh``. Second, if a URL with\nan unrecognized scheme is loaded, it will maintain the\nseparator it sees."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -63,7 +66,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 33 words",
-      "intent": "Iterate over the (key, value) pairs in ``iterable``."
+      "intent": "Iterate over the (key, value) pairs in ``iterable``.",
+      "doc": "Iterate over the (key, value) pairs in ``iterable``.\n\nThis handles dictionaries sensibly, and falls back to assuming the\niterable yields (key, value) pairs. This behaviour is similar to\nwhat Python's ``dict()`` constructor does."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -77,7 +81,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 70 words",
-      "intent": "Parse the host into a tuple of ``(family, host)``, where family"
+      "intent": "Parse the host into a tuple of ``(family, host)``, where family",
+      "doc": "Parse the host into a tuple of ``(family, host)``, where family\nis the appropriate :mod:`socket` module constant when the host is\nan IP address. Family is ``None`` when the host is not an IP.\n\nWill raise :class:`URLParseError` on invalid IPv6 constants.\n\nReturns:\n    family (socket constant or None), host (string)\n\n>>> import socket\n>>> parse_host('googlewebsite.com') == (None, 'googlewebsite.com')\nTrue\n>>> parse_host('::1') == (socket.AF_INET6, '::1')\nTrue\n>>> parse_host('192.168.1.1') == (socket.AF_INET, '192.168.1.1')\nTrue"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -91,7 +96,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "get decoded url (no docstring)"
+      "intent": "get decoded url (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -105,7 +111,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 47 words",
-      "intent": "The scheme is a string, and the first part of an absolute URL, the"
+      "intent": "The scheme is a string, and the first part of an absolute URL, the",
+      "doc": "The scheme is a string, and the first part of an absolute URL, the\npart before the first colon, and the part which defines the\nsemantics of the rest of the URL. Examples include \"http\",\n\"https\", \"ssh\", \"file\", \"mailto\", and many others. See\n:func:`~hyperlink.register_scheme()` for more info."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -119,7 +126,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 45 words",
-      "intent": "The host is a string, and the second standard part of an absolute"
+      "intent": "The host is a string, and the second standard part of an absolute",
+      "doc": "The host is a string, and the second standard part of an absolute\nURL. When present, a valid host must be a domain name, or an\nIP (v4 or v6). It occurs before the first slash, or the second\ncolon, if a :attr:`~hyperlink.URL.port` is provided."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -133,7 +141,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 88 words",
-      "intent": "The port is an integer that is commonly used in connecting to the"
+      "intent": "The port is an integer that is commonly used in connecting to the",
+      "doc": "The port is an integer that is commonly used in connecting to the\n:attr:`host`, and almost never appears without it.\n\nWhen not present in the original URL, this attribute defaults\nto the scheme's default port. If the scheme's default port is\nnot known, and the port is not provided, this attribute will\nbe set to None.\n\n>>> URL.from_text(u'http://example.com/pa/th').port\n80\n>>> URL.from_text(u'foo://example.com/pa/th').port\n>>> URL.from_text(u'foo://example.com:8042/pa/th').port\n8042\n\n.. note::\n\n   Per the standard, when the port is the same as the schemes\n   default port, it will be omitted in the text URL."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -147,7 +156,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 31 words",
-      "intent": "A tuple of strings, created by splitting the slash-separated"
+      "intent": "A tuple of strings, created by splitting the slash-separated",
+      "doc": "A tuple of strings, created by splitting the slash-separated\nhierarchical path. Started by the first slash after the host,\nterminated by a \"?\", which indicates the start of the\n:attr:`~hyperlink.URL.query` string."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -161,7 +171,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 47 words",
-      "intent": "Tuple of pairs, created by splitting the ampersand-separated"
+      "intent": "Tuple of pairs, created by splitting the ampersand-separated",
+      "doc": "Tuple of pairs, created by splitting the ampersand-separated\nmapping of keys and optional values representing\nnon-hierarchical data used to identify the resource. Keys are\nalways strings. Values are strings when present, or None when\nmissing.\n\nFor more operations on the mapping, see\n:meth:`~hyperlink.URL.get()`, :meth:`~hyperlink.URL.add()`,\n:meth:`~hyperlink.URL.set()`, and\n:meth:`~hyperlink.URL.delete()`."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -175,7 +186,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 32 words",
-      "intent": "A string, the last part of the URL, indicated by the first \"#\""
+      "intent": "A string, the last part of the URL, indicated by the first \"#\"",
+      "doc": "A string, the last part of the URL, indicated by the first \"#\"\nafter the :attr:`~hyperlink.URL.path` or\n:attr:`~hyperlink.URL.query`. Enables indirect identification\nof a secondary resource, like an anchor within an HTML page."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -189,7 +201,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 50 words",
-      "intent": "Whether or not the path starts with a forward slash (``/``)."
+      "intent": "Whether or not the path starts with a forward slash (``/``).",
+      "doc": "Whether or not the path starts with a forward slash (``/``).\n\nThis is taken from the terminology in the BNF grammar,\nspecifically the \"path-rootless\", rule, since \"absolute path\"\nand \"absolute URI\" are somewhat ambiguous. :attr:`path` does\nnot contain the implicit prefixed ``\"/\"`` since that is\nsomewhat awkward to work with."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -203,7 +216,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "The colon-separated string forming the username-password"
+      "intent": "The colon-separated string forming the username-password",
+      "doc": "The colon-separated string forming the username-password\ncombination."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -217,7 +231,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 22 words",
-      "intent": "Indicates whether ``://`` (the \"netloc separator\") will appear to"
+      "intent": "Indicates whether ``://`` (the \"netloc separator\") will appear to",
+      "doc": "Indicates whether ``://`` (the \"netloc separator\") will appear to\nseparate the scheme from the *path* in cases where no host is present."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -231,7 +246,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "The user portion of :attr:`~hyperlink.URL.userinfo`."
+      "intent": "The user portion of :attr:`~hyperlink.URL.userinfo`.",
+      "doc": "The user portion of :attr:`~hyperlink.URL.userinfo`."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -245,7 +261,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 52 words",
-      "intent": "Compute and return the appropriate host/port/userinfo combination."
+      "intent": "Compute and return the appropriate host/port/userinfo combination.",
+      "doc": "Compute and return the appropriate host/port/userinfo combination.\n\n>>> url = URL.from_text(u'http://user:pass@localhost:8080/a/b?x=y')\n>>> url.authority()\nu'user:@localhost:8080'\n>>> url.authority(with_password=True)\nu'user:pass@localhost:8080'\n\nArgs:\n    with_password: Whether the return value of this method include the\n    password in the URL, if it is set.\n    Defaults to False.\n\nReturns:\n    Text: The authority (network location and user information) portion\n        of the URL."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -259,7 +276,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 42 words",
-      "intent": "Whether or not the URL is \"absolute\". Absolute URLs are complete"
+      "intent": "Whether or not the URL is \"absolute\". Absolute URLs are complete",
+      "doc": "Whether or not the URL is \"absolute\". Absolute URLs are complete\nenough to resolve to a network resource without being relative\nto a base URI.\n\n>>> URL.from_text(u'http://wikipedia.org/').absolute\nTrue\n>>> URL.from_text(u'?a=b&c=d').absolute\nFalse\n\nAbsolute URLs must have both a scheme and a host set."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -273,7 +291,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 247 words",
-      "intent": ":class:`URL` objects are immutable, which means that attributes"
+      "intent": ":class:`URL` objects are immutable, which means that attributes",
+      "doc": ":class:`URL` objects are immutable, which means that attributes\nare designed to be set only once, at construction. Instead of\nmodifying an existing URL, one simply creates a copy with the\ndesired changes.\n\nIf any of the following arguments is omitted, it defaults to\nthe value on the current URL.\n\nArgs:\n    scheme: The text name of the scheme.\n    host: The host portion of the network location.\n    path: A tuple of strings representing the slash-separated parts of\n        the path.\n    query: The query parameters, as a dictionary or as an sequence of\n        key-value pairs.\n    fragment: The fragment part of the URL.\n    port: The port part of the network location.\n    rooted: Whether or not the path begins with a slash.\n    userinfo: The username or colon-separated username:password pair.\n    uses_netloc: Indicates whether ``://`` (the \"netloc separator\")\n        will appear to separate the scheme from the *path* in cases\n        where no host is present.\n        Setting this to ``True`` is a non-spec-compliant affordance for\n        the common practice of having URIs that are *not* URLs (cannot\n        have a 'host' part) but nevertheless use the common ``://``\n        idiom that most people associate with URLs; e.g. ``message:``\n        URIs like ``message://message-id`` being equivalent to\n        ``message:message-id``.\n        This may be inferred based on the scheme depending on whether\n        :func:`register_scheme` has been used to register the scheme\n        and should not be passed directly unless you know the scheme\n        works like this and you know it has not been registered.\n\nReturns:\n    URL: A copy of the current :class:`URL`, with new values for\n        parameters passed."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -287,7 +306,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 120 words",
-      "intent": "Whereas the :class:`URL` constructor is useful for constructing"
+      "intent": "Whereas the :class:`URL` constructor is useful for constructing",
+      "doc": "Whereas the :class:`URL` constructor is useful for constructing\nURLs from parts, :meth:`~URL.from_text` supports parsing whole\nURLs from their string form::\n\n    >>> URL.from_text(u'http://example.com')\n    URL.from_text(u'http://example.com')\n    >>> URL.from_text(u'?a=b&x=y')\n    URL.from_text(u'?a=b&x=y')\n\nAs you can see above, it's also used as the :func:`repr` of\n:class:`URL` objects. The natural counterpart to\n:func:`~URL.to_text()`. This method only accepts *text*, so be\nsure to decode those bytestrings.\n\nArgs:\n   text: A valid URL string.\n\nReturns:\n   URL: The structured object version of the parsed string.\n\n.. note::\n\n    Somewhat unexpectedly, URLs are a far more permissive\n    format than most would assume. Many strings which don't\n    look like URLs are still valid URLs. As a result, this\n    method only raises :class:`URLParseError` on invalid port\n    and IPv6 values in the host portion of the URL."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -301,7 +321,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 186 words",
-      "intent": "Return a new URL object with several standard normalizations"
+      "intent": "Return a new URL object with several standard normalizations",
+      "doc": "Return a new URL object with several standard normalizations\napplied:\n\n* Decode unreserved characters (`RFC 3986 2.3`_)\n* Uppercase remaining percent-encoded octets (`RFC 3986 2.1`_)\n* Convert scheme and host casing to lowercase (`RFC 3986 3.2.2`_)\n* Resolve any \".\" and \"..\" references in the path (`RFC 3986 6.2.2.3`_)\n* Ensure an ending slash on URLs with an empty path (`RFC 3986 6.2.3`_)\n* Encode any stray percent signs (`%`) in percent-encoded\n  fields (path, query, fragment, userinfo) (`RFC 3986 2.4`_)\n\nAll are applied by default, but normalizations can be disabled\nper-part by passing `False` for that part's corresponding\nname.\n\nArgs:\n    scheme: Convert the scheme to lowercase\n    host: Convert the host to lowercase\n    path: Normalize the path (see above for details)\n    query: Normalize the query string\n    fragment: Normalize the fragment\n    userinfo: Normalize the userinfo\n    percents: Encode isolated percent signs for any percent-encoded\n        fields which are being normalized (defaults to `True`).\n\n>>> url = URL.from_text(u'Http://example.COM/a/../b/./c%2f?%61%')\n>>> print(url.normalize().to_text())\nhttp://example.com/b/c%2F?a%25\n\n.. _RFC 3986 3.2.2: https://tools.ietf.org/html/rfc3986#section-3.2.2\n.. _RFC 3986 2.3: https://tools.ietf.org/html/rfc3986#section-2.3\n.. _RFC 3986 2.1: https://tools.ietf.org/html/rfc3986#section-2.1\n.. _RFC 3986 6.2.2.3: https://tools.ietf.org/html/rfc3986#section-6.2.2.3\n.. _RFC 3986 6.2.3: https://tools.ietf.org/html/rfc3986#section-6.2.3\n.. _RFC 3986 2.4: https://tools.ietf.org/html/rfc3986#section-2.4"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -315,7 +336,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 76 words",
-      "intent": "Make a new :class:`URL` where the given path segments are a child"
+      "intent": "Make a new :class:`URL` where the given path segments are a child",
+      "doc": "Make a new :class:`URL` where the given path segments are a child\nof this URL, preserving other parts of the URL, including the\nquery string and fragment.\n\nFor example::\n\n    >>> url = URL.from_text(u'http://localhost/a/b?x=y')\n    >>> child_url = url.child(u\"c\", u\"d\")\n    >>> child_url.to_text()\n    u'http://localhost/a/b/c/d?x=y'\n\nArgs:\n    segments: Additional parts to be joined and added to the path, like\n    :func:`os.path.join`. Special characters in segments will be\n    percent encoded.\n\nReturns:\n   URL: A copy of the current URL with the extra path segments."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -329,7 +351,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 48 words",
-      "intent": "Make a new :class:`URL` with a single path segment that is a"
+      "intent": "Make a new :class:`URL` with a single path segment that is a",
+      "doc": "Make a new :class:`URL` with a single path segment that is a\nsibling of this URL path.\n\nArgs:\n    segment: A single path segment.\n\nReturns:\n    URL: A copy of the current URL with the last path segment\n        replaced by *segment*. Special characters such as\n        ``/?#`` will be percent encoded."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -343,7 +366,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 77 words",
-      "intent": "Resolve the given URL relative to this URL."
+      "intent": "Resolve the given URL relative to this URL.",
+      "doc": "Resolve the given URL relative to this URL.\n\nThe resulting URI should match what a web browser would\ngenerate if you visited the current URL and clicked on *href*.\n\n    >>> url = URL.from_text(u'http://blog.hatnote.com/')\n    >>> url.click(u'/post/155074058790').to_text()\n    u'http://blog.hatnote.com/post/155074058790'\n    >>> url = URL.from_text(u'http://localhost/a/b/c/')\n    >>> url.click(u'../d/./e').to_text()\n    u'http://localhost/a/b/d/e'\n\nArgs (Text):\n    href: A string representing a clicked URL.\n\nReturn:\n    A copy of the current URL with navigation logic applied.\n\nFor more information, see `RFC 3986 section 5`_.\n\n.. _RFC 3986 section 5: https://tools.ietf.org/html/rfc3986#section-5"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -357,7 +381,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 55 words",
-      "intent": "Make a new :class:`URL` instance with all non-ASCII characters"
+      "intent": "Make a new :class:`URL` instance with all non-ASCII characters",
+      "doc": "Make a new :class:`URL` instance with all non-ASCII characters\nappropriately percent-encoded. This is useful to do in preparation\nfor sending a :class:`URL` over a network protocol.\n\nFor example::\n\n    >>> URL.from_text(u'https://\u0627\u064a\u0631\u0627\u0646.com/foo\u21e7bar/').to_uri()\n    URL.from_text(u'https://xn--mgba3a4fra.com/foo%E2%87%A7bar/')\n\nReturns:\n    URL: A new instance with its path segments, query parameters, and\n        hostname encoded, so that they are all in the standard\n        US-ASCII range."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -371,7 +396,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 96 words",
-      "intent": "Make a new :class:`URL` instance with all but a few reserved"
+      "intent": "Make a new :class:`URL` instance with all but a few reserved",
+      "doc": "Make a new :class:`URL` instance with all but a few reserved\ncharacters decoded into human-readable format.\n\nPercent-encoded Unicode and IDNA-encoded hostnames are\ndecoded, like so::\n\n    >>> url = URL.from_text(u'https://xn--mgba3a4fra.example.com/foo%E2%87%A7bar/')\n    >>> print(url.to_iri().to_text())\n    https://\u0627\u064a\u0631\u0627\u0646.example.com/foo\u21e7bar/\n\n.. note::\n\n    As a general Python issue, \"narrow\" (UCS-2) builds of\n    Python may not be able to fully decode certain URLs, and\n    the in those cases, this method will return a best-effort,\n    partially-decoded, URL which is still valid. This issue\n    does not affect any Python builds 3.4+.\n\nReturns:\n    URL: A new instance with its path segments, query parameters, and\n        hostname decoded for display purposes."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -385,7 +411,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 110 words",
-      "intent": "Render this URL to its textual representation."
+      "intent": "Render this URL to its textual representation.",
+      "doc": "Render this URL to its textual representation.\n\nBy default, the URL text will *not* include a password, if one\nis set. RFC 3986 considers using URLs to represent such\nsensitive information as deprecated. Quoting from RFC 3986,\n`section 3.2.1`:\n\n    \"Applications should not render as clear text any data after the\n    first colon (\":\") character found within a userinfo subcomponent\n    unless the data after the colon is the empty string (indicating no\n    password).\"\n\nArgs (bool):\n    with_password: Whether or not to include the password in the URL\n        text. Defaults to False.\n\nReturns:\n    Text: The serialized textual representation of this URL, such as\n        ``u\"http://example.com/some/path?some=query\"``.\n\nThe natural counterpart to :class:`URL.from_text()`.\n\n.. _section 3.2.1: https://tools.ietf.org/html/rfc3986#section-3.2.1"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -399,7 +426,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "fromText (no docstring)"
+      "intent": "fromText (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -413,7 +441,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "asText (no docstring)"
+      "intent": "asText (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -427,7 +456,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 72 words",
-      "intent": "Make a new :class:`URL` instance with a given query argument,"
+      "intent": "Make a new :class:`URL` instance with a given query argument,",
+      "doc": "Make a new :class:`URL` instance with a given query argument,\n*name*, added to it with the value *value*, like so::\n\n    >>> URL.from_text(u'https://example.com/?x=y').add(u'x')\n    URL.from_text(u'https://example.com/?x=y&x')\n    >>> URL.from_text(u'https://example.com/?x=y').add(u'x', u'z')\n    URL.from_text(u'https://example.com/?x=y&x=z')\n\nArgs:\n    name: The name of the query parameter to add.\n        The part before the ``=``.\n    value: The value of the query parameter to add.\n        The part after the ``=``.\n        Defaults to ``None``, meaning no value.\n\nReturns:\n    URL: A new :class:`URL` instance with the parameter added."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -441,7 +471,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 77 words",
-      "intent": "Make a new :class:`URL` instance with the query parameter *name*"
+      "intent": "Make a new :class:`URL` instance with the query parameter *name*",
+      "doc": "Make a new :class:`URL` instance with the query parameter *name*\nset to *value*. All existing occurences, if any are replaced\nby the single name-value pair.\n\n    >>> URL.from_text(u'https://example.com/?x=y').set(u'x')\n    URL.from_text(u'https://example.com/?x')\n    >>> URL.from_text(u'https://example.com/?x=y').set(u'x', u'z')\n    URL.from_text(u'https://example.com/?x=z')\n\nArgs:\n    name: The name of the query parameter to set.\n        The part before the ``=``.\n    value: The value of the query parameter to set.\n        The part after the ``=``.\n        Defaults to ``None``, meaning no value.\n\nReturns:\n    URL: A new :class:`URL` instance with the parameter set."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -455,7 +486,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 70 words",
-      "intent": "Get a list of values for the given query parameter, *name*::"
+      "intent": "Get a list of values for the given query parameter, *name*::",
+      "doc": "Get a list of values for the given query parameter, *name*::\n\n    >>> url = URL.from_text(u'?x=1&x=2')\n    >>> url.get('x')\n    [u'1', u'2']\n    >>> url.get('y')\n    []\n\nIf the given *name* is not set, an empty list is returned. A\nlist is always returned, and this method raises no exceptions.\n\nArgs:\n    name: The name of the query parameter to get.\n\nReturns:\n    List[Optional[Text]]: A list of all the values associated with the\n        key, in string form."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -469,7 +501,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 80 words",
-      "intent": "Make a new :class:`URL` instance with occurrences of the query"
+      "intent": "Make a new :class:`URL` instance with occurrences of the query",
+      "doc": "Make a new :class:`URL` instance with occurrences of the query\nparameter *name* removed, or, if *value* is set, parameters\nmatching *name* and *value*. No exception is raised if the\nparameter is not already set.\n\nArgs:\n    name: The name of the query parameter to remove.\n    value: Optional value to additionally filter on.\n        Setting this removes query parameters which match both name\n        and value.\n    limit: Optional maximum number of parameters to remove.\n\nReturns:\n    URL: A new :class:`URL` instance with the parameter removed."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -483,7 +516,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 33 words",
-      "intent": "Make a `DecodedURL` instance from any text string containing a URL."
+      "intent": "Make a `DecodedURL` instance from any text string containing a URL.",
+      "doc": "Make a `DecodedURL` instance from any text string containing a URL.\n\nArgs:\n  text: Text containing the URL\n  lazy: Whether to pre-decode all parts of the URL to check for\n      validity.\n      Defaults to True."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -497,7 +531,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "Access the underlying :class:`URL` object, which has any special"
+      "intent": "Access the underlying :class:`URL` object, which has any special",
+      "doc": "Access the underlying :class:`URL` object, which has any special\ncharacters encoded."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -511,7 +546,8 @@
       "impure_reasons": [],
       "auditability": "invariant",
       "auditability_why": "inverse pair with from_text",
-      "intent": "Passthrough to :meth:`~hyperlink.URL.to_text()`"
+      "intent": "Passthrough to :meth:`~hyperlink.URL.to_text()`",
+      "doc": "Passthrough to :meth:`~hyperlink.URL.to_text()`"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -525,7 +561,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "Passthrough to :meth:`~hyperlink.URL.to_uri()`"
+      "intent": "Passthrough to :meth:`~hyperlink.URL.to_uri()`",
+      "doc": "Passthrough to :meth:`~hyperlink.URL.to_uri()`"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -539,7 +576,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "Passthrough to :meth:`~hyperlink.URL.to_iri()`"
+      "intent": "Passthrough to :meth:`~hyperlink.URL.to_iri()`",
+      "doc": "Passthrough to :meth:`~hyperlink.URL.to_iri()`"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -553,7 +591,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "Return a new DecodedURL wrapping the result of"
+      "intent": "Return a new DecodedURL wrapping the result of",
+      "doc": "Return a new DecodedURL wrapping the result of\n:meth:`~hyperlink.URL.click()`"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -567,7 +606,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 17 words",
-      "intent": "Automatically encode any reserved characters in *segment* and"
+      "intent": "Automatically encode any reserved characters in *segment* and",
+      "doc": "Automatically encode any reserved characters in *segment* and\nreturn a new `DecodedURL` wrapping the result of\n:meth:`~hyperlink.URL.sibling()`"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -581,7 +621,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 17 words",
-      "intent": "Automatically encode any reserved characters in *segments* and"
+      "intent": "Automatically encode any reserved characters in *segments* and",
+      "doc": "Automatically encode any reserved characters in *segments* and\nreturn a new `DecodedURL` wrapping the result of\n:meth:`~hyperlink.URL.child()`."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -595,7 +636,8 @@
       "impure_reasons": [],
       "auditability": "invariant",
       "auditability_why": "idempotent-by-name transform",
-      "intent": "Return a new `DecodedURL` wrapping the result of"
+      "intent": "Return a new `DecodedURL` wrapping the result of",
+      "doc": "Return a new `DecodedURL` wrapping the result of\n:meth:`~hyperlink.URL.normalize()`"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -609,7 +651,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "absolute (no docstring)"
+      "intent": "absolute (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -623,7 +666,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "scheme (no docstring)"
+      "intent": "scheme (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -637,7 +681,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "host (no docstring)"
+      "intent": "host (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -651,7 +696,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "port (no docstring)"
+      "intent": "port (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -665,7 +711,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "rooted (no docstring)"
+      "intent": "rooted (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -679,7 +726,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "path (no docstring)"
+      "intent": "path (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -693,7 +741,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "query (no docstring)"
+      "intent": "query (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -707,7 +756,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "fragment (no docstring)"
+      "intent": "fragment (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -721,7 +771,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "userinfo (no docstring)"
+      "intent": "userinfo (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -735,7 +786,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "user (no docstring)"
+      "intent": "user (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -749,7 +801,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "uses netloc (no docstring)"
+      "intent": "uses netloc (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -763,7 +816,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 61 words",
-      "intent": "While the signature is the same, this `replace()` differs a little"
+      "intent": "While the signature is the same, this `replace()` differs a little",
+      "doc": "While the signature is the same, this `replace()` differs a little\nfrom URL.replace. For instance, it accepts userinfo as a\ntuple, not as a string, handling the case of having a username\ncontaining a `:`. As with the rest of the methods on\nDecodedURL, if you pass a reserved character, it will be\nautomatically encoded instead of an error being raised."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -777,7 +831,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "Get the value of all query parameters whose name matches *name*"
+      "intent": "Get the value of all query parameters whose name matches *name*",
+      "doc": "Get the value of all query parameters whose name matches *name*"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -791,7 +846,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "Return a new DecodedURL with the query parameter *name* and *value*"
+      "intent": "Return a new DecodedURL with the query parameter *name* and *value*",
+      "doc": "Return a new DecodedURL with the query parameter *name* and *value*\nadded."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -805,7 +861,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "Return a new DecodedURL with query parameter *name* set to *value*"
+      "intent": "Return a new DecodedURL with query parameter *name* set to *value*",
+      "doc": "Return a new DecodedURL with query parameter *name* set to *value*"
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -819,7 +876,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 25 words",
-      "intent": "Return a new DecodedURL with query parameter *name* removed."
+      "intent": "Return a new DecodedURL with query parameter *name* removed.",
+      "doc": "Return a new DecodedURL with query parameter *name* removed.\n\nOptionally also filter for *value*, as well as cap the number\nof parameters removed with *limit*."
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -833,7 +891,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "fromText (no docstring)"
+      "intent": "fromText (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -847,7 +906,8 @@
       "impure_reasons": [],
       "auditability": "none",
       "auditability_why": "no substantive docstring, no recognized universal invariant",
-      "intent": "asText (no docstring)"
+      "intent": "asText (no docstring)",
+      "doc": ""
     },
     {
       "module": "src/hyperlink/_url.py",
@@ -861,7 +921,8 @@
       "impure_reasons": [],
       "auditability": "spec",
       "auditability_why": "docstring of 99 words",
-      "intent": "Automatically turn text into a structured URL object."
+      "intent": "Automatically turn text into a structured URL object.",
+      "doc": "Automatically turn text into a structured URL object.\n\n>>> url = parse(u\"https://github.com/python-hyper/hyperlink\")\n>>> print(url.to_text())\nhttps://github.com/python-hyper/hyperlink\n\nArgs:\n    url: A text string representation of a URL.\n\n    decoded: Whether or not to return a :class:`DecodedURL`,\n        which automatically handles all\n        encoding/decoding/quoting/unquoting for all the various\n        accessors of parts of the URL, or a :class:`URL`,\n        which has the same API, but requires handling of special\n        characters for different parts of the URL.\n\n    lazy: In the case of `decoded=True`, this controls\n        whether the URL is decoded immediately or as accessed. The\n        default, `lazy=False`, checks all encoded parts of the URL\n        for decodability.\n\n.. versionadded:: 18.0.0"
     }
   ],
   "summary": {

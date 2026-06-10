@@ -400,6 +400,7 @@ def main() -> int:
             "auditability": basis,
             "auditability_why": why,
             "intent": _intent(rec),
+            "doc": rec.doc,  # full docstring — the spec text the oracle author prompts against
         })
 
     manifest = {
