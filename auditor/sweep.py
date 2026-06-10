@@ -126,7 +126,10 @@ def classify(qual, x, adapter, ref, key):
     o_ok, o_val, o_exc, _ = _call(ref, x)
 
     def rec(cls, real_repr, oracle_repr, note=""):
-        return {"qualname": qual, "input": _short(repr(x)),
+        # `input` carries the FULL repr (inputs are small literals — str/tuple/int/None/bool),
+        # so a downstream consumer (triage) can reconstruct the exact value via literal_eval.
+        # Only the potentially-large result reprs are truncated for display.
+        return {"qualname": qual, "input": repr(x),
                 "real_result": _short(real_repr), "oracle_expected": _short(oracle_repr),
                 "classification": cls, "note": note}
 
