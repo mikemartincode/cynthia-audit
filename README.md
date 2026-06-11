@@ -60,6 +60,31 @@ Comparison libraries:
     python auditor/differential.py [--out results/e02-differential] [--cap N]
     ~/projects/cynthia-core/.venv/bin/python auditor/test_differential.py   # proof, no network
 
+## Assertable value bugs (auditor/spec_vectors.py + triage)
+
+Triage used to punt every wrong-VALUE divergence to a human queue — only library crashes
+auto-promoted, because cross-model agreement on a subtle value proved correlated (the first
+all-deepseek run manufactured a 100% false-positive rate on default-port / normalization
+semantics). E03 makes a value divergence assertable when the evidence is strong enough, by two
+paths kept explicitly distinct in the finding's evidence:
+
+  - GROUND TRUTH (`spec_vectors.py`): the spec's OWN canonical vectors (RFC 3986 §5.4.1/§5.4.2
+    reference-resolution table) are the truth, not a model. A spec-vector SWEEP runs the real
+    library over every published vector; a divergence is a real-bug/high anchored to the RFC's
+    own example, with the citation. On hyperlink it is correct on 40/41 vectors — the one
+    divergence is `URL.click('http://a/b/c/d;p?q','g:h')`, re-confirming the A06 finding with no
+    model in the loop.
+  - CROSS-FAMILY MAJORITY: a value divergence promotes only when ≥3 DISTINCT model families side
+    with the oracle (≥2 cross-family GREEN oracles + a cross-family blind arbiter). 2 families
+    alone (the production deepseek+minimax config) stays in the human-review queue — the
+    correlated-error trap stays closed by construction, proven by re-classifying the real A06
+    findings: 0 false value promotions.
+
+Model agreement is corroboration; only the spec's own vectors are proof, and the evidence record
+keeps that line bright.
+
+    ~/projects/cynthia-core/.venv/bin/python auditor/test_value_bugs.py     # proof, no network
+
 ## Layout
 
     seed/            proven single-function pattern (author -> gate) + reference oracle
