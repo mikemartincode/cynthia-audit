@@ -220,19 +220,61 @@ execution; stdlib only, imports clean. Output ONLY the code — no reference imp
 """
 
 
+# A SECOND oracle SHAPE. The value battery hard-codes spec expectations per probe; an INVARIANT
+# (metamorphic) battery instead asserts RELATIONS that hold over ALL valid inputs — round-trip
+# identity (`from_text(to_text(u)) == u`), idempotence (`normalize(normalize(u)) == normalize(u)`),
+# inverse-op stability. This unlocks the round-trip / stateful bug CLASS the single-call value
+# oracle structurally can't see. It reuses the SAME mutation gate and the SAME independent
+# reference (the reference is a correct impl regardless of how it's checked); ONLY the battery
+# contract changes. A vacuous invariant (a relation that holds trivially) is caught RED by the gate
+# exactly like a vacuous value battery — the verify-the-verifier guarantee generalizes for free.
+INVARIANT_BATTERY_CONTRACT = """\
+Write ONE stdlib-only Python snippet defining a mutation-test BATTERY that checks the behavior
+specified above via METAMORPHIC INVARIANTS — relations that hold for EVERY valid input — rather
+than hard-coded input→output values. You are NOT given the reference implementation; derive the
+invariants from the SPEC alone (this independence is the point):
+
+- `PROBE_INPUTS`: 8-20 valid inputs covering the tricky edges of the spec. Each item is ONE argument
+  value (string or tuple of strings preferred), round-trips through repr() exactly, and carries NO
+  expected value.
+- `def check_impl(fn)`: grades an ARBITRARY implementation `fn` (one-argument convention matching
+  PROBE_INPUTS) by asserting INVARIANTS over `fn` applied to each probe. Use relations derived from
+  the spec, e.g.:
+    * round-trip / identity:  for a canonical input, fn(x) == x  (or fn reconstructs x exactly);
+    * idempotence:            fn(fn(x)) == fn(x);
+    * inverse / structure preservation: a spec relation between input and output.
+  Combine >=2 relations so the battery has TEETH: a relation that holds TRIVIALLY (fn(x) == fn(x),
+  isinstance-only, etc.) is VACUOUS and the mutation gate will REJECT it. You have NO reference to
+  call — compute the invariants from the SPEC, never by grading fn against itself. Return a LIST of
+  (bool, str), exactly one per PROBE_INPUTS, in order. fn raising where the spec demands an error is
+  a PASS; fn raising elsewhere — catch it, record FAIL. check_impl MUST NOT raise.
+- OPTIONAL `EQUIV_KEY = lambda out: ...` ONLY if check_impl grades a projection.
+
+HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY — assume it
+exists, grade the `fn` you are handed; define NO reference implementation yourself. No module-level
+execution; stdlib only, imports clean. Output ONLY the code — no reference impl, no prose, no fences.
+"""
+
+# the battery contract per oracle shape; the reference contract is shared (a correct impl is a
+# correct impl). Adding a new shape = one entry here + a prompt; the gate is untouched.
+_BATTERY_CONTRACTS = {"value": BATTERY_CONTRACT, "invariant": INVARIANT_BATTERY_CONTRACT}
+
+
 def build_reference_prompt(entry: dict, target: str = "") -> tuple[str, str]:
     return (build_spec(entry, target=target),
             REFERENCE_CONTRACT.format(ref_name=f"ref_{_safe_leaf(entry['qualname'])}"))
 
 
-def build_battery_prompt(entry: dict, target: str = "") -> tuple[str, str]:
+def build_battery_prompt(entry: dict, target: str = "", shape: str = "value") -> tuple[str, str]:
+    contract = _BATTERY_CONTRACTS[shape]
     return (build_spec(entry, target=target),
-            BATTERY_CONTRACT.format(ref_name=f"ref_{_safe_leaf(entry['qualname'])}"))
+            contract.format(ref_name=f"ref_{_safe_leaf(entry['qualname'])}"))
 
 
 def _author_independent(entry: dict, ref_model: str, battery_model: str, *, target: str = "",
                         max_tokens: int = DEFAULT_MAX_TOKENS, temperature: float = 0.2,
-                        stream: bool = False, thinking: dict | None = None) -> dict:
+                        stream: bool = False, thinking: dict | None = None,
+                        shape: str = "value") -> dict:
     """Author reference (ref_model) and battery (battery_model) INDEPENDENTLY, assemble one module.
     Returns {code, cost, in_tok, out_tok, raw} or {error}. Raises nothing the caller can't survive.
 
@@ -242,7 +284,7 @@ def _author_independent(entry: dict, ref_model: str, battery_model: str, *, targ
     The concurrent variant only won in an isolated single-draft test with spare gateway capacity, so
     it was dropped — it added a cap-breach risk under run.py's fan-out for no real-load gain."""
     spec, ref_contract = build_reference_prompt(entry, target=target)
-    _, bat_contract = build_battery_prompt(entry, target=target)
+    _, bat_contract = build_battery_prompt(entry, target=target, shape=shape)
     def _call(model, contract):
         return call_model(model, SYSTEM_PROMPT, spec + "\n" + contract, max_tokens=max_tokens,
                           temperature=temperature, stream=stream, thinking=thinking)
@@ -386,9 +428,13 @@ class ResultRecord:
 
 def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Path("results/dev"),
                     *, attempts: int = DEFAULT_ATTEMPTS, max_tokens: int = DEFAULT_MAX_TOKENS,
-                    gate_cap: int = 40, target: str = "") -> ResultRecord:
+                    gate_cap: int = 40, target: str = "", shape: str = "value") -> ResultRecord:
     """The per-function unit: author an oracle for one manifest entry, gate it, retry on RED.
     Returns a ResultRecord in EVERY case — model/HTTP/contract failures become RED records.
+
+    `shape` selects the oracle's battery contract: "value" (hard-coded spec expectations) or
+    "invariant" (metamorphic relations over all valid inputs — round-trip / idempotence). Both go
+    through the SAME mutation gate; the gate proves either kind non-vacuous identically.
 
     The reference and battery are authored in SEPARATE calls (_author_independent) so the gate's
     step-0 ref_passes is a real CROSS-ACCEPTANCE check rather than a tautology; a non-green attempt
@@ -408,7 +454,8 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
         # unique module name per qualname AND attempt — sidesteps importlib's module cache,
         # which would otherwise gate attempt 1's module again on attempt 2.
         module_name = f"orc_{qhash}_a{n}"
-        r = _author_independent(entry, model, bat_model, target=target, max_tokens=max_tokens)
+        r = _author_independent(entry, model, bat_model, target=target, max_tokens=max_tokens,
+                                shape=shape)
         if "error" in r:
             rec.attempt_log.append({"attempt": n, "error": r["error"]})
             rec.gate = _normalize_verdict(_Broken(f"author call failed: {r['error']}"))
@@ -445,7 +492,7 @@ DEFAULT_BEST_OF_N = 8
 def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT_BEST_OF_N,
                      temperature: float = 0.7, max_tokens: int = 8000, gate_cap: int = 40,
                      target: str = "", call_workers: int = 8, gate_workers: int = 1,
-                     adaptive_fallback: bool = True) -> ResultRecord:
+                     adaptive_fallback: bool = True, shape: str = "value") -> ResultRecord:
     """Author an oracle from a reasoning model (minimax-m3) FAST: fire N think-OFF streaming
     drafts in parallel (diverse via temperature) and let the MUTATION GATE select a GREEN one.
 
@@ -474,7 +521,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
 
     def _author_one(**kw) -> dict:
         # reference + battery authored in two independent think-OFF calls and assembled
-        return _author_independent(entry, model, bat_model, target=target, **kw)
+        return _author_independent(entry, model, bat_model, target=target, shape=shape, **kw)
 
     # phase 1 — N parallel think-OFF streaming drafts. Each draft gets its OWN dir so the
     # gate's tag-named driver/mutant files never collide when phase 2 gates them in parallel.
@@ -577,6 +624,8 @@ def main() -> int:
     ap.add_argument("qualnames", nargs="+", help="function qualnames from the manifest")
     ap.add_argument("--model", default=DEFAULT_MODEL)
     ap.add_argument("--attempts", type=int, default=DEFAULT_ATTEMPTS)
+    ap.add_argument("--shape", choices=("value", "invariant"), default="value",
+                    help="oracle battery shape: value (spec expectations) or invariant (metamorphic)")
     args = ap.parse_args()
     model, attempts = args.model, args.attempts
     manifest = json.loads(args.manifest.read_text())
@@ -589,9 +638,9 @@ def main() -> int:
             print(f"   !! {qual} not in manifest; skipping", file=sys.stderr)
             continue
         entry = by_qual[qual]
-        print(f"== {qual} ({entry['auditability']}; model={model})")
+        print(f"== {qual} ({entry['auditability']}; model={model}; shape={args.shape})")
         rec = author_and_gate(entry, model, run_dir, attempts=attempts,
-                              target=manifest["target"])
+                              target=manifest["target"], shape=args.shape)
         for a in rec.attempt_log:
             print(f"   attempt {a['attempt']}: " + (f"ERROR {a['error']}" if "error" in a else
                   f"green={a['green']} kill_rate={a['kill_rate']:.2f} "
