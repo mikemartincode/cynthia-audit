@@ -64,25 +64,27 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author as author_mod  # noqa: E402
-from author import author_and_gate, build_prompt, call_model  # noqa: E402
+from author import author_and_gate, author_best_of_n, build_prompt, call_model  # noqa: E402
 from adapters import ADAPTERS  # noqa: E402
 from sweep import _equal, _load_oracle, classify  # noqa: E402
 from run import BudgetTracker  # noqa: E402
 
 # Independent-check model selection (empirical, on this repo):
-#   - gemini-flash authored truncated/prose modules that never passed the gate, expensively;
-#   - minimax-m3 (a cross-FAMILY option) hung — the dense oracle-authoring prompt makes it emit
-#     an unbounded <think> that never returns within the timeout;
-#   - deepseek-flash authors fast and cheap, and is a genuinely DIFFERENT MODEL from the
-#     deepseek-PRO first oracle (the task's check-1 allows "different model OR different
-#     framing"). The blind spec arbiter is deepseek-PRO with a different TASK/framing.
-# Both are deepseek-family, so a correlated error is possible; the conservative bar (vote AND
-# re-derivation must side with the oracle) plus the A07 human read are the safeguards. Gemini
-# rates kept for the optional --vote-model override; all are NOMINAL budget-rail estimates.
+#   - the first oracle (A03) is deepseek-PRO; a deepseek-family vote shares its blind spots and
+#     manufactured a 100% false-positive rate of value "real-bug"s (correlated error);
+#   - gemini-flash authored truncated/prose modules that never gated, expensively;
+#   - minimax-m3 is the only fast CROSS-FAMILY option once you author it right: STREAM it (the
+#     non-stream hang was gateway buffering), turn thinking OFF (~15x faster), and run best-of-N
+#     so the mutation gate selects a GREEN draft (one think-OFF draft is fragile, P(GREEN of 8)
+#     ~= 90%). The blind spec arbiter stays deepseek-PRO (a different TASK/framing); it's
+#     same-family as the first oracle, but the CROSS-FAMILY VOTE is what breaks the correlation.
+# m3 rate = nominal budget-rail estimate (MiniMax bills credit-weighted); gemini kept for the
+# optional --vote-model override.
+author_mod.PRICING.setdefault("minimax-m3", (0.30, 1.20))
 author_mod.PRICING.setdefault("gemini-flash", (0.30, 2.50))
 author_mod.PRICING.setdefault("gemini-pro", (1.25, 10.0))
 
-VOTE_MODEL = "deepseek-v4-flash"
+VOTE_MODEL = "minimax-m3"
 SPEC_MODEL = "deepseek-v4-pro"
 SHORTLIST_CAP = 80
 
@@ -293,7 +295,10 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
 
     quals = sorted({c["qualname"] for c in cands})
 
-    # PHASE 1 — author one independent (gemini) second oracle per function, gated GREEN.
+    # PHASE 1 — author one independent CROSS-FAMILY second oracle per function, gated GREEN.
+    # Reasoning models (minimax) author via best-of-N think-OFF (fast + gate-selected); a
+    # plain coder (deepseek-flash) uses the retry-on-RED path.
+    is_reasoning_vote = vote_model.startswith("minimax")
     second_dir = out_dir / "second_oracles"
     second_refs: dict[str, object] = {}
     second_meta: dict[str, dict] = {}
@@ -306,11 +311,15 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
             reservation = budget.reserve()
         if reservation is None:
             return qual, None, {"note": "budget-stop"}
-        rec = author_and_gate(entry, vote_model, second_dir, attempts=2, target=target)
+        if is_reasoning_vote:
+            rec = author_best_of_n(entry, vote_model, second_dir, target=target)
+        else:
+            rec = author_and_gate(entry, vote_model, second_dir, attempts=2, target=target)
         with lock:
             budget.settle(reservation, rec.cost)  # swap the estimate for the real cost
         meta = {"green": rec.green, "kill_rate": rec.gate.get("kill_rate"),
-                "cost": round(rec.cost, 6), "oracle_path": rec.oracle_path}
+                "cost": round(rec.cost, 6), "oracle_path": rec.oracle_path,
+                "drafts": rec.attempts}
         ref = None
         if rec.green:
             try:
@@ -320,7 +329,10 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         return qual, ref, meta
 
     t0 = time.time()
-    with ThreadPoolExecutor(max_workers=authors_workers) as pool:
+    # best-of-N already fans 8 HTTP + 4 gates PER function internally; keep the OUTER pool small
+    # for the reasoning path so concurrent mutant-subprocess gates don't oversubscribe the box.
+    phase1_workers = 2 if is_reasoning_vote else authors_workers
+    with ThreadPoolExecutor(max_workers=phase1_workers) as pool:
         for qual, ref, meta in pool.map(author_second, quals):
             second_refs[qual] = ref
             second_meta[qual] = meta
