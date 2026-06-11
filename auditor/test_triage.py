@@ -1,6 +1,7 @@
 """Self-contained proof for auditor/triage.py's decision logic — no network, no LLM calls.
-The conservative classification table, the cross-oracle vote, delta-debug minimal-ize, and
-input reconstruction are pure functions, tested directly. The live LLM phases (second-oracle
+The conservative classification table, the cross-oracle vote, delta-debug minimal-ize, input
+reconstruction, and the salvage-resume contract are tested directly (salvage re-gates through
+the REAL local mutation gate — still zero network). The live LLM phases (second-oracle
 authorship, spec re-derivation) are exercised by the real triage run, not here.
 
 Run: ~/projects/cynthia-core/.venv/bin/python auditor/test_triage.py
@@ -8,13 +9,17 @@ Run: ~/projects/cynthia-core/.venv/bin/python auditor/test_triage.py
 
 from __future__ import annotations
 
+import hashlib
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from triage import (  # noqa: E402
-    _reconstruct, classify_candidate, cross_oracle_vote, minimalize,
+    _meta_settled, _reconstruct, _salvage_drafts, classify_candidate, cross_oracle_vote,
+    minimalize,
 )
+from test_author import GOOD_BATTERY, GOOD_REF, VACUOUS_BATTERY  # noqa: E402
 
 
 def _cand(classification="divergence", real="r", oracle="o", note=""):
@@ -107,12 +112,70 @@ def test_reconstruct():
     print("test_reconstruct: literal round-trip OK")
 
 
+def test_meta_settled():
+    # GREEN is always settled, however it was produced.
+    assert _meta_settled({"green": True})
+    assert _meta_settled({"green": True, "salvaged": True})
+    # RED after a REAL authoring pass (no salvage marker) is settled — the fallback ran.
+    assert _meta_settled({"green": False})
+    assert _meta_settled({"green": False, "salvage_then_fallback": True})
+    # a salvage-only RED is NOT settled: its adaptive fallback never ran (the dead-end fix).
+    assert not _meta_settled({"green": False, "salvaged": True})
+    assert not _meta_settled({"green": False, "note": "salvage: no usable draft",
+                              "salvaged": True})
+    print("test_meta_settled: salvage-only RED re-attempted, everything else settled OK")
+
+
+def _write_draft(base: Path, qhash: str, name: str, code: str) -> None:
+    d = base / name
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"orc_{qhash}_{name}.py").write_text(code)
+
+
+def test_salvage_drafts():
+    """Salvage settles only on a GREEN re-gate; RED drafts come back as an UNSETTLED best
+    (caller owes the fallback); an empty/missing draft dir returns None (author fresh) —
+    previously a dir with no usable drafts persisted a terminal RED that suppressed the
+    function's vote on every later resume."""
+    qual = "intcmp"
+    qhash = hashlib.sha1(qual.encode()).hexdigest()[:10]
+    good = GOOD_REF.rstrip() + "\n\n" + GOOD_BATTERY
+    vacuous = GOOD_REF.rstrip() + "\n\n" + VACUOUS_BATTERY
+
+    with tempfile.TemporaryDirectory() as td:
+        second = Path(td)
+        base = second / "oracles" / f"{qual}_{qhash}"
+
+        # no draft dir at all -> None
+        assert _salvage_drafts(qual, second) is None
+
+        # dir exists but holds no usable draft -> None (NOT a settled RED) — the dead-end fix
+        (base / "n0").mkdir(parents=True)
+        assert _salvage_drafts(qual, second) is None
+
+        # only a vacuous (RED) draft -> best RED meta, marked salvaged (=> unsettled)
+        _write_draft(base, qhash, "n1", vacuous)
+        m = _salvage_drafts(qual, second)
+        assert m is not None and not m["green"] and m["salvaged"], m
+        assert not _meta_settled(m)
+
+        # a GREEN draft on disk -> settled GREEN meta through the real gate
+        _write_draft(base, qhash, "adaptive", good)
+        m = _salvage_drafts(qual, second)
+        assert m is not None and m["green"] and m["salvaged"], m
+        assert _meta_settled(m)
+        assert m["oracle_path"].endswith(f"adaptive/orc_{qhash}_adaptive.py"), m
+    print("test_salvage_drafts: GREEN settles, RED unsettled-best, empty dir authors fresh OK")
+
+
 def main():
     test_classify_conservative()
     test_classify_crash()
     test_cross_oracle_vote()
     test_minimalize()
     test_reconstruct()
+    test_meta_settled()
+    test_salvage_drafts()
     print("test_triage: OK")
 
 

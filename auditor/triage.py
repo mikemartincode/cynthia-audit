@@ -66,7 +66,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author as author_mod  # noqa: E402
 from author import (  # noqa: E402
-    _safe_leaf, author_and_gate, author_best_of_n, build_spec, call_model, gate_authored,
+    DEFAULT_BEST_OF_N, _safe_leaf, author_and_gate, author_best_of_n, build_spec, call_model,
+    gate_authored,
 )
 from adapters import ADAPTERS  # noqa: E402
 from sweep import _equal, _load_oracle, classify  # noqa: E402
@@ -111,6 +112,49 @@ def _first_oracle(records_dir: Path):
         out[rec["qualname"]] = (m.REFERENCE_FUNC, getattr(m, "EQUIV_KEY", None),
                                 rec["oracle_path"])
     return out
+
+
+# ---------------------------------------------------------------- second-oracle salvage
+
+def _meta_settled(meta: dict) -> bool:
+    """A persisted second-oracle meta is settled iff it is GREEN or it came from a real
+    authoring pass. A salvage-only RED is NOT settled: its drafts were re-gated but the
+    adaptive thinking-ON fallback never ran on it — re-persisting it as final would
+    permanently suppress the function's cross-oracle vote (the salvage dead-end)."""
+    return bool(meta.get("green") or not meta.get("salvaged"))
+
+
+def _salvage_drafts(qual: str, second_dir: Path):
+    """Re-gate already-authored best-of-N drafts from a prior (interrupted) run instead of
+    re-authoring — gating is cheap (batched, local), authoring is the slow part. Returns a
+    GREEN meta when any draft re-gates GREEN (a settled result), the best RED meta when
+    drafts exist but none gate (the caller still owes the adaptive fallback), or None when
+    nothing usable is on disk (the caller authors from scratch)."""
+    qhash = hashlib.sha1(qual.encode()).hexdigest()[:10]
+    base = second_dir / "oracles" / f"{_safe_leaf(qual)}_{qhash}"
+    if not base.is_dir():
+        return None
+    draft_dirs = sorted([d for d in base.glob("n*") if d.is_dir()])
+    adaptive = base / "adaptive"
+    if adaptive.is_dir():
+        draft_dirs.append(adaptive)
+    best = None
+    for d in draft_dirs:
+        mod = f"orc_{qhash}_{d.name}"
+        if not (d / f"{mod}.py").exists():
+            continue
+        try:
+            v = gate_authored(mod, d, cap=40)
+        except Exception:  # noqa: BLE001
+            continue
+        op = str(d / f"{mod}.py")
+        if v.get("green"):
+            return {"green": True, "kill_rate": v.get("kill_rate"), "oracle_path": op,
+                    "drafts": "salvaged", "salvaged": True}
+        if best is None or (v.get("kill_rate") or 0) > (best.get("kill_rate") or 0):
+            best = {"green": False, "kill_rate": v.get("kill_rate"), "oracle_path": op,
+                    "drafts": "salvaged", "salvaged": True}
+    return best  # None when no usable draft exists — that is NOT a settled RED
 
 
 # ---------------------------------------------------------------- delta-debug minimal-ize
@@ -375,51 +419,26 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         except Exception:  # noqa: BLE001 — a stale/broken oracle file is treated as no-second
             return None
 
-    def _salvage(qual):
-        """Re-gate already-authored best-of-N drafts from a prior (interrupted) run instead of
-        re-authoring — gating is cheap (batched, local), authoring is the slow part. Returns a
-        meta if a draft dir exists on disk (green if any draft re-gates GREEN), else None."""
-        qhash = hashlib.sha1(qual.encode()).hexdigest()[:10]
-        base = second_dir / "oracles" / f"{_safe_leaf(qual)}_{qhash}"
-        if not base.is_dir():
-            return None
-        draft_dirs = sorted([d for d in base.glob("n*") if d.is_dir()])
-        adaptive = base / "adaptive"
-        if adaptive.is_dir():
-            draft_dirs.append(adaptive)
-        best = None
-        for d in draft_dirs:
-            mod = f"orc_{qhash}_{d.name}"
-            if not (d / f"{mod}.py").exists():
-                continue
-            try:
-                v = gate_authored(mod, d, cap=40)
-            except Exception:  # noqa: BLE001
-                continue
-            op = str(d / f"{mod}.py")
-            if v.get("green"):
-                return {"green": True, "kill_rate": v.get("kill_rate"), "oracle_path": op,
-                        "drafts": "salvaged", "salvaged": True}
-            if best is None or (v.get("kill_rate") or 0) > (best.get("kill_rate") or 0):
-                best = {"green": False, "kill_rate": v.get("kill_rate"), "oracle_path": op,
-                        "drafts": "salvaged", "salvaged": True}
-        return best or {"green": False, "note": "salvage: no usable draft", "salvaged": True}
-
     def author_second(qual):
         entry = by_qual.get(qual)
         if entry is None:
             return qual, None, {"note": "not in manifest"}
-        # RESUME: a recorded meta (green OR not) is a settled result — never re-spend on it.
+        # RESUME: a settled meta (GREEN, or RED after a real authoring pass) is never
+        # re-spent. A salvage-only RED falls through: its adaptive fallback never ran.
         mp = _meta_path(qual)
         if mp.exists():
             try:
                 meta = {**json.loads(mp.read_text()), "resumed": True}
-                return qual, _ref_from_meta(meta), meta
             except Exception:  # noqa: BLE001 — unreadable meta falls through to salvage/author
-                pass
-        # SALVAGE: reuse drafts left on disk by an interrupted run (re-gate, don't re-author).
-        salv = _salvage(qual)
-        if salv is not None:
+                meta = None
+            if meta is not None and _meta_settled(meta):
+                return qual, _ref_from_meta(meta), meta
+        # SALVAGE: re-gate drafts left on disk by an interrupted run (gating is cheap,
+        # authoring is the slow part). GREEN settles here; RED means the cheap drafts are
+        # spent and only the adaptive fallback is still owed; None means nothing usable —
+        # author from scratch.
+        salv = _salvage_drafts(qual, second_dir)
+        if salv is not None and salv.get("green"):
             mp.write_text(json.dumps(salv) + "\n")
             return qual, _ref_from_meta(salv), salv
         with lock:
@@ -427,7 +446,10 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         if reservation is None:
             return qual, None, {"note": "budget-stop"}
         if is_reasoning_vote:
-            rec = author_best_of_n(entry, vote_model, second_dir, target=target)
+            # a salvaged-RED already spent its N fast think-OFF drafts — pay ONLY the
+            # thinking-ON adaptive fallback (n=0 authors zero fast drafts).
+            n = 0 if salv is not None else DEFAULT_BEST_OF_N
+            rec = author_best_of_n(entry, vote_model, second_dir, target=target, n=n)
         else:
             rec = author_and_gate(entry, vote_model, second_dir, attempts=2, target=target)
         with lock:
@@ -435,6 +457,12 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         meta = {"green": rec.green, "kill_rate": rec.gate.get("kill_rate"),
                 "cost": round(rec.cost, 6), "oracle_path": rec.oracle_path,
                 "drafts": rec.attempts}
+        if salv is not None:
+            meta["salvage_then_fallback"] = True
+            if not rec.green and (salv.get("kill_rate") or 0) > (meta["kill_rate"] or 0):
+                # keep the strongest oracle on record for inspection (neither is usable
+                # for voting — only a GREEN ref is ever loaded).
+                meta["kill_rate"], meta["oracle_path"] = salv["kill_rate"], salv["oracle_path"]
         ref = None
         if rec.green:
             try:
