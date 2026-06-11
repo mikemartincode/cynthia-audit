@@ -227,30 +227,23 @@ def build_battery_prompt(entry: dict, target: str = "") -> tuple[str, str]:
 
 def _author_independent(entry: dict, ref_model: str, battery_model: str, *, target: str = "",
                         max_tokens: int = DEFAULT_MAX_TOKENS, temperature: float = 0.2,
-                        stream: bool = False, thinking: dict | None = None,
-                        concurrent_calls: bool = False) -> dict:
+                        stream: bool = False, thinking: dict | None = None) -> dict:
     """Author reference (ref_model) and battery (battery_model) INDEPENDENTLY, assemble one module.
     Returns {code, cost, in_tok, out_tok, raw} or {error}. Raises nothing the caller can't survive.
 
-    concurrent_calls fires the two (independent) calls at once, halving a draft's wall-time. It is
-    OFF by default because it doubles the in-flight gateway-call count per attempt: under run.py's
-    fan-out the per-function semaphore already saturates the gateway across functions, so doubling
-    per-attempt would breach the declared concurrency cap for no throughput gain. best-of-N (few
-    standalone drafts, latency-bound) turns it ON — there the halving is the whole point."""
+    The two calls run sequentially. Firing them concurrently was tried and measured NEUTRAL under
+    real best-of-N load: at N=8 the 16 in-flight m3 streams are throughput-bound on the gateway, so
+    one 16-wide wave costs the same wall as two 8-wide waves (AUTH 28s either way on URL.scheme).
+    The concurrent variant only won in an isolated single-draft test with spare gateway capacity, so
+    it was dropped — it added a cap-breach risk under run.py's fan-out for no real-load gain."""
     spec, ref_contract = build_reference_prompt(entry, target=target)
     _, bat_contract = build_battery_prompt(entry, target=target)
     def _call(model, contract):
         return call_model(model, SYSTEM_PROMPT, spec + "\n" + contract, max_tokens=max_tokens,
                           temperature=temperature, stream=stream, thinking=thinking)
     try:
-        if concurrent_calls:
-            with ThreadPoolExecutor(max_workers=2) as pool:
-                fr = pool.submit(_call, ref_model, ref_contract)
-                fb = pool.submit(_call, battery_model, bat_contract)
-                rr, rb = fr.result(), fb.result()
-        else:
-            rr = _call(ref_model, ref_contract)
-            rb = _call(battery_model, bat_contract)
+        rr = _call(ref_model, ref_contract)
+        rb = _call(battery_model, bat_contract)
     except Exception as exc:  # noqa: BLE001 — gateway failure is a RED attempt, not a crash
         return {"error": f"{type(exc).__name__}: {exc}"}
     code = rr["code"].rstrip() + "\n\n" + rb["code"]
@@ -450,19 +443,19 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
                      adaptive_fallback: bool = True) -> ResultRecord:
     """Author an oracle from a reasoning model (minimax-m3) FAST: fire N think-OFF streaming
     drafts in parallel (diverse via temperature) and let the MUTATION GATE select a GREEN one.
-    Each draft authors its reference and battery CONCURRENTLY (two independent calls fired at once),
-    so a draft's wall-time is one call (~13-21s measured), not two.
 
     Why this shape: think-OFF makes M3 ~15x faster but its single draft is fragile — under the
     INDEPENDENT ref+battery contract it fails the gate's ref-consistency check often enough that
     ~25% of functions still find no GREEN draft in N=8 (measured on the first cross-family run).
     Best-of-N turns the cheap-but-noisy generation into a usable signal — the gate is a mechanical
-    selector, so the majority GREEN at the wall-time of ONE fast draft instead of a ~150s reasoning
-    call; the stubborn ~25% pay the adaptive fallback below. This is the verify-the-verifier thesis
-    applied to authoring: trust cheap noisy generation because a non-vacuous gate filters it.
-    (To shrink the slow tail, raise n WITH call_workers — drafts run concurrently, so a larger N is
-    nearly free in wall-time and lowers P(no GREEN) geometrically; it trades cheap think-OFF tokens
-    against fewer expensive fallbacks.)
+    selector, so the majority GREEN in ~30s (AUTH ~28s, gate ~2s) instead of a ~150s reasoning call;
+    the stubborn ~25% pay the adaptive fallback below. This is the verify-the-verifier thesis applied
+    to authoring: trust cheap noisy generation because a non-vacuous gate filters it.
+
+    The authoring phase is throughput-bound on the m3 gateway (N drafts share a fixed token rate),
+    NOT latency-bound — so raising n shrinks the slow-fallback tail (P(no GREEN) drops geometrically)
+    but is NOT free: more drafts add proportional authoring wall. It's a net win only because one
+    avoided fallback (~200s) pays for many extra cheap drafts; tune n against the measured tail.
 
     Returns a ResultRecord (same interface as author_and_gate) whose gate/oracle_path are the
     BEST draft (first GREEN; else highest kill_rate), and whose cost/tokens sum ALL N drafts."""
@@ -475,10 +468,8 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     rec.attempts = n
 
     def _author_one(**kw) -> dict:
-        # reference + battery: two independent think-OFF calls fired CONCURRENTLY (standalone path,
-        # latency-bound — the gateway absorbs n*2 calls; the per-attempt halving is the win here)
-        return _author_independent(entry, model, bat_model, target=target,
-                                   concurrent_calls=True, **kw)
+        # reference + battery authored in two independent think-OFF calls and assembled
+        return _author_independent(entry, model, bat_model, target=target, **kw)
 
     # phase 1 — N parallel think-OFF streaming drafts. Each draft gets its OWN dir so the
     # gate's tag-named driver/mutant files never collide when phase 2 gates them in parallel.
