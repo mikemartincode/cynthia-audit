@@ -113,9 +113,35 @@ stated caps. A bug behind a branch none of the three axes reaches is still misse
     AUDITOR_E04=1 python auditor/sweep.py ...   # opt-in: append the E04 corpus to the sweep
     ~/projects/cynthia-core/.venv/bin/python auditor/test_grammar.py   # proof, no network
 
+## Cost/complexity probe (auditor/complexity.py, E05)
+
+Every other probe compares VALUES; this one measures COST — a bug class the correctness
+pipeline structurally cannot see. Two probes, both bounded and both honest about timing noise:
+
+  - GROWTH — time a function across geometrically scaled input sizes (n, 2n, 4n, 8n), median-of-k
+    on distinct payloads, fit a log-log slope + R^2, and flag superlinear ONLY when the clean fit
+    repeats in every independent trial. Constant-factor noise has no slope and cannot trip it.
+    Reported as MEASURED growth over the probed range, never an asymptotic proof.
+  - REDOS — throw catastrophic-backtracking attack shapes at the regex-bearing parser entry
+    point and flag runaway time against a same-length benign baseline (abs threshold x ratio,
+    or the wall bound itself dying). The baseline comparison separates "this shape backtracks"
+    from "this function is slow on every large input" (which is the growth probe's business).
+
+Every measurement runs in a forked child that STREAMS per-size results; the parent kills it at a
+wall bound, so a genuinely-exponential function is a logged `bound-hit`, never a hung run. The
+planted controls in the test prove both directions: a quadratic function and a `(a+)+$` regex are
+flagged; linear/constant functions and a safe regex are not.
+
+Measured on hyperlink (results/e05-complexity): all 6 size-scalable axes (parse/normalize/
+to_uri/to_text/click) fit linear (slopes 0.66-1.02), and 8 attack shapes produce no runaway —
+0 complexity candidates, a valid recorded outcome for a well-built library.
+
+    python auditor/complexity.py [--out results/e05-complexity] [--base-n 128] [--trials 3]
+    ~/projects/cynthia-core/.venv/bin/python auditor/test_complexity.py   # proof, no network
+
 ## Layout
 
     seed/            proven single-function pattern (author -> gate) + reference oracle
     targets/         per-repo target manifests + cloned source (gitignored)
     results/         per-function result records + the findings report (gitignored)
-    auditor/         the parallel harness (built by Phase 4) + differential (E02) + grammar/coverage inputs (E04)
+    auditor/         the parallel harness (built by Phase 4) + differential (E02) + grammar/coverage inputs (E04) + complexity probe (E05)
