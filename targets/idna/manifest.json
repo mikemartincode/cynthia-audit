@@ -1,0 +1,366 @@
+{
+  "target": "idna",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/idna/repo",
+  "commit": "862150e12779792900343b48a1223beb5e2b62f7",
+  "package_dir": "idna",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "idna/cli.py",
+      "qualname": "main",
+      "signature": "(argv: Optional[list[str]]=None) -> int",
+      "span": [
+        94,
+        124
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "read of sys.stdin"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 62 words",
+      "intent": "Entry point for ``python -m idna``.",
+      "doc": "Entry point for ``python -m idna``.\n\nWhen more than one domain is supplied (via positional arguments or\npiped stdin) and no mode flag is given, the first input determines\nthe direction and that mode is applied uniformly to the rest.\n\n:param argv: Argument list excluding the program name. Defaults to\n    :data:`sys.argv` when ``None``.\n:returns: ``0`` on success, ``1`` if any conversion fails."
+    },
+    {
+      "module": "idna/codec.py",
+      "qualname": "Codec.encode",
+      "signature": "(self, data: str, errors: str='strict') -> tuple[bytes, int]",
+      "span": [
+        18,
+        25
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with decode",
+      "intent": "encode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "idna/codec.py",
+      "qualname": "Codec.decode",
+      "signature": "(self, data: bytes, errors: str='strict') -> tuple[str, int]",
+      "span": [
+        27,
+        34
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with encode",
+      "intent": "decode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "idna/codec.py",
+      "qualname": "search_function",
+      "signature": "(name: str) -> Optional[codecs.CodecInfo]",
+      "span": [
+        135,
+        156
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 46 words",
+      "intent": "Codec search function registered with :mod:`codecs`.",
+      "doc": "Codec search function registered with :mod:`codecs`.\n\nReturns a :class:`codecs.CodecInfo` for the ``\"idna2008\"`` codec name\nso that ``str.encode(\"idna2008\")`` and ``bytes.decode(\"idna2008\")``\ninvoke the IDNA 2008 codec defined in this module.\n\n:param name: The codec name being looked up.\n:returns: A :class:`codecs.CodecInfo` instance if ``name`` is\n    ``\"idna2008\"``, otherwise ``None``."
+    },
+    {
+      "module": "idna/compat.py",
+      "qualname": "ToASCII",
+      "signature": "(label: str) -> bytes",
+      "span": [
+        6,
+        16
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Compatibility shim for :rfc:`3490` ``ToASCII``.",
+      "doc": "Compatibility shim for :rfc:`3490` ``ToASCII``.\n\nDelegates to :func:`idna.encode` (IDNA 2008). Provided to ease porting\nof code written against the legacy :mod:`encodings.idna` API; new code\nshould call :func:`idna.encode` directly.\n\n:param label: The label or domain to encode.\n:returns: The encoded form as ASCII :class:`bytes`."
+    },
+    {
+      "module": "idna/compat.py",
+      "qualname": "ToUnicode",
+      "signature": "(label: Union[bytes, bytearray]) -> str",
+      "span": [
+        19,
+        29
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Compatibility shim for :rfc:`3490` ``ToUnicode``.",
+      "doc": "Compatibility shim for :rfc:`3490` ``ToUnicode``.\n\nDelegates to :func:`idna.decode` (IDNA 2008). Provided to ease porting\nof code written against the legacy :mod:`encodings.idna` API; new code\nshould call :func:`idna.decode` directly.\n\n:param label: The label or domain to decode.\n:returns: The decoded Unicode form."
+    },
+    {
+      "module": "idna/compat.py",
+      "qualname": "nameprep",
+      "signature": "(s: Any) -> None",
+      "span": [
+        32,
+        41
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 42 words",
+      "intent": "Stub for :rfc:`3491` Nameprep, which is not used by IDNA 2008.",
+      "doc": "Stub for :rfc:`3491` Nameprep, which is not used by IDNA 2008.\n\nIDNA 2008 (:rfc:`5891`) replaces Nameprep with the per-codepoint\nvalidity classes from :rfc:`5892`; this function exists only to\nreturn a clear error if legacy code attempts to call it.\n\n:raises NotImplementedError: Always."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "valid_label_length",
+      "signature": "(label: Union[bytes, str]) -> bool",
+      "span": [
+        70,
+        82
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 67 words",
+      "intent": "Check that a label does not exceed the maximum permitted length.",
+      "doc": "Check that a label does not exceed the maximum permitted length.\n\nPer :rfc:`1035` (and :rfc:`5891` \u00a74.2.4) a DNS label must not exceed\n63 octets. The argument may be either a :class:`str` (a U-label, where\nlength is measured in characters) or :class:`bytes` (an A-label, where\nlength is measured in octets).\n\n:param label: The label to check.\n:returns: ``True`` if the label is within the length limit, otherwise\n    ``False``."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "valid_string_length",
+      "signature": "(domain: Union[bytes, str], trailing_dot: bool) -> bool",
+      "span": [
+        85,
+        96
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 64 words",
+      "intent": "Check that a full domain name does not exceed the maximum length.",
+      "doc": "Check that a full domain name does not exceed the maximum length.\n\nPer :rfc:`1035`, a domain name is limited to 253 octets when no trailing\ndot is present, or 254 octets when one is included.\n\n:param domain: The full (possibly multi-label) domain name.\n:param trailing_dot: ``True`` if ``domain`` includes a trailing ``.``.\n:returns: ``True`` if the domain is within the length limit, otherwise\n    ``False``."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "check_bidi",
+      "signature": "(label: str, check_ltr: bool=False) -> bool",
+      "span": [
+        99,
+        171
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 116 words",
+      "intent": "Validate the Bidi Rule from :rfc:`5893` for a single label.",
+      "doc": "Validate the Bidi Rule from :rfc:`5893` for a single label.\n\nThe Bidi Rule constrains how bidirectional characters (Hebrew, Arabic,\netc.) may appear within a label. By default the check is only applied\nwhen the label contains at least one right-to-left character (Unicode\nbidirectional categories ``R``, ``AL``, or ``AN``); set ``check_ltr``\nto ``True`` to apply it to LTR-only labels as well.\n\n:param label: The label to validate, as a Unicode string.\n:param check_ltr: If ``True``, apply the rules even when the label\n    contains no RTL characters.\n:returns: ``True`` if the label satisfies the Bidi Rule.\n:raises IDNABidiError: If any of Bidi Rule conditions 1-6 are violated,\n    or if the directional category of a codepoint cannot be determined."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "check_initial_combiner",
+      "signature": "(label: str) -> bool",
+      "span": [
+        174,
+        186
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Reject labels that begin with a combining mark.",
+      "doc": "Reject labels that begin with a combining mark.\n\nPer :rfc:`5891` \u00a74.2.3.2 a label must not start with a character of\nUnicode general category ``M`` (Mark).\n\n:param label: The label to check.\n:returns: ``True`` if the first character is not a combining mark.\n:raises IDNAError: If the label begins with a combining character."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "check_hyphen_ok",
+      "signature": "(label: str) -> bool",
+      "span": [
+        189,
+        204
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 62 words",
+      "intent": "Validate the hyphen restrictions for a label.",
+      "doc": "Validate the hyphen restrictions for a label.\n\nPer :rfc:`5891` \u00a74.2.3.1 a label must not start or end with a hyphen\n(``U+002D``), and must not have hyphens in both the third and fourth\npositions (the prefix reserved for A-labels).\n\n:param label: The label to check.\n:returns: ``True`` if the hyphen restrictions are satisfied.\n:raises IDNAError: If any of the hyphen restrictions are violated."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "check_nfc",
+      "signature": "(label: str) -> None",
+      "span": [
+        207,
+        216
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Require that a label is in Unicode Normalization Form C.",
+      "doc": "Require that a label is in Unicode Normalization Form C.\n\n:param label: The label to check.\n:raises IDNAError: If ``label`` differs from its NFC normalisation."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "valid_contextj",
+      "signature": "(label: str, pos: int) -> bool",
+      "span": [
+        219,
+        270
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 99 words",
+      "intent": "Validate the CONTEXTJ rules from :rfc:`5892` Appendix A.",
+      "doc": "Validate the CONTEXTJ rules from :rfc:`5892` Appendix A.\n\nThese rules govern the contextual use of the joiner codepoints\n``U+200C`` (ZERO WIDTH NON-JOINER, Appendix A.1) and ``U+200D``\n(ZERO WIDTH JOINER, Appendix A.2) within a label.\n\n:param label: The label containing the codepoint.\n:param pos: Index of the joiner codepoint within ``label``.\n:returns: ``True`` if the codepoint at ``pos`` satisfies its CONTEXTJ\n    rule, ``False`` otherwise (including when the codepoint at\n    ``pos`` is not a recognised joiner).\n:raises ValueError: If an adjacent codepoint has no Unicode name when\n    determining its combining class.\n:raises IDNAError: If ``label`` exceeds the defensive input length limit."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "valid_contexto",
+      "signature": "(label: str, pos: int, exception: bool=False) -> bool",
+      "span": [
+        273,
+        319
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 92 words",
+      "intent": "Validate the CONTEXTO rules from :rfc:`5892` Appendix A.",
+      "doc": "Validate the CONTEXTO rules from :rfc:`5892` Appendix A.\n\nCovers the contextual rules for codepoints such as MIDDLE DOT\n(``U+00B7``), Greek lower numeral sign, Hebrew punctuation, Katakana\nmiddle dot, and the Arabic-Indic / Extended Arabic-Indic digit ranges.\n\n:param label: The label containing the codepoint.\n:param pos: Index of the codepoint within ``label``.\n:param exception: Reserved for forward compatibility; currently unused.\n:returns: ``True`` if the codepoint at ``pos`` satisfies its CONTEXTO\n    rule, ``False`` otherwise (including when the codepoint is not a\n    recognised CONTEXTO codepoint).\n:raises IDNAError: If ``label`` exceeds the defensive input length limit."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "check_label",
+      "signature": "(label: Union[str, bytes, bytearray]) -> None",
+      "span": [
+        322,
+        374
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 99 words",
+      "intent": "Run the full set of IDNA 2008 validity checks on a single label.",
+      "doc": "Run the full set of IDNA 2008 validity checks on a single label.\n\nApplies, in order: NFC normalisation (:func:`check_nfc`), hyphen\nrestrictions (:func:`check_hyphen_ok`), the no-leading-combiner rule\n(:func:`check_initial_combiner`), per-codepoint validity (PVALID,\nCONTEXTJ, CONTEXTO classes from :rfc:`5892`), and the Bidi Rule\n(:func:`check_bidi`).\n\n:param label: The label to validate. ``bytes`` or ``bytearray`` input\n    is decoded as UTF-8 first.\n:raises IDNAError: If the label is empty or fails a structural rule.\n:raises InvalidCodepoint: If the label contains a DISALLOWED or\n    UNASSIGNED codepoint.\n:raises InvalidCodepointContext: If a CONTEXTJ or CONTEXTO codepoint\n    is not valid in its context.\n:raises IDNABidiError: If the Bidi Rule is violated."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "alabel",
+      "signature": "(label: str) -> bytes",
+      "span": [
+        377,
+        408
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 72 words",
+      "intent": "Convert a single U-label into its A-label form.",
+      "doc": "Convert a single U-label into its A-label form.\n\nThe result is the ASCII-Compatible Encoding (ACE) form per :rfc:`5891`\n\u00a74: the label is validated, Punycode-encoded, and prefixed with\n``xn--``. Pure ASCII labels that are already valid IDNA labels are\nreturned unchanged (as :class:`bytes`).\n\n:param label: The label to convert, as a Unicode string.\n:returns: The A-label as ASCII-encoded :class:`bytes`.\n:raises IDNAError: If the label is invalid or the resulting A-label\n    exceeds 63 octets."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "ulabel",
+      "signature": "(label: Union[str, bytes, bytearray]) -> str",
+      "span": [
+        411,
+        451
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 71 words",
+      "intent": "Convert a single A-label into its U-label form.",
+      "doc": "Convert a single A-label into its U-label form.\n\nPerforms the inverse of :func:`alabel`: an ``xn--``-prefixed label is\nPunycode-decoded and validated. Labels that are already Unicode (or\nplain ASCII without the ACE prefix) are validated and returned as a\nUnicode string.\n\n:param label: The label to convert. ``bytes`` or ``bytearray`` input\n    is treated as ASCII.\n:returns: The U-label as a Unicode string.\n:raises IDNAError: If the label is malformed or fails validation."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "uts46_remap",
+      "signature": "(domain: str, std3_rules: bool=True, transitional: bool=False) -> str",
+      "span": [
+        454,
+        507
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 134 words",
+      "intent": "Apply the UTS #46 character mapping to a domain string.",
+      "doc": "Apply the UTS #46 character mapping to a domain string.\n\nImplements the mapping table from `UTS #46 \u00a74\n<https://www.unicode.org/reports/tr46/>`_: each character is kept,\nreplaced, or rejected based on its status (``V``, ``M``, ``D``, ``3``,\n``I``). The result is returned in Normalisation Form C.\n\n:param domain: The full domain name to remap.\n:param std3_rules: If ``True``, apply the stricter STD3 ASCII rules\n    (status ``3`` codepoints raise instead of being kept or mapped).\n:param transitional: If ``True``, use transitional processing (status\n    ``D`` codepoints are mapped instead of kept). Transitional\n    processing has been removed from UTS #46 and this option is\n    retained only for backwards compatibility.\n:returns: The remapped domain, in Normalisation Form C.\n:raises InvalidCodepoint: If the domain contains a disallowed\n    codepoint under the chosen rules.\n:raises IDNAError: If ``domain`` exceeds the defensive input length limit."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "encode",
+      "signature": "(s: Union[str, bytes, bytearray], strict: bool=False, uts46: bool=False, std3_rules: bool=False, transitional: bool=False) -> bytes",
+      "span": [
+        510,
+        579
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 137 words",
+      "intent": "Encode a Unicode domain name into its ASCII (A-label) form.",
+      "doc": "Encode a Unicode domain name into its ASCII (A-label) form.\n\nSplits the input on label separators (only ``U+002E`` if ``strict`` is\nset; otherwise also IDEOGRAPHIC FULL STOP ``U+3002``, FULLWIDTH FULL\nSTOP ``U+FF0E``, and HALFWIDTH IDEOGRAPHIC FULL STOP ``U+FF61``),\nencodes each label with :func:`alabel`, and rejoins them with ``.``.\nOptionally pre-processes the input through :func:`uts46_remap`.\n\n:param s: The domain name to encode.\n:param strict: If ``True``, only ``U+002E`` is recognised as a label\n    separator.\n:param uts46: If ``True``, apply UTS #46 mapping before encoding.\n:param std3_rules: Forwarded to :func:`uts46_remap` when ``uts46`` is\n    ``True``.\n:param transitional: Forwarded to :func:`uts46_remap` when ``uts46``\n    is ``True``. Deprecated: emits a :class:`DeprecationWarning` and\n    will be removed in a future version.\n:returns: The encoded domain as ASCII :class:`bytes`.\n:raises IDNAError: If the domain is empty, contains an invalid label,\n    or exceeds the maximum domain length."
+    },
+    {
+      "module": "idna/core.py",
+      "qualname": "decode",
+      "signature": "(s: Union[str, bytes, bytearray], strict: bool=False, uts46: bool=False, std3_rules: bool=False, display: bool=False) -> str",
+      "span": [
+        582,
+        648
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 168 words",
+      "intent": "Decode an A-label-encoded domain name back to Unicode.",
+      "doc": "Decode an A-label-encoded domain name back to Unicode.\n\nSplits the input on label separators (see :func:`encode` for the\nrules), decodes each label with :func:`ulabel`, and rejoins them\nwith ``.``. Optionally pre-processes the input through\n:func:`uts46_remap`.\n\n:param s: The domain name to decode.\n:param strict: If ``True``, only ``U+002E`` is recognised as a label\n    separator.\n:param uts46: If ``True``, apply UTS #46 mapping before decoding.\n:param std3_rules: Forwarded to :func:`uts46_remap` when ``uts46`` is\n    ``True``.\n:param display: If ``True``, any ``xn--`` label that fails IDNA\n    validation is passed through unchanged (lowercased) rather than\n    aborting the whole call. Intended for \"decode for display\"\n    consumers (e.g. URL libraries, HTTP clients) that want to show\n    the user the label as it appears on the wire when it cannot be\n    rendered as Unicode. Matches the per-label recovery prescribed\n    by UTS #46 \u00a74 and the WHATWG URL \"domain to Unicode\" algorithm.\n:returns: The decoded domain as a Unicode string.\n:raises IDNAError: If the input is not valid ASCII, contains an\n    invalid label, or is empty."
+    },
+    {
+      "module": "idna/intranges.py",
+      "qualname": "intranges_from_list",
+      "signature": "(list_: list[int]) -> tuple[int, ...]",
+      "span": [
+        11,
+        29
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Represent a list of integers as a sequence of ranges:",
+      "doc": "Represent a list of integers as a sequence of ranges:\n((start_0, end_0), (start_1, end_1), ...), such that the original\nintegers are exactly those x such that start_i <= x < end_i for some i.\n\nRanges are encoded as single integers (start << 32 | end), not as tuples."
+    },
+    {
+      "module": "idna/intranges.py",
+      "qualname": "intranges_contain",
+      "signature": "(int_: int, ranges: tuple[int, ...]) -> bool",
+      "span": [
+        40,
+        55
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Determine if `int_` falls into one of the ranges in `ranges`.",
+      "doc": "Determine if `int_` falls into one of the ranges in `ranges`."
+    }
+  ],
+  "summary": {
+    "total_public_functions": 23,
+    "auditability": {
+      "spec": 20,
+      "invariant": 2,
+      "none": 1
+    },
+    "deterministic": 22,
+    "auditable": 21
+  }
+}
