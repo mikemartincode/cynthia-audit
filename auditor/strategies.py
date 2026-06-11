@@ -31,6 +31,7 @@ A convention maps an oracle's one-argument shape to an iterator of those argumen
 from __future__ import annotations
 
 import itertools
+import os
 
 # ---------------------------------------------------------------- value pools
 
@@ -80,13 +81,47 @@ SEGMENT_POOL = [
 BOOL_POOL = [True, False]
 
 
+# ---------------------------------------------------------------- E04 augmentation (opt-in)
+#
+# By default the `url` convention draws from the static, hand-authored URL_POOL above — the
+# pre-E04 baseline, kept reproducible. When AUDITOR_E04=1 (or `enable_e04()` is called), the
+# single-string `url` convention is EXTENDED with the E04 corpus (grammar ∪ seed-corpus ∪
+# coverage-guided, auditor/grammar.py). The extra inputs are APPENDED, so the capped cartesian
+# conventions (url_href, etc.) keep their exact prior front-loaded coverage; only the uncapped
+# `url` convention reaches the new inputs. That is the honest, measurable surface for the lift.
+
+_E04_EXTRA: list[str] = []
+
+
+def enable_e04(grammar_limit: int = 300, seed_cap: int = 600, fuzz_budget: int = 2000,
+               seed: int = 0) -> dict:
+    """Populate the E04 extra-input list and return its build stats (caps/budgets surfaced)."""
+    global _E04_EXTRA
+    from grammar import build_e04_inputs  # local import: grammar pulls in the target
+    inputs, stats = build_e04_inputs(grammar_limit=grammar_limit, seed_cap=seed_cap,
+                                     fuzz_budget=fuzz_budget, seed=seed)
+    pool = set(URL_POOL)
+    _E04_EXTRA = [s for s in inputs if s not in pool]  # only inputs not already in the baseline
+    stats["appended_to_url_convention"] = len(_E04_EXTRA)
+    return stats
+
+
+def _url_inputs():
+    """The `url` convention's input list: the baseline pool plus any enabled E04 extras."""
+    return URL_POOL + _E04_EXTRA
+
+
+if os.environ.get("AUDITOR_E04") == "1":  # CLI/CI opt-in without a code change
+    enable_e04()
+
+
 # ---------------------------------------------------------------- convention generators
 #
 # Each generator is a thunk -> iterator. Caps are applied with itertools.islice in
 # strategy_for; the generators themselves are honest cartesian products in stable order.
 
 def _gen_url():
-    return (u for u in URL_POOL)
+    return (u for u in _url_inputs())
 
 def _gen_url_href():
     return ((u, h) for u in URL_POOL for h in URL_POOL)

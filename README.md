@@ -85,9 +85,37 @@ keeps that line bright.
 
     ~/projects/cynthia-core/.venv/bin/python auditor/test_value_bugs.py     # proof, no network
 
+## Grammar-based + coverage-guided inputs (auditor/grammar.py, E04)
+
+The sweep's pre-E04 generator draws from a fixed, hand-authored `URL_POOL` — finite and static,
+so a valid-but-unusual URI the author didn't write is never reached. E04 raises RECALL on three
+axes, each feeding the SAME sweep so the lift is measured, not asserted:
+
+  - GRAMMAR — structurally-valid URIs straight from the RFC 3986 ABNF (Appendix A): every
+    authority form (reg-name / IPv4 / IPv6 / IPvFuture / empty), rootless vs //-authority paths,
+    dot-segments, ports, query, fragment, percent-encoding. Deterministic; every emitted URI is
+    validated to parse, so it exercises post-parse code, not just the reject path.
+  - SEED — the target's OWN test fixtures (AST-extracted, not regex) ∪ a known edge-case
+    dictionary (the RFC §1.1.2 examples, percent-encoding edge cases, Unicode normalization).
+  - COVERAGE — a bounded greybox loop (AFL/libFuzzer core idea, no atheris): mutate the corpus,
+    keep a mutant only if it reaches a target line not yet covered. Coverage measured with
+    `sys.settrace` over the vendored source (no `coverage` dep). HARD-CAPPED by mutation budget;
+    the cap is logged, never silent.
+
+Measured on hyperlink (`measure_e04.py`, deterministic): driving the same operation battery, the
+baseline pool reaches 393 distinct target lines; baseline ∪ E04 reaches 411 (+18, +4.6%). Over the
+14 url-convention gate-GREEN oracles the E04 corpus surfaces proportionally more candidate
+divergences for triage (generated-diff, weak evidence). This RAISES recall — more branches
+reached, more candidates surfaced — it is NOT exhaustive: no symbolic execution, bounded by the
+stated caps. A bug behind a branch none of the three axes reaches is still missed.
+
+    python auditor/measure_e04.py [--records results/a06-final] [--out results/e04-recall]
+    AUDITOR_E04=1 python auditor/sweep.py ...   # opt-in: append the E04 corpus to the sweep
+    ~/projects/cynthia-core/.venv/bin/python auditor/test_grammar.py   # proof, no network
+
 ## Layout
 
     seed/            proven single-function pattern (author -> gate) + reference oracle
     targets/         per-repo target manifests + cloned source (gitignored)
     results/         per-function result records + the findings report (gitignored)
-    auditor/         the parallel harness (built by Phase 4) + differential mode (E02)
+    auditor/         the parallel harness (built by Phase 4) + differential (E02) + grammar/coverage inputs (E04)
