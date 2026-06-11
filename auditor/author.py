@@ -227,21 +227,30 @@ def build_battery_prompt(entry: dict, target: str = "") -> tuple[str, str]:
 
 def _author_independent(entry: dict, ref_model: str, battery_model: str, *, target: str = "",
                         max_tokens: int = DEFAULT_MAX_TOKENS, temperature: float = 0.2,
-                        stream: bool = False, thinking: dict | None = None) -> dict:
+                        stream: bool = False, thinking: dict | None = None,
+                        concurrent_calls: bool = False) -> dict:
     """Author reference (ref_model) and battery (battery_model) INDEPENDENTLY, assemble one module.
-    Returns {code, cost, in_tok, out_tok, raw} or {error}. Raises nothing the caller can't survive."""
+    Returns {code, cost, in_tok, out_tok, raw} or {error}. Raises nothing the caller can't survive.
+
+    concurrent_calls fires the two (independent) calls at once, halving a draft's wall-time. It is
+    OFF by default because it doubles the in-flight gateway-call count per attempt: under run.py's
+    fan-out the per-function semaphore already saturates the gateway across functions, so doubling
+    per-attempt would breach the declared concurrency cap for no throughput gain. best-of-N (few
+    standalone drafts, latency-bound) turns it ON — there the halving is the whole point."""
     spec, ref_contract = build_reference_prompt(entry, target=target)
     _, bat_contract = build_battery_prompt(entry, target=target)
-    # The reference and battery are independent reads of the spec — fire them CONCURRENTLY so a
-    # draft's wall-time is one call, not two (it was the dominant cost once gating got cheap).
     def _call(model, contract):
         return call_model(model, SYSTEM_PROMPT, spec + "\n" + contract, max_tokens=max_tokens,
                           temperature=temperature, stream=stream, thinking=thinking)
     try:
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            fr = pool.submit(_call, ref_model, ref_contract)
-            fb = pool.submit(_call, battery_model, bat_contract)
-            rr, rb = fr.result(), fb.result()
+        if concurrent_calls:
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                fr = pool.submit(_call, ref_model, ref_contract)
+                fb = pool.submit(_call, battery_model, bat_contract)
+                rr, rb = fr.result(), fb.result()
+        else:
+            rr = _call(ref_model, ref_contract)
+            rb = _call(battery_model, bat_contract)
     except Exception as exc:  # noqa: BLE001 — gateway failure is a RED attempt, not a crash
         return {"error": f"{type(exc).__name__}: {exc}"}
     code = rr["code"].rstrip() + "\n\n" + rb["code"]
@@ -466,8 +475,10 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     rec.attempts = n
 
     def _author_one(**kw) -> dict:
-        # reference + battery authored in two independent calls (each think-OFF) and assembled
-        return _author_independent(entry, model, bat_model, target=target, **kw)
+        # reference + battery: two independent think-OFF calls fired CONCURRENTLY (standalone path,
+        # latency-bound — the gateway absorbs n*2 calls; the per-attempt halving is the win here)
+        return _author_independent(entry, model, bat_model, target=target,
+                                   concurrent_calls=True, **kw)
 
     # phase 1 — N parallel think-OFF streaming drafts. Each draft gets its OWN dir so the
     # gate's tag-named driver/mutant files never collide when phase 2 gates them in parallel.
