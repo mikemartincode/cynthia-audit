@@ -95,6 +95,58 @@ def _exc_stub(exc: Exception):
     return fake
 
 
+def test_convention_hint() -> None:
+    """Multi-arg functions get the EXACT tuple layout pinned into the shared spec text
+    (the measured idna fix: 4/4 convention-mismatch REDs were multi-arg, 0/13 single-arg);
+    single-arg functions get NO hint; a garbage signature degrades to no hint, never raises."""
+    h = author._convention_hint({"qualname": "encode",
+                                 "signature": "(s, strict=False, uts46=False)"})
+    assert "EXACTLY 3 items" in h and "arg = (s, strict, uts46)" in h, h
+    assert "strict=False" in h and "uts46=False" in h, h
+
+    h = author._convention_hint({"qualname": "URL.click", "signature": "(self, href)"})
+    assert "EXACTLY 2 items" in h and "<the object's textual form>, href" in h, h
+
+    h = author._convention_hint({"qualname": "URL.child", "signature": "(self, *segments)"})
+    assert "AT LEAST 1" in h and "*segments" in h, h
+
+    assert author._convention_hint({"qualname": "parse_host", "signature": "(host)"}) == ""
+    assert author._convention_hint({"qualname": "URL.scheme", "signature": "(self)"}) == ""
+    assert author._convention_hint({"qualname": "x", "signature": "(not (valid"}) == ""
+
+    # build_spec carries the hint for multi-arg entries and stays hint-free for single-arg
+    multi = {**ENTRY, "qualname": "encode", "signature": "(s, strict=False)"}
+    assert "CALLING CONVENTION" in author.build_spec(multi)
+    assert "CALLING CONVENTION" not in author.build_spec(ENTRY)
+    print("test_convention_hint: multi-arg pinned, single-arg untouched, garbage safe OK")
+
+
+def test_best_of_n_fallback_only() -> None:
+    """author_best_of_n(n=0) authors ZERO fast drafts and goes straight to the adaptive
+    thinking-ON fallback — the salvage-resume path uses this to pay only the fallback a
+    salvaged-RED function is still owed (its fast drafts already exist on disk, all RED)."""
+    calls = []
+    real = author.call_model
+
+    def fake(model, system, user, **kw):
+        calls.append(kw.get("thinking"))
+        code = GOOD_BATTERY if "BATTERY" in user else GOOD_REF
+        return {"code": code, "raw": code, "in_tok": 100, "out_tok": 200,
+                "cost": 0.001, "elapsed": 0.0}
+
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            author.call_model = fake
+            rec = author.author_best_of_n(ENTRY, "stub-model", Path(td), n=0)
+        assert rec.green, rec.to_dict()
+        assert len(calls) == 2, calls  # ONE fallback draft = one ref call + one battery call
+        assert all(t == {"type": "adaptive"} for t in calls), calls
+        assert [a["attempt"] for a in rec.attempt_log] == ["adaptive_fallback"], rec.attempt_log
+    finally:
+        author.call_model = real
+    print("test_best_of_n_fallback_only: n=0 -> adaptive fallback only, gates GREEN OK")
+
+
 def main() -> None:
     real = author.call_model
     try:
@@ -141,6 +193,8 @@ def main() -> None:
             print("RED (gateway) ok")
     finally:
         author.call_model = real
+    test_convention_hint()
+    test_best_of_n_fallback_only()
     print("test_author: OK")
 
 

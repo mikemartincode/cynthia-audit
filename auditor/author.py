@@ -20,6 +20,7 @@ Demo (3 manifest entries, prints + saves records):
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import importlib
 import json
@@ -163,6 +164,54 @@ def _safe_leaf(qualname: str) -> str:
     return re.sub(r"\W", "_", qualname.split(".")[-1]).lower()
 
 
+def _convention_hint(entry: dict) -> str:
+    """Pin the one-argument tuple convention for multi-input functions, derived from the
+    manifest signature.
+
+    Measured (first idna run, trace_report): every convention-mismatch RED was a multi-arg
+    function (4/4) and no single-arg function failed that way (0/13). Left unpinned, the
+    independently-authored reference and battery each invent their OWN tuple layout, so the
+    gate's cross-acceptance check fails on layout, not spec — a predictable, recoverable RED.
+    Pinning the exact layout here (in the SHARED spec text both calls read) removes the
+    ambiguity without coupling the two authors. Single-input functions get no hint: they have
+    no measured failures and extra text is extra drift surface."""
+    try:
+        node = ast.parse(f"def _f{entry.get('signature', '') or '()'}: pass").body[0]
+    except SyntaxError:
+        return ""
+    a = node.args
+    allpos = a.posonlyargs + a.args
+    names = [p.arg for p in allpos if p.arg != "self"] + [p.arg for p in a.kwonlyargs]
+    dflt: dict[str, str] = {}
+    for p, d in zip(allpos[len(allpos) - len(a.defaults):], a.defaults):
+        if p.arg != "self":
+            dflt[p.arg] = ast.unparse(d)
+    for p, d in zip(a.kwonlyargs, a.kw_defaults):
+        if d is not None:
+            dflt[p.arg] = ast.unparse(d)
+    is_method = "." in entry["qualname"]
+    items = (["<the object's textual form>"] if is_method else []) + names
+    vararg = a.vararg.arg if a.vararg else None
+    if len(items) + (1 if vararg else 0) < 2:
+        return ""
+    tuple_disp = "(" + ", ".join(items + ([f"*{vararg}"] if vararg else [])) + ")"
+    n = len(items)
+    lines = ["", "CALLING CONVENTION (fixed — the reference and the battery MUST both assume "
+                 "exactly this layout; do not invent another):"]
+    if vararg:
+        lines.append(f"`arg` is a tuple of AT LEAST {n} item(s): arg = {tuple_disp} — the "
+                     f"first {n} fixed as named, then zero or more `{vararg}` values.")
+    else:
+        lines.append(f"`arg` is a tuple of EXACTLY {n} items, in this order: "
+                     f"arg = {tuple_disp}.")
+    if dflt:
+        rendered = ", ".join(f"{k}={v}" for k, v in dflt.items())
+        lines.append(f"Defaulted parameters ({rendered}) still occupy their slot in EVERY "
+                     "probe tuple — pass the default's value explicitly (use None where the "
+                     "default is a library-internal sentinel); never use a shorter tuple.")
+    return "\n".join(lines)
+
+
 def build_spec(entry: dict, target: str = "") -> str:
     """The SPEC text for one manifest entry — the single shared input both the reference and the
     battery are authored from (independently). The reference/battery CONTRACTS live separately
@@ -185,6 +234,9 @@ def build_spec(entry: dict, target: str = "") -> str:
         lines += ["", "NOTE: the original is a method. Your reference must be a standalone "
                       "pure function over plain text/tuple inputs that captures the same "
                       "specified behavior (e.g. take the object's textual form as input)."]
+    hint = _convention_hint(entry)
+    if hint:
+        lines.append(hint)
     return "\n".join(lines) + "\n"
 
 
