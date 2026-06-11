@@ -35,9 +35,34 @@ Hard cap: **$50 of DeepSeek** for the first full repo pass. Realistic spend for 
 $1–5 (pro authoring ~$0.03/function); the cap is iteration headroom, enforced by the harness
 spend tracker (A03), which stops dispatching before the cap.
 
+## Real-vs-real differential (auditor/differential.py)
+
+A second comparison mode that needs no model and no oracle: run the same URL through 2+
+INDEPENDENT real implementations of RFC 3986 and flag where they disagree, with a field-level
+diff on the security-relevant authority components (scheme, userinfo, host, port). Where the
+oracle sweep is bounded by oracle quality, this is bounded only by the agreement of independent
+real code — its sweet spot is the parser-differential class (SSRF / request-smuggling / filter
+bypass), where two parsers reading the same authority boundary differently IS the bug.
+
+A raw difference is detected first, then a canonicalization folding EXACTLY the RFC-permitted
+variation (scheme/host case §3.1/§3.2.2, percent-hex case §6.2.2.1, default-port elision §6.2.3,
+IP-literal brackets §3.2.2). Differences that survive on an authority component are promoted as
+spec-pinned candidates; those that vanish are spec-permitted ambiguities and are never promoted.
+An accept/reject split is promoted only when ≥2 independent reals resolve the SAME host a third
+rejects (cross-parser corroboration). Nothing is dressed as a confirmed CVE — the disagreement
+is shown, the RFC clause cited, severity follows the field.
+
+Comparison libraries:
+  - urllib.parse — Python stdlib (always present)
+  - rfc3986       — OPTIONAL third voice; `pip install rfc3986`. Absent => 2-way. The strongest
+                    (corroborated) findings need this third independent parser.
+
+    python auditor/differential.py [--out results/e02-differential] [--cap N]
+    ~/projects/cynthia-core/.venv/bin/python auditor/test_differential.py   # proof, no network
+
 ## Layout
 
     seed/            proven single-function pattern (author -> gate) + reference oracle
     targets/         per-repo target manifests + cloned source (gitignored)
     results/         per-function result records + the findings report (gitignored)
-    auditor/         the parallel harness (built by Phase 4)
+    auditor/         the parallel harness (built by Phase 4) + differential mode (E02)
