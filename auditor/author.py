@@ -290,12 +290,13 @@ _REMOTE_GATE_PY = os.environ.get("CYNTHIA_GATE_PY", "~/cynthia-core/.venv/bin/py
 _REMOTE_GATE_DIR = os.environ.get("CYNTHIA_GATE_DIR", "~/cynthia-gate")
 
 
-def _gate_remote(src_path: Path, cap: int, host: str, *, retries: int = 1) -> dict:
+def _gate_remote(src_path: Path, cap: int, host: str, *, fail_fast: bool = False,
+                 retries: int = 1) -> dict:
     """Ship one oracle module to the SSH gate worker; return its verdict dict. A worker/SSH
     failure degrades to RED (never raises) so one lost draft can't kill a best-of-N batch."""
     import subprocess  # local import: only loaded on the remote-gate path
     src = src_path.read_text()
-    remote_cmd = f"{_REMOTE_GATE_PY} {_REMOTE_GATE_DIR}/remote_gate.py {cap}"
+    remote_cmd = f"{_REMOTE_GATE_PY} {_REMOTE_GATE_DIR}/remote_gate.py {cap} {1 if fail_fast else 0}"
     cmd = ["ssh", "-o", "ConnectTimeout=10", "-o", "BatchMode=yes", host, remote_cmd]
     for _ in range(retries + 1):
         try:
@@ -307,10 +308,13 @@ def _gate_remote(src_path: Path, cap: int, host: str, *, retries: int = 1) -> di
     return _normalize_verdict(_Broken(f"remote gate failed on {host}"))
 
 
-def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40) -> dict:
+def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40,
+                  fail_fast: bool = False) -> dict:
     """Compile-check, import, and mutation-gate one authored oracle module.
     Any failure of the AUTHORED module degrades to a RED verdict dict, never an exception.
-    With CYNTHIA_GATE_HOST set, the gate runs on that remote worker instead of locally."""
+    With CYNTHIA_GATE_HOST set, the gate runs on that remote worker instead of locally.
+    `fail_fast` (selection contexts) stops at the first genuine survivor — much faster on RED
+    drafts; keep it OFF where exact kill rates matter."""
     src_path = oracles_dir / f"{module_name}.py"
     try:
         compile(src_path.read_text(), str(src_path), "exec")
@@ -318,7 +322,7 @@ def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40) -> dict
         return _normalize_verdict(_Broken(f"syntactically broken (likely truncated): {exc}"))
     host = os.environ.get("CYNTHIA_GATE_HOST")
     if host:
-        return _gate_remote(src_path, cap, host)
+        return _gate_remote(src_path, cap, host, fail_fast=fail_fast)
     inserted = str(oracles_dir) not in sys.path
     if inserted:
         sys.path.insert(0, str(oracles_dir))
@@ -331,7 +335,7 @@ def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40) -> dict
         try:
             # work_dir MUST be the oracle's own dir: the gate's subprocess drivers do
             # `import <module_name>` and resolve it via the driver script's directory.
-            v = run_mutation_gate(module_name, work_dir=oracles_dir, cap=cap)
+            v = run_mutation_gate(module_name, work_dir=oracles_dir, cap=cap, fail_fast=fail_fast)
         except Exception as exc:  # noqa: BLE001 — contract violation inside check_impl is a RED
             return _normalize_verdict(_Broken(
                 f"oracle violates the gate contract: {type(exc).__name__}: {exc}"))
@@ -486,6 +490,10 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     # family run was OOM-killed at gate_workers=3 × phase1=2). gate_workers=1 keeps the
     # concurrent-gate count at/below the level the sequential deepseek path runs safely.
     def _gate(d):
+        # batched grading already collapses ~2 subprocesses/mutant into a few parallel chunks
+        # (measured ~5-11x vs the legacy per-mutant path, byte-equal verdicts). fail_fast is left
+        # OFF: its sequential-tripwire stage loses the parallelism and measured NET SLOWER than
+        # plain batched-full on RED drafts (0.33s vs 0.05s on a 17-mutant vacuous oracle).
         v = gate_authored(d["mod"], d["dir"], cap=gate_cap)
         return d, v
 
