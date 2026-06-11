@@ -54,6 +54,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import json
 import os
 import sys
@@ -64,7 +65,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author as author_mod  # noqa: E402
-from author import author_and_gate, author_best_of_n, build_spec, call_model  # noqa: E402
+from author import (  # noqa: E402
+    _safe_leaf, author_and_gate, author_best_of_n, build_spec, call_model, gate_authored,
+)
 from adapters import ADAPTERS  # noqa: E402
 from sweep import _equal, _load_oracle, classify  # noqa: E402
 from run import BudgetTracker  # noqa: E402
@@ -303,10 +306,64 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
     second_refs: dict[str, object] = {}
     second_meta: dict[str, dict] = {}
 
+    def _meta_path(qual):
+        return second_dir / f"_meta_{_safe_leaf(qual)}.json"
+
+    def _ref_from_meta(meta):
+        if not (meta.get("green") and meta.get("oracle_path") and Path(meta["oracle_path"]).exists()):
+            return None
+        try:
+            return _load_oracle(meta["oracle_path"]).REFERENCE_FUNC
+        except Exception:  # noqa: BLE001 — a stale/broken oracle file is treated as no-second
+            return None
+
+    def _salvage(qual):
+        """Re-gate already-authored best-of-N drafts from a prior (interrupted) run instead of
+        re-authoring — gating is cheap (batched, local), authoring is the slow part. Returns a
+        meta if a draft dir exists on disk (green if any draft re-gates GREEN), else None."""
+        qhash = hashlib.sha1(qual.encode()).hexdigest()[:10]
+        base = second_dir / "oracles" / f"{_safe_leaf(qual)}_{qhash}"
+        if not base.is_dir():
+            return None
+        draft_dirs = sorted([d for d in base.glob("n*") if d.is_dir()])
+        adaptive = base / "adaptive"
+        if adaptive.is_dir():
+            draft_dirs.append(adaptive)
+        best = None
+        for d in draft_dirs:
+            mod = f"orc_{qhash}_{d.name}"
+            if not (d / f"{mod}.py").exists():
+                continue
+            try:
+                v = gate_authored(mod, d, cap=40)
+            except Exception:  # noqa: BLE001
+                continue
+            op = str(d / f"{mod}.py")
+            if v.get("green"):
+                return {"green": True, "kill_rate": v.get("kill_rate"), "oracle_path": op,
+                        "drafts": "salvaged", "salvaged": True}
+            if best is None or (v.get("kill_rate") or 0) > (best.get("kill_rate") or 0):
+                best = {"green": False, "kill_rate": v.get("kill_rate"), "oracle_path": op,
+                        "drafts": "salvaged", "salvaged": True}
+        return best or {"green": False, "note": "salvage: no usable draft", "salvaged": True}
+
     def author_second(qual):
         entry = by_qual.get(qual)
         if entry is None:
             return qual, None, {"note": "not in manifest"}
+        # RESUME: a recorded meta (green OR not) is a settled result — never re-spend on it.
+        mp = _meta_path(qual)
+        if mp.exists():
+            try:
+                meta = {**json.loads(mp.read_text()), "resumed": True}
+                return qual, _ref_from_meta(meta), meta
+            except Exception:  # noqa: BLE001 — unreadable meta falls through to salvage/author
+                pass
+        # SALVAGE: reuse drafts left on disk by an interrupted run (re-gate, don't re-author).
+        salv = _salvage(qual)
+        if salv is not None:
+            mp.write_text(json.dumps(salv) + "\n")
+            return qual, _ref_from_meta(salv), salv
         with lock:
             reservation = budget.reserve()
         if reservation is None:
@@ -326,6 +383,7 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
                 ref = _load_oracle(rec.oracle_path).REFERENCE_FUNC
             except Exception as exc:  # noqa: BLE001
                 meta["note"] = f"load failed: {exc}"
+        mp.write_text(json.dumps(meta) + "\n")  # persist so a later run resumes, never re-spends
         return qual, ref, meta
 
     t0 = time.time()
