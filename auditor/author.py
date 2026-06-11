@@ -232,11 +232,16 @@ def _author_independent(entry: dict, ref_model: str, battery_model: str, *, targ
     Returns {code, cost, in_tok, out_tok, raw} or {error}. Raises nothing the caller can't survive."""
     spec, ref_contract = build_reference_prompt(entry, target=target)
     _, bat_contract = build_battery_prompt(entry, target=target)
+    # The reference and battery are independent reads of the spec — fire them CONCURRENTLY so a
+    # draft's wall-time is one call, not two (it was the dominant cost once gating got cheap).
+    def _call(model, contract):
+        return call_model(model, SYSTEM_PROMPT, spec + "\n" + contract, max_tokens=max_tokens,
+                          temperature=temperature, stream=stream, thinking=thinking)
     try:
-        rr = call_model(ref_model, SYSTEM_PROMPT, spec + "\n" + ref_contract,
-                        max_tokens=max_tokens, temperature=temperature, stream=stream, thinking=thinking)
-        rb = call_model(battery_model, SYSTEM_PROMPT, spec + "\n" + bat_contract,
-                        max_tokens=max_tokens, temperature=temperature, stream=stream, thinking=thinking)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            fr = pool.submit(_call, ref_model, ref_contract)
+            fb = pool.submit(_call, battery_model, bat_contract)
+            rr, rb = fr.result(), fb.result()
     except Exception as exc:  # noqa: BLE001 — gateway failure is a RED attempt, not a crash
         return {"error": f"{type(exc).__name__}: {exc}"}
     code = rr["code"].rstrip() + "\n\n" + rb["code"]
@@ -436,12 +441,19 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
                      adaptive_fallback: bool = True) -> ResultRecord:
     """Author an oracle from a reasoning model (minimax-m3) FAST: fire N think-OFF streaming
     drafts in parallel (diverse via temperature) and let the MUTATION GATE select a GREEN one.
+    Each draft authors its reference and battery CONCURRENTLY (two independent calls fired at once),
+    so a draft's wall-time is one call (~13-21s measured), not two.
 
-    Why this shape: think-OFF makes M3 ~15x faster but its single draft is fragile (it fails the
-    gate's own ref-consistency check ~75% of the time). Best-of-N turns that into a strength —
-    the gate is a mechanical selector, so P(>=1 GREEN of 8) ~= 90%, at the wall-time of ONE fast
-    draft instead of one ~150s reasoning call. This is the verify-the-verifier thesis applied to
-    authoring: trust cheap noisy generation because a non-vacuous gate filters it.
+    Why this shape: think-OFF makes M3 ~15x faster but its single draft is fragile — under the
+    INDEPENDENT ref+battery contract it fails the gate's ref-consistency check often enough that
+    ~25% of functions still find no GREEN draft in N=8 (measured on the first cross-family run).
+    Best-of-N turns the cheap-but-noisy generation into a usable signal — the gate is a mechanical
+    selector, so the majority GREEN at the wall-time of ONE fast draft instead of a ~150s reasoning
+    call; the stubborn ~25% pay the adaptive fallback below. This is the verify-the-verifier thesis
+    applied to authoring: trust cheap noisy generation because a non-vacuous gate filters it.
+    (To shrink the slow tail, raise n WITH call_workers — drafts run concurrently, so a larger N is
+    nearly free in wall-time and lowers P(no GREEN) geometrically; it trades cheap think-OFF tokens
+    against fewer expensive fallbacks.)
 
     Returns a ResultRecord (same interface as author_and_gate) whose gate/oracle_path are the
     BEST draft (first GREEN; else highest kill_rate), and whose cost/tokens sum ALL N drafts."""
