@@ -33,6 +33,9 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import trace as _trace  # noqa: E402 — the execution-trace sink (no-op unless AUDITOR_TRACE_DIR set)
+
 # per-model gateway pricing ($/M tokens, in/out) — keep in sync with the gateway config.
 # (input, output) USD per 1M tokens — DeepSeek's published cache-MISS + output rates.
 # This is a deliberately conservative budget-rail estimate: it bills every input token at the
@@ -77,14 +80,17 @@ def _read_stream(resp) -> tuple[str, dict]:
 
 def call_model(model: str, system: str, user: str, *, max_tokens: int = DEFAULT_MAX_TOKENS,
                timeout: int = 300, temperature: float = 0.2, stream: bool = False,
-               thinking: dict | None = None) -> dict:
+               thinking: dict | None = None, meta: dict | None = None) -> dict:
     """One authoring call. Returns {code, raw, in_tok, out_tok, cost, elapsed}.
     Raises urllib errors upward — callers convert them to RED records.
 
     `stream=True` reads the response incrementally (required for reasoning models, whose
     non-stream response the gateway buffers past the timeout). `thinking={'type':'disabled'}`
     turns OFF a reasoning model's chain-of-thought — ~15x faster, but the draft is more fragile
-    (callers compensate with best-of-N + the mutation gate as the selector)."""
+    (callers compensate with best-of-N + the mutation gate as the selector).
+
+    `meta` is trace-only context (qualname, role, attempt/draft id, shape) attached to the emitted
+    `llm_call` event — it never touches the request payload."""
     gateway = os.environ["LITELLM_GATEWAY"].rstrip("/") + "/v1/chat/completions"
     key = os.environ["LITELLM_KEY"]
     payload = {
@@ -112,9 +118,19 @@ def call_model(model: str, system: str, user: str, *, max_tokens: int = DEFAULT_
             raw = data["choices"][0]["message"]["content"]
     rin, rout = PRICING.get(model, (0.0, 0.0))
     cost = u.get("prompt_tokens", 0) / 1e6 * rin + u.get("completion_tokens", 0) / 1e6 * rout
-    return {"code": extract_code(raw), "raw": raw,
-            "in_tok": u.get("prompt_tokens", 0), "out_tok": u.get("completion_tokens", 0),
-            "cost": cost, "elapsed": round(time.time() - t0, 1)}
+    out = {"code": extract_code(raw), "raw": raw,
+           "in_tok": u.get("prompt_tokens", 0), "out_tok": u.get("completion_tokens", 0),
+           "cost": cost, "elapsed": round(time.time() - t0, 1)}
+    if _trace.enabled():
+        m = meta or {}
+        _trace.emit("llm_call", qualname=m.get("qualname", ""), role=m.get("role", ""),
+                    shape=m.get("shape", ""), model=model, temperature=temperature,
+                    max_tokens=max_tokens, thinking=(thinking or {}).get("type", ""),
+                    stream=stream, system=system, user=user, response_raw=raw,
+                    extracted_code=out["code"], in_tok=out["in_tok"], out_tok=out["out_tok"],
+                    cost=round(cost, 6), elapsed=out["elapsed"],
+                    meta={k: v for k, v in m.items() if k not in ("qualname", "role", "shape")})
+    return out
 
 
 def extract_code(text: str) -> str:
@@ -274,7 +290,7 @@ def build_battery_prompt(entry: dict, target: str = "", shape: str = "value") ->
 def _author_independent(entry: dict, ref_model: str, battery_model: str, *, target: str = "",
                         max_tokens: int = DEFAULT_MAX_TOKENS, temperature: float = 0.2,
                         stream: bool = False, thinking: dict | None = None,
-                        shape: str = "value") -> dict:
+                        shape: str = "value", trace_meta: dict | None = None) -> dict:
     """Author reference (ref_model) and battery (battery_model) INDEPENDENTLY, assemble one module.
     Returns {code, cost, in_tok, out_tok, raw} or {error}. Raises nothing the caller can't survive.
 
@@ -285,12 +301,14 @@ def _author_independent(entry: dict, ref_model: str, battery_model: str, *, targ
     it was dropped — it added a cap-breach risk under run.py's fan-out for no real-load gain."""
     spec, ref_contract = build_reference_prompt(entry, target=target)
     _, bat_contract = build_battery_prompt(entry, target=target, shape=shape)
-    def _call(model, contract):
+    base_meta = {"qualname": entry.get("qualname", ""), "shape": shape, **(trace_meta or {})}
+    def _call(model, contract, role):
         return call_model(model, SYSTEM_PROMPT, spec + "\n" + contract, max_tokens=max_tokens,
-                          temperature=temperature, stream=stream, thinking=thinking)
+                          temperature=temperature, stream=stream, thinking=thinking,
+                          meta={**base_meta, "role": role})
     try:
-        rr = _call(ref_model, ref_contract)
-        rb = _call(battery_model, bat_contract)
+        rr = _call(ref_model, ref_contract, "reference")
+        rb = _call(battery_model, bat_contract, "battery")
     except Exception as exc:  # noqa: BLE001 — gateway failure is a RED attempt, not a crash
         return {"error": f"{type(exc).__name__}: {exc}"}
     code = rr["code"].rstrip() + "\n\n" + rb["code"]
@@ -362,21 +380,64 @@ def _gate_remote(src_path: Path, cap: int, host: str, *, fail_fast: bool = False
     return _normalize_verdict(_Broken(f"remote gate failed on {host}"))
 
 
+def _trace_gate(qualname: str, module_name: str, oracles_dir: Path, verdict: dict,
+                cap: int) -> None:
+    """Emit a `gate` trace event with the FULL per-mutant table, reconstructed exactly the way
+    the gate built it: generate_mutants(dedent(getsource(REFERENCE_FUNC)), [REFERENCE_NAME], cap).
+    That AST pass is pure + deterministic, so the tag set is identical to what the gate scored;
+    survivors/errored are named in the verdict, the remainder is killed-or-equivalence-filtered
+    (the equivalent count is generated - non_equivalent, surfaced so the label is interpretable).
+    Best-effort: any reconstruction failure still emits a minimal event, never breaks the gate."""
+    if not _trace.enabled():
+        return
+    mutants_out: list[dict] = []
+    note = ""
+    try:
+        import inspect
+        import textwrap
+
+        from cynthia_core.mutate import generate_mutants
+        orc = importlib.import_module(module_name)
+        ref_src = textwrap.dedent(inspect.getsource(orc.REFERENCE_FUNC))
+        ref_name = orc.REFERENCE_NAME
+        muts = generate_mutants(ref_src, [ref_name], cap=cap)
+        survivors = set(verdict.get("survivors") or [])
+        errored = set(verdict.get("errored") or [])
+        for tag, src in muts.items():
+            if tag in survivors:
+                vr = "survived"
+            elif tag in errored:
+                vr = "errored"
+            else:
+                vr = "killed_or_equivalent"
+            mutants_out.append({"tag": tag, "kind": re.split(r"[:#]", tag)[0], "verdict": vr,
+                                "src": src})
+    except Exception as exc:  # noqa: BLE001 — reconstruction is best-effort
+        note = f"mutant reconstruction failed: {type(exc).__name__}: {exc}"
+    equiv = max(0, verdict.get("generated", 0) - verdict.get("non_equivalent", 0))
+    _trace.emit("gate", qualname=qualname, module=module_name, oracle_dir=oracles_dir.name,
+                cap=cap, verdict=verdict, equivalent_count=equiv, mutants=mutants_out, note=note)
+
+
 def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40,
-                  fail_fast: bool = False) -> dict:
+                  fail_fast: bool = False, qualname: str = "") -> dict:
     """Compile-check, import, and mutation-gate one authored oracle module.
     Any failure of the AUTHORED module degrades to a RED verdict dict, never an exception.
     With CYNTHIA_GATE_HOST set, the gate runs on that remote worker instead of locally.
     `fail_fast` (selection contexts) stops at the first genuine survivor — much faster on RED
-    drafts; keep it OFF where exact kill rates matter."""
+    drafts; keep it OFF where exact kill rates matter. `qualname` is trace-only context."""
     src_path = oracles_dir / f"{module_name}.py"
     try:
         compile(src_path.read_text(), str(src_path), "exec")
     except SyntaxError as exc:
-        return _normalize_verdict(_Broken(f"syntactically broken (likely truncated): {exc}"))
+        v = _normalize_verdict(_Broken(f"syntactically broken (likely truncated): {exc}"))
+        _trace_gate(qualname, module_name, oracles_dir, v, cap)
+        return v
     host = os.environ.get("CYNTHIA_GATE_HOST")
     if host:
-        return _gate_remote(src_path, cap, host, fail_fast=fail_fast)
+        v = _gate_remote(src_path, cap, host, fail_fast=fail_fast)
+        _trace_gate(qualname, module_name, oracles_dir, v, cap)
+        return v
     inserted = str(oracles_dir) not in sys.path
     if inserted:
         sys.path.insert(0, str(oracles_dir))
@@ -384,16 +445,22 @@ def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40,
         try:
             importlib.import_module(module_name)
         except Exception as exc:  # noqa: BLE001 — the LLM module failing to import is a RED
-            return _normalize_verdict(_Broken(f"import failed: {type(exc).__name__}: {exc}"))
+            v = _normalize_verdict(_Broken(f"import failed: {type(exc).__name__}: {exc}"))
+            _trace_gate(qualname, module_name, oracles_dir, v, cap)
+            return v
         from cynthia_core.mutate import run_mutation_gate
         try:
             # work_dir MUST be the oracle's own dir: the gate's subprocess drivers do
             # `import <module_name>` and resolve it via the driver script's directory.
             v = run_mutation_gate(module_name, work_dir=oracles_dir, cap=cap, fail_fast=fail_fast)
         except Exception as exc:  # noqa: BLE001 — contract violation inside check_impl is a RED
-            return _normalize_verdict(_Broken(
+            vd = _normalize_verdict(_Broken(
                 f"oracle violates the gate contract: {type(exc).__name__}: {exc}"))
-        return _normalize_verdict(v)
+            _trace_gate(qualname, module_name, oracles_dir, vd, cap)
+            return vd
+        vd = _normalize_verdict(v)
+        _trace_gate(qualname, module_name, oracles_dir, vd, cap)
+        return vd
     finally:
         if inserted:
             sys.path.remove(str(oracles_dir))
@@ -455,7 +522,7 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
         # which would otherwise gate attempt 1's module again on attempt 2.
         module_name = f"orc_{qhash}_a{n}"
         r = _author_independent(entry, model, bat_model, target=target, max_tokens=max_tokens,
-                                shape=shape)
+                                shape=shape, trace_meta={"attempt": n, "module": module_name})
         if "error" in r:
             rec.attempt_log.append({"attempt": n, "error": r["error"]})
             rec.gate = _normalize_verdict(_Broken(f"author call failed: {r['error']}"))
@@ -466,7 +533,7 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
         (oracles_dir / f"{module_name}.py").write_text(r["code"])
         (oracles_dir / f"{module_name}_raw.txt").write_text(r["raw"])
         rec.oracle_path = str(oracles_dir / f"{module_name}.py")
-        rec.gate = gate_authored(module_name, oracles_dir, cap=gate_cap)
+        rec.gate = gate_authored(module_name, oracles_dir, cap=gate_cap, qualname=entry["qualname"])
         disagree = _is_spec_disagreement(rec.gate)
         rec.attempt_log.append({"attempt": n, "green": rec.gate["green"],
                                 "kill_rate": rec.gate["kill_rate"], "note": rec.gate["note"],
@@ -527,7 +594,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     # gate's tag-named driver/mutant files never collide when phase 2 gates them in parallel.
     def _draft(i: int):
         r = _author_one(max_tokens=max_tokens, temperature=temperature, stream=True,
-                        thinking={"type": "disabled"})
+                        thinking={"type": "disabled"}, trace_meta={"draft": i})
         if "error" in r:
             return {"i": i, "error": r["error"]}
         cand_dir = base / f"n{i}"
@@ -560,7 +627,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
         # (measured ~5-11x vs the legacy per-mutant path, byte-equal verdicts). fail_fast is left
         # OFF: its sequential-tripwire stage loses the parallelism and measured NET SLOWER than
         # plain batched-full on RED drafts (0.33s vs 0.05s on a 17-mutant vacuous oracle).
-        v = gate_authored(d["mod"], d["dir"], cap=gate_cap)
+        v = gate_authored(d["mod"], d["dir"], cap=gate_cap, qualname=entry["qualname"])
         return d, v
 
     graded = []
@@ -582,7 +649,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     # oracle. Fast for the ~90% that best-of-N nails; the slow tail pays only on the stubborn few.
     if adaptive_fallback and (best is None or not best[1]["green"]):
         r = _author_one(max_tokens=24000, temperature=0.2, stream=True,
-                        thinking={"type": "adaptive"})
+                        thinking={"type": "adaptive"}, trace_meta={"phase": "adaptive_fallback"})
         if "error" in r:
             rec.attempt_log.append({"attempt": "adaptive_fallback", "error": r["error"]})
         else:
@@ -594,7 +661,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
             mod = f"orc_{qhash}_adaptive"
             (cand_dir / f"{mod}.py").write_text(r["code"])
             (cand_dir / f"{mod}_raw.txt").write_text(r["raw"])
-            v = gate_authored(mod, cand_dir, cap=gate_cap)
+            v = gate_authored(mod, cand_dir, cap=gate_cap, qualname=entry["qualname"])
             rec.attempt_log.append({"attempt": "adaptive_fallback", "green": v["green"],
                                     "kill_rate": v["kill_rate"], "note": v["note"],
                                     "out_tok": r["out_tok"], "cost": round(r["cost"], 6)})
