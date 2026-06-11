@@ -34,7 +34,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 # per-model gateway pricing ($/M tokens, in/out) — keep in sync with the gateway config.
-PRICING = {"deepseek-v4-flash": (0.14, 0.28), "deepseek-v4-pro": (1.74, 3.48)}
+# (input, output) USD per 1M tokens — DeepSeek's published cache-MISS + output rates.
+# This is a deliberately conservative budget-rail estimate: it bills every input token at the
+# miss rate, ignoring DeepSeek prefix-cache hits (which bill at ~1/120th: $0.003625/M for pro).
+# The cache-accurate spend is LiteLLM's response_cost (x-litellm-response-cost) / /spend/logs —
+# use those for real reporting; this dict only needs to never UNDER-count for the hard cap.
+PRICING = {"deepseek-v4-flash": (0.14, 0.28), "deepseek-v4-pro": (0.435, 0.87)}
 
 DEFAULT_MODEL = "deepseek-v4-pro"
 DEFAULT_ATTEMPTS = 4
