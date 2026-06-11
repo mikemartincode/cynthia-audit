@@ -1,6 +1,10 @@
-"""No-network proof for auditor/author.py: every model-failure mode degrades to a RED
-ResultRecord (never an exception), and a well-formed authored oracle goes GREEN through
-the real mutation gate. call_model is stubbed — zero spend, deterministic.
+"""No-network proof for auditor/author.py: the reference and battery are authored
+INDEPENDENTLY (two calls), so the gate's step-0 ref_passes is a real cross-acceptance check —
+a battery that disagrees with the reference is a SPEC-DISAGREEMENT, not a silent retry. Every
+model-failure mode still degrades to a RED ResultRecord (never an exception), and a well-formed
+ref+battery pair goes GREEN through the real mutation gate. call_model is stubbed (prompt-aware:
+it returns the reference snippet for the reference prompt, the battery snippet for the battery
+prompt) — zero spend, deterministic.
 
 Run: ~/projects/cynthia-core/.venv/bin/python auditor/test_author.py
 """
@@ -24,13 +28,16 @@ ENTRY = {
            "The pair argument is a tuple (a, b) of integers.",
 }
 
-GOOD_ORACLE = '''
+GOOD_REF = '''
 def ref_intcmp(pair):
     a, b = pair
     return (a > b) - (a < b)
 
 REFERENCE_FUNC = ref_intcmp
 REFERENCE_NAME = "ref_intcmp"
+'''
+
+GOOD_BATTERY = '''
 PROBE_INPUTS = [(0, 0), (1, 0), (0, 1), (-5, 3), (3, -5), (7, 7), (-2, -2), (-3, -1)]
 EQUIV_KEY = lambda r: (r > 0) - (r < 0)
 
@@ -46,28 +53,46 @@ def check_impl(fn):
     return out
 '''
 
-VACUOUS_ORACLE = '''
-def ref_intcmp(pair):
-    a, b = pair
-    return (a > b) - (a < b)
-
-REFERENCE_FUNC = ref_intcmp
-REFERENCE_NAME = "ref_intcmp"
+# always-pass battery — non-vacuity gate must catch it (survivors)
+VACUOUS_BATTERY = '''
 PROBE_INPUTS = [(0, 0), (1, 0), (0, 1), (-5, 3), (3, -5), (7, 7), (-2, -2), (-3, -1)]
-EQUIV_KEY = lambda r: (r > 0) - (r < 0)
 
 def check_impl(fn):
     return [(True, "looks fine") for _ in PROBE_INPUTS]
 '''
 
+# a battery that read the spec BACKWARDS — it expects the sign of (b - a). It REJECTS the correct
+# reference, so the gate's step-0 ref_passes is False: an independent spec-disagreement to escalate.
+DISAGREE_BATTERY = '''
+PROBE_INPUTS = [(1, 0), (0, 1), (-5, 3)]
 
-def _stub(code_or_exc):
-    def fake_call(model, system, user, *, max_tokens=0, timeout=0):
-        if isinstance(code_or_exc, Exception):
-            raise code_or_exc
-        return {"code": code_or_exc, "raw": code_or_exc,
-                "in_tok": 100, "out_tok": 200, "cost": 0.001, "elapsed": 0.0}
-    return fake_call
+def check_impl(fn):
+    expected = [-1, 1, 1]  # backwards: ref_intcmp gives 1, -1, -1
+    out = []
+    for pair, exp in zip(PROBE_INPUTS, expected):
+        try:
+            got = fn(pair)
+            out.append((((got > 0) - (got < 0)) == exp, f"{pair} -> {got}"))
+        except Exception as exc:
+            out.append((False, f"{pair} raised {exc}"))
+    return out
+'''
+
+
+def _split_stub(ref_code: str, battery_code: str):
+    """Prompt-aware stub: the battery prompt carries the word BATTERY; the reference prompt does
+    not. Returns the right snippet so the two independent calls assemble into one oracle."""
+    def fake(model, system, user, **kw):
+        code = battery_code if "BATTERY" in user else ref_code
+        return {"code": code, "raw": code, "in_tok": 100, "out_tok": 200,
+                "cost": 0.001, "elapsed": 0.0}
+    return fake
+
+
+def _exc_stub(exc: Exception):
+    def fake(model, system, user, **kw):
+        raise exc
+    return fake
 
 
 def main() -> None:
@@ -76,31 +101,39 @@ def main() -> None:
         with tempfile.TemporaryDirectory() as td:
             run = Path(td)
 
-            # GREEN: a contract-conforming oracle passes the REAL gate end to end
-            author.call_model = _stub(GOOD_ORACLE)
+            # GREEN: independent reference + battery assemble and pass the REAL gate end to end
+            author.call_model = _split_stub(GOOD_REF, GOOD_BATTERY)
             rec = author.author_and_gate(ENTRY, "stub-model", run, attempts=1, gate_cap=40)
-            assert rec.green, rec.to_dict()
+            assert rec.green and not rec.spec_disagreement, rec.to_dict()
             assert rec.gate["kill_rate"] == 1.0 and rec.gate["non_equivalent"] > 0, rec.gate
             json.dumps(rec.to_dict())  # serializable
             print(f"GREEN ok: kill {rec.gate['killed']}/{rec.gate['non_equivalent']}")
 
-            # RED (vacuous): the gate catches an always-pass battery — survivors, no exception
-            author.call_model = _stub(VACUOUS_ORACLE)
+            # RED (vacuous): the gate catches an always-pass battery — survivors, not a crash
+            author.call_model = _split_stub(GOOD_REF, VACUOUS_BATTERY)
             rec = author.author_and_gate({**ENTRY, "qualname": "intcmp_vac"}, "stub-model",
                                          run, attempts=1)
-            assert not rec.green and rec.gate["survivors"], rec.gate
+            assert not rec.green and rec.gate["survivors"] and not rec.spec_disagreement, rec.gate
             print(f"RED (vacuous) ok: {len(rec.gate['survivors'])} survivors")
 
-            # RED (garbage): un-compilable prose degrades, never crashes
-            author.call_model = _stub("I am unable to help with that today\n  - because reasons")
+            # SPEC-DISAGREEMENT: an independent battery that rejects the reference -> ref_passes
+            # False -> flagged distinctly (escalate), NOT retried into agreement.
+            author.call_model = _split_stub(GOOD_REF, DISAGREE_BATTERY)
+            rec = author.author_and_gate({**ENTRY, "qualname": "intcmp_dis"}, "stub-model",
+                                         run, attempts=4)
+            assert not rec.green and rec.spec_disagreement, rec.to_dict()
+            assert rec.gate["ref_passes"] is False and rec.attempts == 1, rec.gate  # no retry-into-agreement
+            print("SPEC-DISAGREEMENT ok: battery rejects independent reference -> escalate")
+
+            # RED (garbage): un-compilable prose on both calls degrades, never crashes
+            author.call_model = _split_stub("not code at all", "also not code")
             rec = author.author_and_gate({**ENTRY, "qualname": "intcmp_junk"}, "stub-model",
                                          run, attempts=2)
-            assert not rec.green and rec.attempts == 2, rec.to_dict()
-            assert "broken" in rec.gate["note"] or "import failed" in rec.gate["note"], rec.gate
+            assert not rec.green, rec.to_dict()
             print(f"RED (garbage) ok: {rec.gate['note'][:60]!r}")
 
             # RED (gateway down): HTTP failure becomes a RED record with the error noted
-            author.call_model = _stub(urllib.error.URLError("connection refused"))
+            author.call_model = _exc_stub(urllib.error.URLError("connection refused"))
             rec = author.author_and_gate({**ENTRY, "qualname": "intcmp_http"}, "stub-model",
                                          run, attempts=2)
             assert not rec.green and "author call failed" in rec.gate["note"], rec.gate

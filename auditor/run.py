@@ -42,12 +42,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author as author_mod  # noqa: E402
 from author import (  # noqa: E402
     DEFAULT_ATTEMPTS, DEFAULT_MAX_TOKENS, ResultRecord, _normalize_verdict, _safe_leaf,
-    build_prompt, gate_authored,
+    gate_authored,
 )
 
 # conservative per-call estimate used only BEFORE a model's first real cost lands;
 # afterwards the tracker uses the max cost actually observed for the model.
-EST_FIRST_CALL_USD = 0.10
+# one authoring ATTEMPT is two calls (reference + battery); estimate conservatively for both
+# until a real settle lands and max_seen takes over.
+EST_FIRST_CALL_USD = 0.20
 
 
 class BudgetTracker:
@@ -81,21 +83,20 @@ class BudgetTracker:
         self.max_seen = max(self.max_seen, real_cost)
 
 
-async def _author_one_attempt(entry: dict, model: str, spec: str, contract: str,
+async def _author_one_attempt(entry: dict, model: str, bat_model: str, target: str,
                               module_name: str, oracles_dir: Path, max_tokens: int,
                               sem: asyncio.Semaphore, budget: BudgetTracker) -> dict | None:
-    """One budget-gated authoring call. None => budget exhausted (do not retry)."""
+    """One budget-gated INDEPENDENT authoring attempt (reference + battery in two calls, via
+    author._author_independent run off-thread under the semaphore). None => budget exhausted."""
     reservation = budget.reserve()
     if reservation is None:
         return None
-    try:
-        async with sem:
-            r = await asyncio.to_thread(author_mod.call_model, model,
-                                        author_mod.SYSTEM_PROMPT, spec + "\n" + contract,
-                                        max_tokens=max_tokens)
-    except Exception as exc:  # noqa: BLE001 — gateway failure is a RED attempt, not a crash
+    async with sem:
+        r = await asyncio.to_thread(author_mod._author_independent, entry, model, bat_model,
+                                    target=target, max_tokens=max_tokens)
+    if "error" in r:  # _author_independent never raises; a gateway failure is a RED attempt
         budget.settle(reservation, 0.0)
-        return {"error": f"{type(exc).__name__}: {exc}"}
+        return r
     budget.settle(reservation, r["cost"])
     (oracles_dir / f"{module_name}.py").write_text(r["code"])
     (oracles_dir / f"{module_name}_raw.txt").write_text(r["raw"])
@@ -114,13 +115,13 @@ async def process_function(entry: dict, model: str, run_dir: Path, target: str,
     qhash = hashlib.sha1(entry["qualname"].encode()).hexdigest()[:10]
     oracles_dir = run_dir / "oracles" / f"{_safe_leaf(entry['qualname'])}_{qhash}"
     oracles_dir.mkdir(parents=True, exist_ok=True)
-    spec, contract = build_prompt(entry, target=target)
+    bat_model = author_mod._battery_model(model)
     rec = ResultRecord(qualname=entry["qualname"], model=model)
     loop = asyncio.get_running_loop()
 
     for n in range(1, attempts + 1):
         module_name = f"orc_{qhash}_a{n}"
-        r = await _author_one_attempt(entry, model, spec, contract, module_name,
+        r = await _author_one_attempt(entry, model, bat_model, target, module_name,
                                       oracles_dir, max_tokens, sem, budget)
         if r is None:  # budget wall
             if n == 1:
@@ -138,11 +139,15 @@ async def process_function(entry: dict, model: str, run_dir: Path, target: str,
         rec.oracle_path = str(oracles_dir / f"{module_name}.py")
         rec.gate = await loop.run_in_executor(gate_pool, _gate_in_pool,
                                               module_name, str(oracles_dir), gate_cap)
+        disagree = author_mod._is_spec_disagreement(rec.gate)
         rec.attempt_log.append({"attempt": n, "green": rec.gate["green"],
                                 "kill_rate": rec.gate["kill_rate"], "note": rec.gate["note"],
-                                "out_tok": r["out_tok"], "cost": round(r["cost"], 6),
-                                "elapsed": r["elapsed"]})
+                                "spec_disagreement": disagree,
+                                "out_tok": r["out_tok"], "cost": round(r["cost"], 6)})
         if rec.gate["green"]:
+            break
+        if disagree:  # independent reference and battery disagree — escalate, don't retry
+            rec.spec_disagreement = True
             break
     rec.elapsed = time.time() - t0
     return rec

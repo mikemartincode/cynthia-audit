@@ -138,54 +138,14 @@ def extract_code(text: str) -> str:
 
 SYSTEM_PROMPT = "You are a precise Python engineer. Output only code."
 
-# The module contract, parameterized by reference name. The HARD rules encode the measured
-# one-shot failure modes of the cheap model (forward reference, wrong-shape probes,
-# module-level execution, truncation) — each otherwise caught by the gate only after a
-# wasted attempt.
-CONTRACT_TEMPLATE = """\
-Write ONE self-contained stdlib-only Python module defining a mutation-test oracle for the
-behavior specified above, conforming EXACTLY to this contract:
-
-- `def {ref_name}(arg)`: a known-correct PURE reference implementation of the specified
-  behavior, written from the SPEC above. Do NOT try to recall the library's own source —
-  your implementation must be independent. It takes EXACTLY ONE positional argument; if the
-  behavior needs multiple inputs, `arg` is a tuple that {ref_name} unpacks. Every helper must
-  be an INNER function defined inside {ref_name}. Raise ValueError for spec-invalid inputs.
-- `REFERENCE_FUNC = {ref_name}` and `REFERENCE_NAME = "{ref_name}"`.
-- `PROBE_INPUTS`: a list of 8-20 inputs covering the tricky edges of the spec. Each item is
-  ONE argument value (string or tuple of strings preferred) and must round-trip through
-  repr() exactly.
-- `def check_impl(fn)`: grades an ARBITRARY implementation `fn` (same one-argument calling
-  convention) against the SPEC. Expected outcomes are HARD-CODED from the spec, or asserted
-  as spec properties (round-trip, idempotence, error-on-invalid) — NEVER computed by calling
-  {ref_name} (that would be circular). It MUST return a LIST of (bool, str) tuples, exactly
-  one per PROBE_INPUTS item, in order. If fn raises where the spec demands an error, that is
-  a PASS for that probe; if fn raises anywhere else, catch it and record a FAIL (never let
-  check_impl itself raise).
-- OPTIONAL `EQUIV_KEY = lambda out: ...` ONLY if check_impl grades a projection of the
-  output (e.g. the sign of a comparator); omit it when you grade the full value.
-
-HARD conformance rules (violating any one makes the module worthless):
-1. `def {ref_name}` comes FIRST; every module-level assignment (REFERENCE_FUNC,
-   REFERENCE_NAME, PROBE_INPUTS, EQUIV_KEY) and `def check_impl` come AFTER it — no forward
-   reference.
-2. PROBE_INPUTS items contain NO expected values — check_impl carries the expectations.
-3. NO module-level execution: nothing runs at import except the defs and the assignments.
-   Never call check_impl or {ref_name} at module level.
-4. The module must import top-to-bottom with no error, stdlib only.
-5. Keep it SHORT enough to finish completely — truncation is failure. Output ONLY the
-   module, no prose, no fences.
-"""
-
-
 def _safe_leaf(qualname: str) -> str:
     return re.sub(r"\W", "_", qualname.split(".")[-1]).lower()
 
 
-def build_prompt(entry: dict, target: str = "") -> tuple[str, str]:
-    """(spec_text, contract_text) for one manifest entry."""
-    leaf = _safe_leaf(entry["qualname"])
-    ref_name = f"ref_{leaf}"
+def build_spec(entry: dict, target: str = "") -> str:
+    """The SPEC text for one manifest entry — the single shared input both the reference and the
+    battery are authored from (independently). The reference/battery CONTRACTS live separately
+    (REFERENCE_CONTRACT / BATTERY_CONTRACT); there is no combined single-call contract."""
     lines = [
         f"TARGET BEHAVIOR — `{entry['qualname']}{entry['signature']}`"
         + (f" from the `{target}` library." if target else "."),
@@ -204,8 +164,96 @@ def build_prompt(entry: dict, target: str = "") -> tuple[str, str]:
         lines += ["", "NOTE: the original is a method. Your reference must be a standalone "
                       "pure function over plain text/tuple inputs that captures the same "
                       "specified behavior (e.g. take the object's textual form as input)."]
-    spec = "\n".join(lines) + "\n"
-    return spec, CONTRACT_TEMPLATE.format(ref_name=ref_name)
+    return "\n".join(lines) + "\n"
+
+
+# ---------------------------------------------------------------- independent authoring (#1)
+#
+# Authoring reference + battery + probes in ONE call makes the gate's step-0 ref_passes a
+# TAUTOLOGY: the model wrote both to agree, so "battery accepts reference" is guaranteed and
+# proves nothing about spec fidelity. A model that misreads the spec produces a coherent WRONG
+# oracle that gates GREEN. Splitting the authoring into two independent reads of the spec — a
+# reference (model A) and a battery (model B, never shown the reference) — turns ref_passes into
+# a real CROSS-ACCEPTANCE check: if the independent battery rejects the independent reference,
+# they disagree on the spec → mechanical ESCALATE, not a silent retry into agreement. Set
+# CYNTHIA_BATTERY_MODEL to author the battery with a DIFFERENT family (breaks correlated misreads).
+
+REFERENCE_CONTRACT = """\
+Write ONE stdlib-only Python snippet defining ONLY a reference implementation of the behavior
+specified above — no probes, no grader:
+
+- `def {ref_name}(arg)`: a known-correct PURE reference, written from the SPEC. Do NOT recall the
+  library's own source — implement independently. EXACTLY ONE positional argument; if the behavior
+  needs multiple inputs, `arg` is a tuple {ref_name} unpacks. Every helper is an INNER function.
+  Raise ValueError for spec-invalid inputs.
+- `REFERENCE_FUNC = {ref_name}` and `REFERENCE_NAME = "{ref_name}"`.
+
+HARD rules: `def {ref_name}` first, then the two assignments, nothing else at module level; no
+module-level execution; stdlib only, imports at the top, imports clean. Output ONLY the code —
+NO PROBE_INPUTS, NO check_impl, no prose, no fences.
+"""
+
+BATTERY_CONTRACT = """\
+Write ONE stdlib-only Python snippet defining a mutation-test BATTERY for the behavior specified
+above. You are NOT given the reference implementation — derive EVERY expectation from the SPEC
+alone (this independence is the point):
+
+- `PROBE_INPUTS`: 8-20 inputs covering the tricky edges of the spec. Each item is ONE argument
+  value (string or tuple of strings preferred), round-trips through repr() exactly, and carries NO
+  expected value.
+- `def check_impl(fn)`: grades an ARBITRARY implementation `fn` (one-argument convention matching
+  PROBE_INPUTS) against the SPEC. Expected outcomes are HARD-CODED from the spec, or asserted as
+  spec properties (round-trip, idempotence, error-on-invalid). You have NO reference to call —
+  compute expectations from the SPEC, never by grading fn against itself. Return a LIST of
+  (bool, str), exactly one per PROBE_INPUTS, in order. fn raising where the spec demands an error
+  is a PASS; fn raising elsewhere — catch it, record FAIL. check_impl MUST NOT raise.
+- OPTIONAL `EQUIV_KEY = lambda out: ...` ONLY if check_impl grades a projection (e.g. a sign).
+
+HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY — assume it
+exists, grade the `fn` you are handed; define NO reference implementation yourself. No module-level
+execution; stdlib only, imports clean. Output ONLY the code — no reference impl, no prose, no fences.
+"""
+
+
+def build_reference_prompt(entry: dict, target: str = "") -> tuple[str, str]:
+    return (build_spec(entry, target=target),
+            REFERENCE_CONTRACT.format(ref_name=f"ref_{_safe_leaf(entry['qualname'])}"))
+
+
+def build_battery_prompt(entry: dict, target: str = "") -> tuple[str, str]:
+    return (build_spec(entry, target=target),
+            BATTERY_CONTRACT.format(ref_name=f"ref_{_safe_leaf(entry['qualname'])}"))
+
+
+def _author_independent(entry: dict, ref_model: str, battery_model: str, *, target: str = "",
+                        max_tokens: int = DEFAULT_MAX_TOKENS, temperature: float = 0.2,
+                        stream: bool = False, thinking: dict | None = None) -> dict:
+    """Author reference (ref_model) and battery (battery_model) INDEPENDENTLY, assemble one module.
+    Returns {code, cost, in_tok, out_tok, raw} or {error}. Raises nothing the caller can't survive."""
+    spec, ref_contract = build_reference_prompt(entry, target=target)
+    _, bat_contract = build_battery_prompt(entry, target=target)
+    try:
+        rr = call_model(ref_model, SYSTEM_PROMPT, spec + "\n" + ref_contract,
+                        max_tokens=max_tokens, temperature=temperature, stream=stream, thinking=thinking)
+        rb = call_model(battery_model, SYSTEM_PROMPT, spec + "\n" + bat_contract,
+                        max_tokens=max_tokens, temperature=temperature, stream=stream, thinking=thinking)
+    except Exception as exc:  # noqa: BLE001 — gateway failure is a RED attempt, not a crash
+        return {"error": f"{type(exc).__name__}: {exc}"}
+    code = rr["code"].rstrip() + "\n\n" + rb["code"]
+    return {"code": code, "raw": rr["raw"] + "\n--- battery ---\n" + rb["raw"],
+            "cost": rr["cost"] + rb["cost"], "in_tok": rr["in_tok"] + rb["in_tok"],
+            "out_tok": rr["out_tok"] + rb["out_tok"]}
+
+
+def _battery_model(ref_model: str) -> str:
+    return os.environ.get("CYNTHIA_BATTERY_MODEL", ref_model)
+
+
+def _is_spec_disagreement(gate: dict) -> bool:
+    """A non-green verdict whose ref_passes is False: under INDEPENDENT authoring this means the
+    battery rejects the reference — the two spec-reads disagree (escalate), distinct from a
+    vacuous-but-self-consistent oracle (survivors)."""
+    return bool(gate) and not gate.get("green") and not gate.get("ref_passes")
 
 
 # ---------------------------------------------------------------- gate plumbing
@@ -306,6 +354,7 @@ class ResultRecord:
     oracle_path: str = ""
     elapsed: float = 0.0
     attempt_log: list = field(default_factory=list)
+    spec_disagreement: bool = False  # independent ref/battery disagreed on the spec (escalate)
 
     @property
     def green(self) -> bool:
@@ -313,7 +362,8 @@ class ResultRecord:
 
     def to_dict(self) -> dict:
         return {"qualname": self.qualname, "model": self.model, "attempts": self.attempts,
-                "green": self.green, "gate": self.gate, "cost": round(self.cost, 6),
+                "green": self.green, "spec_disagreement": self.spec_disagreement,
+                "gate": self.gate, "cost": round(self.cost, 6),
                 "tokens": self.tokens, "oracle_path": self.oracle_path,
                 "elapsed": round(self.elapsed, 1), "attempt_log": self.attempt_log}
 
@@ -322,14 +372,19 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
                     *, attempts: int = DEFAULT_ATTEMPTS, max_tokens: int = DEFAULT_MAX_TOKENS,
                     gate_cap: int = 40, target: str = "") -> ResultRecord:
     """The per-function unit: author an oracle for one manifest entry, gate it, retry on RED.
-    Returns a ResultRecord in EVERY case — model/HTTP/contract failures become RED records."""
+    Returns a ResultRecord in EVERY case — model/HTTP/contract failures become RED records.
+
+    The reference and battery are authored in SEPARATE calls (_author_independent) so the gate's
+    step-0 ref_passes is a real CROSS-ACCEPTANCE check rather than a tautology; a non-green attempt
+    whose ref_passes is False is a SPEC-DISAGREEMENT — recorded distinctly and NOT retried into a
+    self-consistent (possibly wrong) agreement."""
     t0 = time.time()
     qhash = hashlib.sha1(entry["qualname"].encode()).hexdigest()[:10]
     # one dir per function: the gate writes tag-named driver/mutant files into the oracle's
     # dir, so a shared dir would collide when A03 gates many functions in parallel.
     oracles_dir = run_dir / "oracles" / f"{_safe_leaf(entry['qualname'])}_{qhash}"
     oracles_dir.mkdir(parents=True, exist_ok=True)
-    spec, contract = build_prompt(entry, target=target)
+    bat_model = _battery_model(model)
     rec = ResultRecord(qualname=entry["qualname"], model=model)
 
     for n in range(1, attempts + 1):
@@ -337,11 +392,10 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
         # unique module name per qualname AND attempt — sidesteps importlib's module cache,
         # which would otherwise gate attempt 1's module again on attempt 2.
         module_name = f"orc_{qhash}_a{n}"
-        try:
-            r = call_model(model, SYSTEM_PROMPT, spec + "\n" + contract, max_tokens=max_tokens)
-        except Exception as exc:  # noqa: BLE001 — gateway/HTTP failure is a RED attempt, not a crash
-            rec.attempt_log.append({"attempt": n, "error": f"{type(exc).__name__}: {exc}"})
-            rec.gate = _normalize_verdict(_Broken(f"author call failed: {type(exc).__name__}: {exc}"))
+        r = _author_independent(entry, model, bat_model, target=target, max_tokens=max_tokens)
+        if "error" in r:
+            rec.attempt_log.append({"attempt": n, "error": r["error"]})
+            rec.gate = _normalize_verdict(_Broken(f"author call failed: {r['error']}"))
             continue
         rec.cost += r["cost"]
         rec.tokens["in"] += r["in_tok"]
@@ -350,11 +404,18 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
         (oracles_dir / f"{module_name}_raw.txt").write_text(r["raw"])
         rec.oracle_path = str(oracles_dir / f"{module_name}.py")
         rec.gate = gate_authored(module_name, oracles_dir, cap=gate_cap)
+        disagree = _is_spec_disagreement(rec.gate)
         rec.attempt_log.append({"attempt": n, "green": rec.gate["green"],
                                 "kill_rate": rec.gate["kill_rate"], "note": rec.gate["note"],
-                                "out_tok": r["out_tok"], "cost": round(r["cost"], 6),
-                                "elapsed": r["elapsed"]})
+                                "spec_disagreement": disagree,
+                                "out_tok": r["out_tok"], "cost": round(r["cost"], 6)})
         if rec.gate["green"]:
+            rec.spec_disagreement = False
+            break
+        if disagree:
+            # independent reference and battery disagree on the spec — escalate, don't retry into
+            # a self-consistent (possibly wrong) agreement.
+            rec.spec_disagreement = True
             break
     rec.elapsed = time.time() - t0
     return rec
@@ -384,19 +445,21 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     qhash = hashlib.sha1(entry["qualname"].encode()).hexdigest()[:10]
     base = run_dir / "oracles" / f"{_safe_leaf(entry['qualname'])}_{qhash}"
     base.mkdir(parents=True, exist_ok=True)
-    spec, contract = build_prompt(entry, target=target)
-    user = spec + "\n" + contract
+    bat_model = _battery_model(model)
     rec = ResultRecord(qualname=entry["qualname"], model=model)
     rec.attempts = n
+
+    def _author_one(**kw) -> dict:
+        # reference + battery authored in two independent calls (each think-OFF) and assembled
+        return _author_independent(entry, model, bat_model, target=target, **kw)
 
     # phase 1 — N parallel think-OFF streaming drafts. Each draft gets its OWN dir so the
     # gate's tag-named driver/mutant files never collide when phase 2 gates them in parallel.
     def _draft(i: int):
-        try:
-            r = call_model(model, SYSTEM_PROMPT, user, max_tokens=max_tokens, timeout=90,
-                           temperature=temperature, stream=True, thinking={"type": "disabled"})
-        except Exception as exc:  # noqa: BLE001 — a failed draft is just one lost ticket
-            return {"i": i, "error": f"{type(exc).__name__}: {exc}"}
+        r = _author_one(max_tokens=max_tokens, temperature=temperature, stream=True,
+                        thinking={"type": "disabled"})
+        if "error" in r:
+            return {"i": i, "error": r["error"]}
         cand_dir = base / f"n{i}"
         cand_dir.mkdir(exist_ok=True)
         mod = f"orc_{qhash}_n{i}"
@@ -444,9 +507,11 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     # ONE slow thinking-ON draft — near-certain GREEN — so every function gets a cross-family
     # oracle. Fast for the ~90% that best-of-N nails; the slow tail pays only on the stubborn few.
     if adaptive_fallback and (best is None or not best[1]["green"]):
-        try:
-            r = call_model(model, SYSTEM_PROMPT, user, max_tokens=24000, timeout=300,
-                           temperature=0.2, stream=True, thinking={"type": "adaptive"})
+        r = _author_one(max_tokens=24000, temperature=0.2, stream=True,
+                        thinking={"type": "adaptive"})
+        if "error" in r:
+            rec.attempt_log.append({"attempt": "adaptive_fallback", "error": r["error"]})
+        else:
             rec.cost += r["cost"]
             rec.tokens["in"] += r["in_tok"]
             rec.tokens["out"] += r["out_tok"]
@@ -462,12 +527,12 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
             d = {"dir": cand_dir, "mod": mod, "r": r}
             if best is None or (v["green"], v["kill_rate"]) > (best[1]["green"], best[1]["kill_rate"]):
                 best = (d, v)
-        except Exception as exc:  # noqa: BLE001
-            rec.attempt_log.append({"attempt": "adaptive_fallback",
-                                    "error": f"{type(exc).__name__}: {exc}"})
 
     if best is not None:
         d, v = best
+        # independent ref/battery disagreement on the SELECTED best (non-green, ref_passes False)
+        # is a spec-disagreement to escalate — distinct from a vacuous oracle.
+        rec.spec_disagreement = _is_spec_disagreement(v)
         rec.gate = v
         rec.oracle_path = str(d["dir"] / f"{d['mod']}.py")
     else:

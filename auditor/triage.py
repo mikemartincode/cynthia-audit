@@ -64,7 +64,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author as author_mod  # noqa: E402
-from author import author_and_gate, author_best_of_n, build_prompt, call_model  # noqa: E402
+from author import author_and_gate, author_best_of_n, build_spec, call_model  # noqa: E402
 from adapters import ADAPTERS  # noqa: E402
 from sweep import _equal, _load_oracle, classify  # noqa: E402
 from run import BudgetTracker  # noqa: E402
@@ -200,7 +200,7 @@ def spec_rederive(entry, x, model, budget, lock):
         reservation = budget.reserve()
     if reservation is None:
         return (None, None, "budget-stop", 0.0)
-    spec, _contract = build_prompt(entry)
+    spec = build_spec(entry)
     user = (f"{spec}\nThe function receives this single argument (Python repr):\n  {x!r}\n\n"
             "What is the spec-correct return value? One Python literal, or INVALID.")
     try:
