@@ -1,0 +1,2643 @@
+{
+  "target": "more_itertools",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/more-itertools/repo",
+  "commit": "4a55f8d7d2aed01e0c9383ededd9ea12c1085bec",
+  "package_dir": "more_itertools",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "chunked",
+      "signature": "(iterable, n, strict=False)",
+      "span": [
+        214,
+        246
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 97 words",
+      "intent": "Break *iterable* into lists of length *n*:",
+      "doc": "Break *iterable* into lists of length *n*:\n\n    >>> list(chunked([1, 2, 3, 4, 5, 6], 3))\n    [[1, 2, 3], [4, 5, 6]]\n\nBy the default, the last yielded list will have fewer than *n* elements\nif the length of *iterable* is not divisible by *n*:\n\n    >>> list(chunked([1, 2, 3, 4, 5, 6, 7, 8], 3))\n    [[1, 2, 3], [4, 5, 6], [7, 8]]\n\nTo use a fill-in value instead, see the :func:`grouper` recipe.\n\nIf the length of *iterable* is not divisible by *n* and *strict* is\n``True``, then ``ValueError`` will be raised before the last\nlist is yielded."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "first",
+      "signature": "(iterable, default=_marker)",
+      "span": [
+        249,
+        273
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 62 words",
+      "intent": "Return the first item of *iterable*, or *default* if *iterable* is",
+      "doc": "Return the first item of *iterable*, or *default* if *iterable* is\nempty.\n\n    >>> first([0, 1, 2, 3])\n    0\n    >>> first([], 'some default')\n    'some default'\n\nIf *default* is not provided and there are no items in the iterable,\nraise ``ValueError``.\n\n:func:`first` is useful when you have a generator of expensive-to-retrieve\nvalues and want any arbitrary one. It is marginally shorter than\n``next(iter(iterable), default)``."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "last",
+      "signature": "(iterable, default=_marker)",
+      "span": [
+        276,
+        298
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Return the last item of *iterable*, or *default* if *iterable* is",
+      "doc": "Return the last item of *iterable*, or *default* if *iterable* is\nempty.\n\n    >>> last([0, 1, 2, 3])\n    3\n    >>> last([], 'some default')\n    'some default'\n\nIf *default* is not provided and there are no items in the iterable,\nraise ``ValueError``."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "nth_or_last",
+      "signature": "(iterable, n, default=_marker)",
+      "span": [
+        301,
+        315
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Return the nth or the last item of *iterable*,",
+      "doc": "Return the nth or the last item of *iterable*,\nor *default* if *iterable* is empty.\n\n    >>> nth_or_last([0, 1, 2, 3], 2)\n    2\n    >>> nth_or_last([0, 1], 2)\n    1\n    >>> nth_or_last([], 0, 'some default')\n    'some default'\n\nIf *default* is not provided and there are no items in the iterable,\nraise ``ValueError``."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "peekable.peek",
+      "signature": "(self, default=_marker)",
+      "span": [
+        391,
+        405
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Return the item that will be next returned from ``next()``.",
+      "doc": "Return the item that will be next returned from ``next()``.\n\nReturn ``default`` if there are no items left. If ``default`` is not\nprovided, raise ``StopIteration``."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "peekable.prepend",
+      "signature": "(self, *items)",
+      "span": [
+        407,
+        436
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 85 words",
+      "intent": "Stack up items to be the next ones returned from ``next()`` or",
+      "doc": "Stack up items to be the next ones returned from ``next()`` or\n``self.peek()``. The items will be returned in\nfirst in, first out order::\n\n    >>> p = peekable([1, 2, 3])\n    >>> p.prepend(10, 11, 12)\n    >>> next(p)\n    10\n    >>> list(p)\n    [11, 12, 1, 2, 3]\n\nIt is possible, by prepending items, to \"resurrect\" a peekable that\npreviously raised ``StopIteration``.\n\n    >>> p = peekable([])\n    >>> next(p)\n    Traceback (most recent call last):\n      ...\n    StopIteration\n    >>> p.prepend(1)\n    >>> next(p)\n    1\n    >>> next(p)\n    Traceback (most recent call last):\n      ...\n    StopIteration"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "consumer",
+      "signature": "(func)",
+      "span": [
+        485,
+        514
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 81 words",
+      "intent": "Decorator that automatically advances a PEP-342-style \"reverse iterator\"",
+      "doc": "Decorator that automatically advances a PEP-342-style \"reverse iterator\"\nto its first yield point so you don't have to call ``next()`` on it\nmanually.\n\n    >>> @consumer\n    ... def tally():\n    ...     i = 0\n    ...     while True:\n    ...         print('Thing number %s is %s.' % (i, (yield)))\n    ...         i += 1\n    ...\n    >>> t = tally()\n    >>> t.send('red')\n    Thing number 0 is red.\n    >>> t.send('fish')\n    Thing number 1 is fish.\n\nWithout the decorator, you would have to call ``next(t)`` before\n``t.send()`` could be used."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "ilen",
+      "signature": "(iterable)",
+      "span": [
+        517,
+        539
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Return the number of items in *iterable*.",
+      "doc": "Return the number of items in *iterable*.\n\nFor example, there are 168 prime numbers below 1,000:\n\n    >>> ilen(sieve(1000))\n    168\n\nEquivalent to, but faster than::\n\n    def ilen(iterable):\n        count = 0\n        for _ in iterable:\n            count += 1\n        return count\n\nThis fully consumes the iterable, so handle with care."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "iterate",
+      "signature": "(func, start)",
+      "span": [
+        542,
+        559
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 62 words",
+      "intent": "Return ``start``, ``func(start)``, ``func(func(start))``, ...",
+      "doc": "Return ``start``, ``func(start)``, ``func(func(start))``, ...\n\nProduces an infinite iterator. To add a stopping condition,\nuse :func:`take`, ``takewhile``, or :func:`takewhile_inclusive`:.\n\n>>> take(10, iterate(lambda x: 2*x, 1))\n[1, 2, 4, 8, 16, 32, 64, 128, 256, 512]\n\n>>> collatz = lambda x: 3*x + 1 if x%2==1 else x // 2\n>>> list(takewhile_inclusive(lambda x: x!=1, iterate(collatz, 10)))\n[10, 5, 16, 8, 4, 2, 1]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "with_iter",
+      "signature": "(context_manager)",
+      "span": [
+        562,
+        576
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 58 words",
+      "intent": "Wrap an iterable in a ``with`` statement, so it closes once exhausted.",
+      "doc": "Wrap an iterable in a ``with`` statement, so it closes once exhausted.\n\nFor example, this will close the file when the iterator is exhausted::\n\n    upper_lines = (line.upper() for line in with_iter(open('foo')))\n\nNote that you have to actually exhaust the iterator for opened files to be closed.\n\nAny context manager which returns an iterable is a candidate for\n``with_iter``."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "one",
+      "signature": "(iterable, too_short=None, too_long=None)",
+      "span": [
+        610,
+        663
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 218 words",
+      "intent": "Return the first item from *iterable*, which is expected to contain only",
+      "doc": "Return the first item from *iterable*, which is expected to contain only\nthat item. Raise an exception if *iterable* is empty or has more than one\nitem.\n\n:func:`one` is useful for ensuring that an iterable contains only one item.\nFor example, it can be used to retrieve the result of a database query\nthat is expected to return a single row.\n\nIf *iterable* is empty, ``ValueError`` will be raised. You may specify a\ndifferent exception with the *too_short* keyword:\n\n    >>> it = []\n    >>> one(it)  # doctest: +IGNORE_EXCEPTION_DETAIL\n    Traceback (most recent call last):\n    ...\n    ValueError: too few items in iterable (expected 1)'\n    >>> too_short = IndexError('too few items')\n    >>> one(it, too_short=too_short)  # doctest: +IGNORE_EXCEPTION_DETAIL\n    Traceback (most recent call last):\n    ...\n    IndexError: too few items\n\nSimilarly, if *iterable* contains more than one item, ``ValueError`` will\nbe raised. You may specify a different exception with the *too_long*\nkeyword:\n\n    >>> it = ['too', 'many']\n    >>> one(it)  # doctest: +IGNORE_EXCEPTION_DETAIL\n    Traceback (most recent call last):\n    ...\n    ValueError: Expected exactly one item in iterable, but got 'too',\n    'many', and perhaps more.\n    >>> too_long = RuntimeError\n    >>> one(it, too_long=too_long)  # doctest: +IGNORE_EXCEPTION_DETAIL\n    Traceback (most recent call last):\n    ...\n    RuntimeError\n\nNote that :func:`one` attempts to advance *iterable* twice to ensure there\nis only one item. See :func:`spy` or :func:`peekable` to check iterable\ncontents less destructively."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "raise_",
+      "signature": "(exception, *args)",
+      "span": [
+        666,
+        667
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "raise (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "strictly_n",
+      "signature": "(iterable, n, too_short=None, too_long=None)",
+      "span": [
+        670,
+        742
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 215 words",
+      "intent": "Validate that *iterable* has exactly *n* items and return them if",
+      "doc": "Validate that *iterable* has exactly *n* items and return them if\nit does. If it has fewer than *n* items, call function *too_short*\nwith the actual number of items. If it has more than *n* items, call function\n*too_long* with the number ``n + 1``.\n\n    >>> iterable = ['a', 'b', 'c', 'd']\n    >>> n = 4\n    >>> list(strictly_n(iterable, n))\n    ['a', 'b', 'c', 'd']\n\nNote that the returned iterable must be consumed in order for the check to\nbe made.\n\nBy default, *too_short* and *too_long* are functions that raise\n``ValueError``.\n\n    >>> list(strictly_n('ab', 3))  # doctest: +IGNORE_EXCEPTION_DETAIL\n    Traceback (most recent call last):\n    ...\n    ValueError: too few items in iterable (got 2)\n\n    >>> list(strictly_n('abc', 2))  # doctest: +IGNORE_EXCEPTION_DETAIL\n    Traceback (most recent call last):\n    ...\n    ValueError: too many items in iterable (got at least 3)\n\nYou can instead supply functions that do something else.\n*too_short* will be called with the number of items in *iterable*.\n*too_long* will be called with `n + 1`.\n\n    >>> def too_short(item_count):\n    ...     raise RuntimeError\n    >>> it = strictly_n('abcd', 6, too_short=too_short)\n    >>> list(it)  # doctest: +IGNORE_EXCEPTION_DETAIL\n    Traceback (most recent call last):\n    ...\n    RuntimeError\n\n    >>> def too_long(item_count):\n    ...     print('The boss is going to hear about this')\n    >>> it = strictly_n('abcdef', 4, too_long=too_long)\n    >>> list(it)\n    The boss is going to hear about this\n    ['a', 'b', 'c', 'd']"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "distinct_permutations",
+      "signature": "(iterable, r=None)",
+      "span": [
+        745,
+        892
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: A[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 213 words",
+      "intent": "Yield successive distinct permutations of the elements in *iterable*.",
+      "doc": "Yield successive distinct permutations of the elements in *iterable*.\n\n    >>> sorted(distinct_permutations([1, 0, 1]))\n    [(0, 1, 1), (1, 0, 1), (1, 1, 0)]\n\nEquivalent to yielding from ``set(permutations(iterable))``, except\nduplicates are not generated and thrown away. For larger input sequences\nthis is much more efficient.\n\nDuplicate permutations arise when there are duplicated elements in the\ninput iterable. The number of items returned is\n`n! / (x_1! * x_2! * ... * x_n!)`, where `n` is the total number of\nitems input, and each `x_i` is the count of a distinct item in the input\nsequence. The function :func:`multinomial` computes this directly.\n\nIf *r* is given, only the *r*-length permutations are yielded.\n\n    >>> sorted(distinct_permutations([1, 0, 1], r=2))\n    [(0, 1), (1, 0), (1, 1)]\n    >>> sorted(distinct_permutations(range(3), r=2))\n    [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)]\n\n*iterable* need not be sortable, but note that using equal (``x == y``)\nbut non-identical (``id(x) != id(y)``) elements may produce surprising\nbehavior. For example, ``1`` and ``True`` are equal but non-identical:\n\n    >>> list(distinct_permutations([1, True, '3']))  # doctest: +SKIP\n    [\n        (1, True, '3'),\n        (1, '3', True),\n        ('3', 1, True)\n    ]\n    >>> list(distinct_permutations([1, 2, '3']))  # doctest: +SKIP\n    [\n        (1, 2, '3'),\n        (1, '3', 2),\n        (2, 1, '3'),\n        (2, '3', 1),\n        ('3', 1, 2),\n        ('3', 2, 1)\n    ]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "derangements",
+      "signature": "(iterable, r=None)",
+      "span": [
+        895,
+        955
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 269 words",
+      "intent": "Yield successive derangements of the elements in *iterable*.",
+      "doc": "Yield successive derangements of the elements in *iterable*.\n\nA derangement is a permutation in which no element appears at its original\nindex. In other words, a derangement is a permutation that has no fixed points.\n\nSuppose Alice, Bob, Carol, and Dave are playing Secret Santa.\nThe code below outputs all of the different ways to assign gift recipients\nsuch that nobody is assigned to himself or herself:\n\n    >>> for d in derangements(['Alice', 'Bob', 'Carol', 'Dave']):\n    ...    print(', '.join(d))\n    Bob, Alice, Dave, Carol\n    Bob, Carol, Dave, Alice\n    Bob, Dave, Alice, Carol\n    Carol, Alice, Dave, Bob\n    Carol, Dave, Alice, Bob\n    Carol, Dave, Bob, Alice\n    Dave, Alice, Bob, Carol\n    Dave, Carol, Alice, Bob\n    Dave, Carol, Bob, Alice\n\nIf *r* is given, only the *r*-length derangements are yielded.\n\n    >>> sorted(derangements(range(3), 2))\n    [(1, 0), (1, 2), (2, 0)]\n    >>> sorted(derangements([0, 2, 3], 2))\n    [(2, 0), (2, 3), (3, 0)]\n\nElements are treated as unique based on their position, not on their value.\n\nConsider the Secret Santa example with two *different* people who have\nthe *same* name. Then there are two valid gift assignments even though\nit might appear that a person is assigned to themselves:\n\n    >>> names = ['Alice', 'Bob', 'Bob']\n    >>> list(derangements(names))\n    [('Bob', 'Bob', 'Alice'), ('Bob', 'Alice', 'Bob')]\n\nTo avoid confusion, make the inputs distinct:\n\n    >>> deduped = [f'{name}{index}' for index, name in enumerate(names)]\n    >>> list(derangements(deduped))\n    [('Bob1', 'Bob2', 'Alice0'), ('Bob2', 'Alice0', 'Bob1')]\n\nThe number of derangements of a set of size *n* is known as the\n\"subfactorial of n\".  For n > 0, the subfactorial is:\n``round(math.factorial(n) / math.e)``.   The more-itertools function\n:func:`subfactorial` computes this directly.\n\nReferences:\n\n* Article:  https://www.numberanalytics.com/blog/ultimate-guide-to-derangements-in-combinatorics\n* Sizes:    https://oeis.org/A000166"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "intersperse",
+      "signature": "(e, iterable, n=1)",
+      "span": [
+        958,
+        981
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Intersperse filler element *e* among the items in *iterable*, leaving",
+      "doc": "Intersperse filler element *e* among the items in *iterable*, leaving\n*n* items between each filler element.\n\n    >>> list(intersperse('!', [1, 2, 3, 4, 5]))\n    [1, '!', 2, '!', 3, '!', 4, '!', 5]\n\n    >>> list(intersperse(None, [1, 2, 3, 4, 5], n=2))\n    [1, 2, None, 3, 4, None, 5]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "unique_to_each",
+      "signature": "(*iterables)",
+      "span": [
+        984,
+        1014
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 137 words",
+      "intent": "Return the elements from each of the input iterables that aren't in the",
+      "doc": "Return the elements from each of the input iterables that aren't in the\nother input iterables.\n\nFor example, suppose you have a set of packages, each with a set of\ndependencies::\n\n    {'pkg_1': {'A', 'B'}, 'pkg_2': {'B', 'C'}, 'pkg_3': {'B', 'D'}}\n\nIf you remove one package, which dependencies can also be removed?\n\nIf ``pkg_1`` is removed, then ``A`` is no longer necessary - it is not\nassociated with ``pkg_2`` or ``pkg_3``. Similarly, ``C`` is only needed for\n``pkg_2``, and ``D`` is only needed for ``pkg_3``::\n\n    >>> unique_to_each({'A', 'B'}, {'B', 'C'}, {'B', 'D'})\n    [['A'], ['C'], ['D']]\n\nIf there are duplicates in one input iterable that aren't in the others\nthey will be duplicated in the output. Input order is preserved::\n\n    >>> unique_to_each(\"mississippi\", \"missouri\")\n    [['p', 'p'], ['o', 'u', 'r']]\n\nIt is assumed that the elements of each iterable are hashable."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "windowed",
+      "signature": "(seq, n, fillvalue=None, step=1)",
+      "span": [
+        1017,
+        1069
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 133 words",
+      "intent": "Return a sliding window of width *n* over the given iterable.",
+      "doc": "Return a sliding window of width *n* over the given iterable.\n\n    >>> all_windows = windowed([1, 2, 3, 4, 5], 3)\n    >>> list(all_windows)\n    [(1, 2, 3), (2, 3, 4), (3, 4, 5)]\n\nWhen the window is larger than the iterable, *fillvalue* is used in place\nof missing values:\n\n    >>> list(windowed([1, 2, 3], 4))\n    [(1, 2, 3, None)]\n\nEach window will advance in increments of *step*:\n\n    >>> list(windowed([1, 2, 3, 4, 5, 6], 3, fillvalue='!', step=2))\n    [(1, 2, 3), (3, 4, 5), (5, 6, '!')]\n\nTo slide into the iterable's items, use :func:`chain` to add filler items\nto the left:\n\n    >>> iterable = [1, 2, 3, 4]\n    >>> n = 3\n    >>> padding = [None] * (n - 1)\n    >>> list(windowed(chain(padding, iterable), 3))\n    [(None, None, 1), (None, 1, 2), (1, 2, 3), (2, 3, 4)]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "substrings",
+      "signature": "(iterable)",
+      "span": [
+        1072,
+        1091
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 59 words",
+      "intent": "Yield all of the substrings of *iterable*.",
+      "doc": "Yield all of the substrings of *iterable*.\n\n    >>> [''.join(s) for s in substrings('more')]\n    ['m', 'o', 'r', 'e', 'mo', 'or', 're', 'mor', 'ore', 'more']\n\nNote that non-string iterables can also be subdivided.\n\n    >>> list(substrings([0, 1, 2]))\n    [(0,), (1,), (2,), (0, 1), (1, 2), (0, 1, 2)]\n\nLike subslices() but returns tuples instead of lists\nand returns the shortest substrings first."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "substrings_indexes",
+      "signature": "(seq, reverse=False)",
+      "span": [
+        1094,
+        1125
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 88 words",
+      "intent": "Yield all substrings and their positions in *seq*",
+      "doc": "Yield all substrings and their positions in *seq*\n\nThe items yielded will be a tuple of the form ``(substr, i, j)``, where\n``substr == seq[i:j]``.\n\nThis function only works for iterables that support slicing, such as\n``str`` objects.\n\n>>> for item in substrings_indexes('more'):\n...    print(item)\n('m', 0, 1)\n('o', 1, 2)\n('r', 2, 3)\n('e', 3, 4)\n('mo', 0, 2)\n('or', 1, 3)\n('re', 2, 4)\n('mor', 0, 3)\n('ore', 1, 4)\n('more', 0, 4)\n\nSet *reverse* to ``True`` to yield the same items in the opposite order."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "spy",
+      "signature": "(iterable, n=1)",
+      "span": [
+        1231,
+        1269
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 142 words",
+      "intent": "Return a 2-tuple with a list containing the first *n* elements of",
+      "doc": "Return a 2-tuple with a list containing the first *n* elements of\n*iterable*, and an iterator with the same items as *iterable*.\nThis allows you to \"look ahead\" at the items in the iterable without\nadvancing it.\n\nThere is one item in the list by default:\n\n    >>> iterable = 'abcdefg'\n    >>> head, iterable = spy(iterable)\n    >>> head\n    ['a']\n    >>> list(iterable)\n    ['a', 'b', 'c', 'd', 'e', 'f', 'g']\n\nYou may use unpacking to retrieve items instead of lists:\n\n    >>> (head,), iterable = spy('abcdefg')\n    >>> head\n    'a'\n    >>> (first, second), iterable = spy('abcdefg', 2)\n    >>> first\n    'a'\n    >>> second\n    'b'\n\nThe number of items requested can be larger than the number of items in\nthe iterable:\n\n    >>> iterable = [1, 2, 3, 4, 5]\n    >>> head, iterable = spy(iterable, 10)\n    >>> head\n    [1, 2, 3, 4, 5]\n    >>> list(iterable)\n    [1, 2, 3, 4, 5]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "interleave",
+      "signature": "(*iterables)",
+      "span": [
+        1272,
+        1283
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 44 words",
+      "intent": "Return a new iterable yielding from each iterable in turn,",
+      "doc": "Return a new iterable yielding from each iterable in turn,\nuntil the shortest is exhausted.\n\n    >>> list(interleave([1, 2, 3], [4, 5], [6, 7, 8]))\n    [1, 4, 6, 2, 5, 7]\n\nFor a version that doesn't terminate after the shortest iterable is\nexhausted, see :func:`interleave_longest`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "interleave_longest",
+      "signature": "(*iterables)",
+      "span": [
+        1286,
+        1301
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 56 words",
+      "intent": "Return a new iterable yielding from each iterable in turn,",
+      "doc": "Return a new iterable yielding from each iterable in turn,\nskipping any that are exhausted.\n\n    >>> list(interleave_longest([1, 2, 3], [4, 5], [6, 7, 8]))\n    [1, 4, 6, 2, 5, 7, 3, 8]\n\nThis function produces the same output as :func:`roundrobin`, but may\nperform better for some inputs (in particular when the number of iterables\nis large)."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "interleave_evenly",
+      "signature": "(iterables, lengths=None)",
+      "span": [
+        1304,
+        1367
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 120 words",
+      "intent": "Interleave multiple iterables so that their elements are evenly distributed",
+      "doc": "Interleave multiple iterables so that their elements are evenly distributed\nthroughout the output sequence.\n\n>>> iterables = [1, 2, 3, 4, 5], ['a', 'b']\n>>> list(interleave_evenly(iterables))\n[1, 2, 'a', 3, 4, 'b', 5]\n\n>>> iterables = [[1, 2, 3], [4, 5], [6, 7, 8]]\n>>> list(interleave_evenly(iterables))\n[1, 6, 4, 2, 7, 3, 8, 5]\n\nThis function requires iterables of known length. Iterables without\n``__len__()`` can be used by manually specifying lengths with *lengths*:\n\n>>> from itertools import combinations, repeat\n>>> iterables = [combinations(range(4), 2), ['a', 'b', 'c']]\n>>> lengths = [4 * (4 - 1) // 2, 3]\n>>> list(interleave_evenly(iterables, lengths=lengths))\n[(0, 1), (0, 2), 'a', (0, 3), (1, 2), 'b', (1, 3), (2, 3), 'c']\n\nBased on Bresenham's algorithm."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "interleave_randomly",
+      "signature": "(*iterables)",
+      "span": [
+        1370,
+        1390
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to random.randrange"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 67 words",
+      "intent": "Repeatedly select one of the input *iterables* at random and yield the next",
+      "doc": "Repeatedly select one of the input *iterables* at random and yield the next\nitem from it.\n\n    >>> iterables = [1, 2, 3], 'abc', (True, False, None)\n    >>> list(interleave_randomly(*iterables))  # doctest: +SKIP\n    ['a', 'b', 1, 'c', True, False, None, 2, 3]\n\nThe relative order of the items in each input iterable will preserved. Note the\nsequences of items with this property are not equally likely to be generated."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "collapse",
+      "signature": "(iterable, base_type=None, levels=None)",
+      "span": [
+        1393,
+        1450
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 108 words",
+      "intent": "Flatten an iterable with multiple levels of nesting (e.g., a list of",
+      "doc": "Flatten an iterable with multiple levels of nesting (e.g., a list of\nlists of tuples) into non-iterable types.\n\n    >>> iterable = [(1, 2), ([3, 4], [[5], [6]])]\n    >>> list(collapse(iterable))\n    [1, 2, 3, 4, 5, 6]\n\nBinary and text strings are not considered iterable and\nwill not be collapsed.\n\nTo avoid collapsing other types, specify *base_type*:\n\n    >>> iterable = ['ab', ('cd', 'ef'), ['gh', 'ij']]\n    >>> list(collapse(iterable, base_type=tuple))\n    ['ab', ('cd', 'ef'), 'gh', 'ij']\n\nSpecify *levels* to stop flattening after a certain level:\n\n>>> iterable = [('a', ['b']), ('c', ['d'])]\n>>> list(collapse(iterable))  # Fully flattened\n['a', 'b', 'c', 'd']\n>>> list(collapse(iterable, levels=1))  # Only one level flattened\n['a', ['b'], 'c', ['d']]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "side_effect",
+      "signature": "(func, iterable, chunk_size=None, before=None, after=None)",
+      "span": [
+        1453,
+        1511
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 180 words",
+      "intent": "Invoke *func* on each item in *iterable* (or on each *chunk_size* group",
+      "doc": "Invoke *func* on each item in *iterable* (or on each *chunk_size* group\nof items) before yielding the item.\n\n`func` must be a function that takes a single argument. Its return value\nwill be discarded.\n\n*before* and *after* are optional functions that take no arguments. They\nwill be executed before iteration starts and after it ends, respectively.\n\n`side_effect` can be used for logging, updating progress bars, or anything\nthat is not functionally \"pure.\"\n\nEmitting a status message:\n\n    >>> from more_itertools import consume\n    >>> func = lambda item: print('Received {}'.format(item))\n    >>> consume(side_effect(func, range(2)))\n    Received 0\n    Received 1\n\nOperating on chunks of items:\n\n    >>> pair_sums = []\n    >>> func = lambda chunk: pair_sums.append(sum(chunk))\n    >>> list(side_effect(func, [0, 1, 2, 3, 4, 5], 2))\n    [0, 1, 2, 3, 4, 5]\n    >>> list(pair_sums)\n    [1, 5, 9]\n\nWriting to a file-like object:\n\n    >>> from io import StringIO\n    >>> from more_itertools import consume\n    >>> f = StringIO()\n    >>> func = lambda x: print(x, file=f)\n    >>> before = lambda: print(u'HEADER', file=f)\n    >>> after = f.close\n    >>> it = [u'a', u'b', u'c']\n    >>> consume(side_effect(func, it, before=before, after=after))\n    >>> f.closed\n    True"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "sliced",
+      "signature": "(seq, n, strict=False)",
+      "span": [
+        1514,
+        1545
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 104 words",
+      "intent": "Yield slices of length *n* from the sequence *seq*.",
+      "doc": "Yield slices of length *n* from the sequence *seq*.\n\n>>> list(sliced((1, 2, 3, 4, 5, 6), 3))\n[(1, 2, 3), (4, 5, 6)]\n\nBy the default, the last yielded slice will have fewer than *n* elements\nif the length of *seq* is not divisible by *n*:\n\n>>> list(sliced((1, 2, 3, 4, 5, 6, 7, 8), 3))\n[(1, 2, 3), (4, 5, 6), (7, 8)]\n\nIf the length of *seq* is not divisible by *n* and *strict* is\n``True``, then ``ValueError`` will be raised before the last\nslice is yielded.\n\nThis function will only work for iterables that support slicing.\nFor non-sliceable iterables, see :func:`chunked`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "split_at",
+      "signature": "(iterable, pred, maxsplit=-1, keep_separator=False)",
+      "span": [
+        1548,
+        1589
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 120 words",
+      "intent": "Yield lists of items from *iterable*, where each list is delimited by",
+      "doc": "Yield lists of items from *iterable*, where each list is delimited by\nan item where callable *pred* returns ``True``.\n\n    >>> list(split_at('abcdcba', lambda x: x == 'b'))\n    [['a'], ['c', 'd', 'c'], ['a']]\n\n    >>> list(split_at(range(10), lambda n: n % 2 == 1))\n    [[0], [2], [4], [6], [8], []]\n\nAt most *maxsplit* splits are done. If *maxsplit* is not specified or -1,\nthen there is no limit on the number of splits:\n\n    >>> list(split_at(range(10), lambda n: n % 2 == 1, maxsplit=2))\n    [[0], [2], [4, 5, 6, 7, 8, 9]]\n\nBy default, the delimiting items are not included in the output.\nTo include them, set *keep_separator* to ``True``.\n\n    >>> list(split_at('abcdcba', lambda x: x == 'b', keep_separator=True))\n    [['a'], ['b'], ['c', 'd', 'c'], ['b'], ['a']]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "split_before",
+      "signature": "(iterable, pred, maxsplit=-1)",
+      "span": [
+        1592,
+        1624
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 93 words",
+      "intent": "Yield lists of items from *iterable*, where each list ends just before",
+      "doc": "Yield lists of items from *iterable*, where each list ends just before\nan item for which callable *pred* returns ``True``:\n\n    >>> list(split_before('OneTwo', lambda s: s.isupper()))\n    [['O', 'n', 'e'], ['T', 'w', 'o']]\n\n    >>> list(split_before(range(10), lambda n: n % 3 == 0))\n    [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]\n\nAt most *maxsplit* splits are done. If *maxsplit* is not specified or -1,\nthen there is no limit on the number of splits:\n\n    >>> list(split_before(range(10), lambda n: n % 3 == 0, maxsplit=2))\n    [[0, 1, 2], [3, 4, 5], [6, 7, 8, 9]]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "split_after",
+      "signature": "(iterable, pred, maxsplit=-1)",
+      "span": [
+        1627,
+        1662
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 93 words",
+      "intent": "Yield lists of items from *iterable*, where each list ends with an",
+      "doc": "Yield lists of items from *iterable*, where each list ends with an\nitem where callable *pred* returns ``True``:\n\n    >>> list(split_after('one1two2', lambda s: s.isdigit()))\n    [['o', 'n', 'e', '1'], ['t', 'w', 'o', '2']]\n\n    >>> list(split_after(range(10), lambda n: n % 3 == 0))\n    [[0], [1, 2, 3], [4, 5, 6], [7, 8, 9]]\n\nAt most *maxsplit* splits are done. If *maxsplit* is not specified or -1,\nthen there is no limit on the number of splits:\n\n    >>> list(split_after(range(10), lambda n: n % 3 == 0, maxsplit=2))\n    [[0], [1, 2, 3], [4, 5, 6, 7, 8, 9]]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "split_when",
+      "signature": "(iterable, pred, maxsplit=-1)",
+      "span": [
+        1665,
+        1707
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 129 words",
+      "intent": "Split *iterable* into pieces based on the output of *pred*.",
+      "doc": "Split *iterable* into pieces based on the output of *pred*.\n*pred* should be a function that takes successive pairs of items and\nreturns ``True`` if the iterable should be split in between them.\n\nFor example, to find runs of increasing numbers, split the iterable when\nelement ``i`` is larger than element ``i + 1``:\n\n    >>> list(split_when([1, 2, 3, 3, 2, 5, 2, 4, 2], lambda x, y: x > y))\n    [[1, 2, 3, 3], [2, 5], [2, 4], [2]]\n\nAt most *maxsplit* splits are done. If *maxsplit* is not specified or -1,\nthen there is no limit on the number of splits:\n\n    >>> list(split_when([1, 2, 3, 3, 2, 5, 2, 4, 2],\n    ...                 lambda x, y: x > y, maxsplit=2))\n    [[1, 2, 3, 3], [2, 5], [2, 4, 2]]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "split_into",
+      "signature": "(iterable, sizes)",
+      "span": [
+        1710,
+        1752
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 187 words",
+      "intent": "Yield a list of sequential items from *iterable* of length 'n' for each",
+      "doc": "Yield a list of sequential items from *iterable* of length 'n' for each\ninteger 'n' in *sizes*.\n\n    >>> list(split_into([1,2,3,4,5,6], [1,2,3]))\n    [[1], [2, 3], [4, 5, 6]]\n\nIf the sum of *sizes* is smaller than the length of *iterable*, then the\nremaining items of *iterable* will not be returned.\n\n    >>> list(split_into([1,2,3,4,5,6], [2,3]))\n    [[1, 2], [3, 4, 5]]\n\nIf the sum of *sizes* is larger than the length of *iterable*, fewer items\nwill be returned in the iteration that overruns the *iterable* and further\nlists will be empty:\n\n    >>> list(split_into([1,2,3,4], [1,2,3,4]))\n    [[1], [2, 3], [4], []]\n\nWhen a ``None`` object is encountered in *sizes*, the returned list will\ncontain items up to the end of *iterable* the same way that\n:func:`itertools.slice` does:\n\n    >>> list(split_into([1,2,3,4,5,6,7,8,9,0], [2,3,None]))\n    [[1, 2], [3, 4, 5], [6, 7, 8, 9, 0]]\n\n:func:`split_into` can be useful for grouping a series of items where the\nsizes of the groups are not uniform. An example would be where in a row\nfrom a table, multiple columns represent elements of the same feature\n(e.g. a point represented by x,y,z) but, the format is not the same for\nall columns."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "padded",
+      "signature": "(iterable, fillvalue=None, n=None, next_multiple=False)",
+      "span": [
+        1755,
+        1797
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 108 words",
+      "intent": "Yield the elements from *iterable*, followed by *fillvalue*, such that",
+      "doc": "Yield the elements from *iterable*, followed by *fillvalue*, such that\nat least *n* items are emitted.\n\n    >>> list(padded([1, 2, 3], '?', 5))\n    [1, 2, 3, '?', '?']\n\nIf *next_multiple* is ``True``, *fillvalue* will be emitted until the\nnumber of items emitted is a multiple of *n*:\n\n    >>> list(padded([1, 2, 3, 4], n=3, next_multiple=True))\n    [1, 2, 3, 4, None, None]\n\nIf *n* is ``None``, *fillvalue* will be emitted indefinitely.\n\nTo create an *iterable* of exactly size *n*, you can truncate with\n:func:`islice`.\n\n    >>> list(islice(padded([1, 2, 3], '?'), 5))\n    [1, 2, 3, '?', '?']\n    >>> list(islice(padded([1, 2, 3, 4, 5, 6, 7, 8], '?'), 5))\n    [1, 2, 3, 4, 5]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "repeat_each",
+      "signature": "(iterable, n=2)",
+      "span": [
+        1800,
+        1806
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 19 words",
+      "intent": "Repeat each element in *iterable* *n* times.",
+      "doc": "Repeat each element in *iterable* *n* times.\n\n>>> list(repeat_each('ABC', 3))\n['A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C']"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "repeat_last",
+      "signature": "(iterable, default=None)",
+      "span": [
+        1809,
+        1825
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 35 words",
+      "intent": "After the *iterable* is exhausted, keep yielding its last element.",
+      "doc": "After the *iterable* is exhausted, keep yielding its last element.\n\n    >>> list(islice(repeat_last(range(3)), 5))\n    [0, 1, 2, 2, 2]\n\nIf the iterable is empty, yield *default* forever::\n\n    >>> list(islice(repeat_last(range(0), 42), 5))\n    [42, 42, 42, 42, 42]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "distribute",
+      "signature": "(n, iterable)",
+      "span": [
+        1828,
+        1862
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 137 words",
+      "intent": "Distribute the items from *iterable* among *n* smaller iterables.",
+      "doc": "Distribute the items from *iterable* among *n* smaller iterables.\n\n    >>> group_1, group_2 = distribute(2, [1, 2, 3, 4, 5, 6])\n    >>> list(group_1)\n    [1, 3, 5]\n    >>> list(group_2)\n    [2, 4, 6]\n\nIf the length of *iterable* is not evenly divisible by *n*, then the\nlength of the returned iterables will not be identical:\n\n    >>> children = distribute(3, [1, 2, 3, 4, 5, 6, 7])\n    >>> [list(c) for c in children]\n    [[1, 4, 7], [2, 5], [3, 6]]\n\nIf the length of *iterable* is smaller than *n*, then the last returned\niterables will be empty:\n\n    >>> children = distribute(5, [1, 2, 3])\n    >>> [list(c) for c in children]\n    [[1], [2], [3], [], []]\n\nThis function uses :func:`itertools.tee` and may require significant\nstorage.\n\nIf you need the order items in the smaller iterables to match the\noriginal iterable, see :func:`divide`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "stagger",
+      "signature": "(iterable, offsets=(-1, 0, 1), longest=False, fillvalue=None)",
+      "span": [
+        1865,
+        1890
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 142 words",
+      "intent": "Yield tuples whose elements are offset from *iterable*.",
+      "doc": "Yield tuples whose elements are offset from *iterable*.\nThe amount by which the `i`-th item in each tuple is offset is given by\nthe `i`-th item in *offsets*.\n\n    >>> list(stagger([0, 1, 2, 3]))\n    [(None, 0, 1), (0, 1, 2), (1, 2, 3)]\n    >>> list(stagger(range(8), offsets=(0, 2, 4)))\n    [(0, 2, 4), (1, 3, 5), (2, 4, 6), (3, 5, 7)]\n\nBy default, the sequence will end when the final element of a tuple is the\nlast item in the iterable. To continue until the first element of a tuple\nis the last item in the iterable, set *longest* to ``True``::\n\n    >>> list(stagger([0, 1, 2, 3], longest=True))\n    [(None, 0, 1), (0, 1, 2), (1, 2, 3), (2, 3, None), (3, None, None)]\n\nBy default, ``None`` will be used to replace offsets beyond the end of the\nsequence. Specify *fillvalue* to use some other value."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "zip_offset",
+      "signature": "(*iterables, offsets, longest=False, fillvalue=None)",
+      "span": [
+        1893,
+        1929
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 117 words",
+      "intent": "``zip`` the input *iterables* together, but offset the `i`-th iterable",
+      "doc": "``zip`` the input *iterables* together, but offset the `i`-th iterable\nby the `i`-th item in *offsets*.\n\n    >>> list(zip_offset('0123', 'abcdef', offsets=(0, 1)))\n    [('0', 'b'), ('1', 'c'), ('2', 'd'), ('3', 'e')]\n\nThis can be used as a lightweight alternative to SciPy or pandas to analyze\ndata sets in which some series have a lead or lag relationship.\n\nBy default, the sequence will end when the shortest iterable is exhausted.\nTo continue until the longest iterable is exhausted, set *longest* to\n``True``.\n\n    >>> list(zip_offset('0123', 'abcdef', offsets=(0, 1), longest=True))\n    [('0', 'b'), ('1', 'c'), ('2', 'd'), ('3', 'e'), (None, 'f')]\n\nBy default, ``None`` will be used to replace offsets beyond the end of the\nsequence. Specify *fillvalue* to use some other value."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "sort_together",
+      "signature": "(iterables, key_list=(0,), key=None, reverse=False, strict=False)",
+      "span": [
+        1932,
+        2002
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 242 words",
+      "intent": "Return the input iterables sorted together, with *key_list* as the",
+      "doc": "Return the input iterables sorted together, with *key_list* as the\npriority for sorting. All iterables are trimmed to the length of the\nshortest one.\n\nThis can be used like the sorting function in a spreadsheet. If each\niterable represents a column of data, the key list determines which\ncolumns are used for sorting.\n\nBy default, all iterables are sorted using the ``0``-th iterable::\n\n    >>> iterables = [(4, 3, 2, 1), ('a', 'b', 'c', 'd')]\n    >>> sort_together(iterables)\n    [(1, 2, 3, 4), ('d', 'c', 'b', 'a')]\n\nSet a different key list to sort according to another iterable.\nSpecifying multiple keys dictates how ties are broken::\n\n    >>> iterables = [(3, 1, 2), (0, 1, 0), ('c', 'b', 'a')]\n    >>> sort_together(iterables, key_list=(1, 2))\n    [(2, 3, 1), (0, 0, 1), ('a', 'c', 'b')]\n\nTo sort by a function of the elements of the iterable, pass a *key*\nfunction. Its arguments are the elements of the iterables corresponding to\nthe key list::\n\n    >>> names = ('a', 'b', 'c')\n    >>> lengths = (1, 2, 3)\n    >>> widths = (5, 2, 1)\n    >>> def area(length, width):\n    ...     return length * width\n    >>> sort_together([names, lengths, widths], key_list=(1, 2), key=area)\n    [('c', 'b', 'a'), (3, 2, 1), (1, 2, 5)]\n\nSet *reverse* to ``True`` to sort in descending order.\n\n    >>> sort_together([(1, 2, 3), ('c', 'b', 'a')], reverse=True)\n    [(3, 2, 1), ('a', 'b', 'c')]\n\nIf the *strict* keyword argument is ``True``, then\n``ValueError`` will be raised if any of the iterables have\ndifferent lengths."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "unzip",
+      "signature": "(iterable)",
+      "span": [
+        2005,
+        2043
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 94 words",
+      "intent": "The inverse of :func:`zip`, this function disaggregates the elements",
+      "doc": "The inverse of :func:`zip`, this function disaggregates the elements\nof the zipped *iterable*.\n\nThe ``i``-th iterable contains the ``i``-th element from each element\nof the zipped iterable. The first element is used to determine the\nlength of the remaining elements.\n\n    >>> iterable = [('a', 1), ('b', 2), ('c', 3), ('d', 4)]\n    >>> letters, numbers = unzip(iterable)\n    >>> list(letters)\n    ['a', 'b', 'c', 'd']\n    >>> list(numbers)\n    [1, 2, 3, 4]\n\nThis is similar to using ``zip(*iterable)``, but it avoids reading\n*iterable* into memory. Note, however, that this function uses\n:func:`itertools.tee` and thus may require significant storage."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "divide",
+      "signature": "(n, iterable)",
+      "span": [
+        2046,
+        2094
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 137 words",
+      "intent": "Divide the elements from *iterable* into *n* parts, maintaining",
+      "doc": "Divide the elements from *iterable* into *n* parts, maintaining\norder.\n\n    >>> group_1, group_2 = divide(2, [1, 2, 3, 4, 5, 6])\n    >>> list(group_1)\n    [1, 2, 3]\n    >>> list(group_2)\n    [4, 5, 6]\n\nIf the length of *iterable* is not evenly divisible by *n*, then the\nlength of the returned iterables will not be identical:\n\n    >>> children = divide(3, [1, 2, 3, 4, 5, 6, 7])\n    >>> [list(c) for c in children]\n    [[1, 2, 3], [4, 5], [6, 7]]\n\nIf the length of the iterable is smaller than n, then the last returned\niterables will be empty:\n\n    >>> children = divide(5, [1, 2, 3])\n    >>> [list(c) for c in children]\n    [[1], [2], [3], [], []]\n\nThis function will exhaust the iterable before returning.\nIf order is not important, see :func:`distribute`, which does not first\npull the iterable into memory."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "always_iterable",
+      "signature": "(obj, base_type=(str, bytes))",
+      "span": [
+        2097,
+        2147
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 138 words",
+      "intent": "If *obj* is iterable, return an iterator over its items::",
+      "doc": "If *obj* is iterable, return an iterator over its items::\n\n    >>> obj = (1, 2, 3)\n    >>> list(always_iterable(obj))\n    [1, 2, 3]\n\nIf *obj* is not iterable, return a one-item iterable containing *obj*::\n\n    >>> obj = 1\n    >>> list(always_iterable(obj))\n    [1]\n\nIf *obj* is ``None``, return an empty iterable:\n\n    >>> obj = None\n    >>> list(always_iterable(None))\n    []\n\nBy default, binary and text strings are not considered iterable::\n\n    >>> obj = 'foo'\n    >>> list(always_iterable(obj))\n    ['foo']\n\nIf *base_type* is set, objects for which ``isinstance(obj, base_type)``\nreturns ``True`` won't be considered iterable.\n\n    >>> obj = {'a': 1}\n    >>> list(always_iterable(obj))  # Iterate over the dict's keys\n    ['a']\n    >>> list(always_iterable(obj, base_type=dict))  # Treat dicts as a unit\n    [{'a': 1}]\n\nSet *base_type* to ``None`` to avoid any special handling and treat objects\nPython considers iterable as iterable:\n\n    >>> obj = 'foo'\n    >>> list(always_iterable(obj, base_type=None))\n    ['f', 'o', 'o']"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "adjacent",
+      "signature": "(predicate, iterable, distance=1)",
+      "span": [
+        2150,
+        2186
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 174 words",
+      "intent": "Return an iterable over `(bool, item)` tuples where the `item` is",
+      "doc": "Return an iterable over `(bool, item)` tuples where the `item` is\ndrawn from *iterable* and the `bool` indicates whether\nthat item satisfies the *predicate* or is adjacent to an item that does.\n\nFor example, to find whether items are adjacent to a ``3``::\n\n    >>> list(adjacent(lambda x: x == 3, range(6)))\n    [(False, 0), (False, 1), (True, 2), (True, 3), (True, 4), (False, 5)]\n\nSet *distance* to change what counts as adjacent. For example, to find\nwhether items are two places away from a ``3``:\n\n    >>> list(adjacent(lambda x: x == 3, range(6), distance=2))\n    [(False, 0), (True, 1), (True, 2), (True, 3), (True, 4), (True, 5)]\n\nThis is useful for contextualizing the results of a search function.\nFor example, a code comparison tool might want to identify lines that\nhave changed, but also surrounding lines to give the viewer of the diff\ncontext.\n\nThe predicate function will only be called once for each item in the\niterable.\n\nSee also :func:`groupby_transform`, which can be used with this function\nto group ranges of items with the same `bool` value."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "groupby_transform",
+      "signature": "(iterable, keyfunc=None, valuefunc=None, reducefunc=None)",
+      "span": [
+        2189,
+        2236
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 238 words",
+      "intent": "An extension of :func:`itertools.groupby` that can apply transformations",
+      "doc": "An extension of :func:`itertools.groupby` that can apply transformations\nto the grouped data.\n\n* *keyfunc* is a function computing a key value for each item in *iterable*\n* *valuefunc* is a function that transforms the individual items from\n  *iterable* after grouping\n* *reducefunc* is a function that transforms each group of items\n\n>>> iterable = 'aAAbBBcCC'\n>>> keyfunc = lambda k: k.upper()\n>>> valuefunc = lambda v: v.lower()\n>>> reducefunc = lambda g: ''.join(g)\n>>> list(groupby_transform(iterable, keyfunc, valuefunc, reducefunc))\n[('A', 'aaa'), ('B', 'bbb'), ('C', 'ccc')]\n\nEach optional argument defaults to an identity function if not specified.\n\n:func:`groupby_transform` is useful when grouping elements of an iterable\nusing a separate iterable as the key. To do this, :func:`zip` the iterables\nand pass a *keyfunc* that extracts the first element and a *valuefunc*\nthat extracts the second element::\n\n    >>> from operator import itemgetter\n    >>> keys = [0, 0, 1, 1, 1, 2, 2, 2, 3]\n    >>> values = 'abcdefghi'\n    >>> iterable = zip(keys, values)\n    >>> grouper = groupby_transform(iterable, itemgetter(0), itemgetter(1))\n    >>> [(k, ''.join(g)) for k, g in grouper]\n    [(0, 'ab'), (1, 'cde'), (2, 'fgh'), (3, 'i')]\n\nNote that the order of items in the iterable is significant.\nOnly adjacent items are grouped together, so if you don't want any\nduplicate groups, you should sort the iterable by the key function\nor consider :func:`bucket` or :func:`map_reduce`. :func:`map_reduce`\nconsumes the iterable immediately and returns a dictionary, while\n:func:`bucket` does not.\n\n.. seealso:: :func:`bucket`, :func:`map_reduce`"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "numeric_range.count",
+      "signature": "(self, value)",
+      "span": [
+        2419,
+        2420
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "count (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "numeric_range.index",
+      "signature": "(self, value)",
+      "span": [
+        2422,
+        2434
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "index (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "count_cycle",
+      "signature": "(iterable, n=None)",
+      "span": [
+        2444,
+        2458
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Cycle through the items from *iterable* up to *n* times, yielding",
+      "doc": "Cycle through the items from *iterable* up to *n* times, yielding\nthe number of completed cycles along with each item. If *n* is omitted the\nprocess repeats indefinitely.\n\n>>> list(count_cycle('AB', 3))\n[(0, 'A'), (0, 'B'), (1, 'A'), (1, 'B'), (2, 'A'), (2, 'B')]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "mark_ends",
+      "signature": "(iterable)",
+      "span": [
+        2461,
+        2488
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 79 words",
+      "intent": "Yield 3-tuples of the form ``(is_first, is_last, item)``.",
+      "doc": "Yield 3-tuples of the form ``(is_first, is_last, item)``.\n\n>>> list(mark_ends('ABC'))\n[(True, False, 'A'), (False, False, 'B'), (False, True, 'C')]\n\nUse this when looping over an iterable to take special action on its first\nand/or last items:\n\n>>> iterable = ['Header', 100, 200, 'Footer']\n>>> total = 0\n>>> for is_first, is_last, item in mark_ends(iterable):\n...     if is_first:\n...         continue  # Skip the header\n...     if is_last:\n...         continue  # Skip the footer\n...     total += item\n>>> print(total)\n300"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "locate",
+      "signature": "(iterable, pred=bool, window_size=None)",
+      "span": [
+        2491,
+        2541
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 197 words",
+      "intent": "Yield the index of each item in *iterable* for which *pred* returns",
+      "doc": "Yield the index of each item in *iterable* for which *pred* returns\n``True``.\n\n*pred* defaults to :func:`bool`, which will select truthy items:\n\n    >>> list(locate([0, 1, 1, 0, 1, 0, 0]))\n    [1, 2, 4]\n\nSet *pred* to a custom function to, e.g., find the indexes for a particular\nitem.\n\n    >>> list(locate(['a', 'b', 'c', 'b'], lambda x: x == 'b'))\n    [1, 3]\n\nIf *window_size* is given, then the *pred* function will be called with\nthe values in each window. This enables searching for sub-sequences.\nNote that *pred* may receive fewer than *window_size* arguments at the end of\nthe iterable.\n\n    >>> iterable = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]\n    >>> pred = lambda *args: args == (1, 2, 3)\n    >>> list(locate(iterable, pred=pred, window_size=3))\n    [1, 5, 9]\n\nUse with :func:`seekable` to find indexes and then retrieve the associated\nitems:\n\n    >>> from itertools import count\n    >>> from more_itertools import seekable\n    >>> source = (3 * n + 1 if (n % 2) else n // 2 for n in count())\n    >>> it = seekable(source)\n    >>> pred = lambda x: x > 100\n    >>> indexes = locate(it, pred=pred)\n    >>> i = next(indexes)\n    >>> it.seek(i)\n    >>> next(it)\n    106"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "longest_common_prefix",
+      "signature": "(iterables)",
+      "span": [
+        2544,
+        2551
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Yield elements of the longest common prefix among given *iterables*.",
+      "doc": "Yield elements of the longest common prefix among given *iterables*.\n\n>>> ''.join(longest_common_prefix(['abcd', 'abc', 'abf']))\n'ab'"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "lstrip",
+      "signature": "(iterable, pred)",
+      "span": [
+        2554,
+        2569
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 74 words",
+      "intent": "Yield the items from *iterable*, but strip any from the beginning",
+      "doc": "Yield the items from *iterable*, but strip any from the beginning\nfor which *pred* returns ``True``.\n\nFor example, to remove a set of items from the start of an iterable:\n\n    >>> iterable = (None, False, None, 1, 2, None, 3, False, None)\n    >>> pred = lambda x: x in {None, False, ''}\n    >>> list(lstrip(iterable, pred))\n    [1, 2, None, 3, False, None]\n\nThis function is analogous to :func:`str.lstrip`, and is essentially\na wrapper for :func:`itertools.dropwhile`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "rstrip",
+      "signature": "(iterable, pred)",
+      "span": [
+        2572,
+        2595
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 68 words",
+      "intent": "Yield the items from *iterable*, but strip any from the end",
+      "doc": "Yield the items from *iterable*, but strip any from the end\nfor which *pred* returns ``True``.\n\nFor example, to remove a set of items from the end of an iterable:\n\n    >>> iterable = (None, False, None, 1, 2, None, 3, False, None)\n    >>> pred = lambda x: x in {None, False, ''}\n    >>> list(rstrip(iterable, pred))\n    [None, False, None, 1, 2, None, 3]\n\nThis function is analogous to :func:`str.rstrip`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "strip",
+      "signature": "(iterable, pred)",
+      "span": [
+        2598,
+        2612
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 67 words",
+      "intent": "Yield the items from *iterable*, but strip any from the",
+      "doc": "Yield the items from *iterable*, but strip any from the\nbeginning and end for which *pred* returns ``True``.\n\nFor example, to remove a set of items from both ends of an iterable:\n\n    >>> iterable = (None, False, None, 1, 2, None, 3, False, None)\n    >>> pred = lambda x: x in {None, False, ''}\n    >>> list(strip(iterable, pred))\n    [1, 2, None, 3]\n\nThis function is analogous to :func:`str.strip`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "always_reversible",
+      "signature": "(iterable)",
+      "span": [
+        2772,
+        2787
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 67 words",
+      "intent": "An extension of :func:`reversed` that supports all iterables, not",
+      "doc": "An extension of :func:`reversed` that supports all iterables, not\njust those which implement the ``Reversible`` or ``Sequence`` protocols.\n\n    >>> print(*always_reversible(x for x in range(3)))\n    2 1 0\n\nIf the iterable is already reversible, this function returns the\nresult of :func:`reversed()`. If the iterable is not reversible,\nthis function will cache the remaining items in the iterable and\nyield them in reverse order, which may require significant storage."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "consecutive_groups",
+      "signature": "(iterable, ordering=None)",
+      "span": [
+        2790,
+        2837
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 177 words",
+      "intent": "Yield groups of consecutive items using :func:`itertools.groupby`.",
+      "doc": "Yield groups of consecutive items using :func:`itertools.groupby`.\nThe *ordering* function determines whether two items are adjacent by\nreturning their position.\n\nBy default, the ordering function is the identity function. This is\nsuitable for finding runs of numbers:\n\n    >>> iterable = [1, 10, 11, 12, 20, 30, 31, 32, 33, 40]\n    >>> for group in consecutive_groups(iterable):\n    ...     print(list(group))\n    [1]\n    [10, 11, 12]\n    [20]\n    [30, 31, 32, 33]\n    [40]\n\nTo find runs of adjacent letters, apply :func:`ord` function\nto convert letters to ordinals.\n\n    >>> iterable = 'abcdfgilmnop'\n    >>> ordering = ord\n    >>> for group in consecutive_groups(iterable, ordering):\n    ...     print(list(group))\n    ['a', 'b', 'c', 'd']\n    ['f', 'g']\n    ['i']\n    ['l', 'm', 'n', 'o', 'p']\n\nEach group of consecutive items is an iterator that shares its source with\n*iterable*. When an output group is advanced, the previous group is\nno longer available unless its elements are copied (e.g., into a ``list``).\n\n    >>> iterable = [1, 2, 11, 12, 21, 22]\n    >>> saved_groups = []\n    >>> for group in consecutive_groups(iterable):\n    ...     saved_groups.append(list(group))  # Copy group elements\n    >>> saved_groups\n    [[1, 2], [11, 12], [21, 22]]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "difference",
+      "signature": "(iterable, func=sub, *, initial=None)",
+      "span": [
+        2840,
+        2879
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 142 words",
+      "intent": "This function is the inverse of :func:`itertools.accumulate`. By default",
+      "doc": "This function is the inverse of :func:`itertools.accumulate`. By default\nit will compute the first difference of *iterable* using\n:func:`operator.sub`:\n\n    >>> from itertools import accumulate\n    >>> iterable = accumulate([0, 1, 2, 3, 4])  # produces 0, 1, 3, 6, 10\n    >>> list(difference(iterable))\n    [0, 1, 2, 3, 4]\n\n*func* defaults to :func:`operator.sub`, but other functions can be\nspecified. They will be applied as follows::\n\n    A, B, C, D, ... --> A, func(B, A), func(C, B), func(D, C), ...\n\nFor example, to do progressive division:\n\n    >>> iterable = [1, 2, 6, 24, 120]\n    >>> func = lambda x, y: x // y\n    >>> list(difference(iterable, func))\n    [1, 2, 3, 4, 5]\n\nIf the *initial* keyword is set, the first element will be skipped when\ncomputing successive differences.\n\n    >>> it = [10, 11, 13, 16]  # from accumulate([1, 2, 3], initial=10)\n    >>> list(difference(it, initial=10))\n    [1, 2, 3]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "seekable.peek",
+      "signature": "(self, default=_marker)",
+      "span": [
+        3070,
+        3080
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "peek (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "seekable.elements",
+      "signature": "(self)",
+      "span": [
+        3082,
+        3083
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "elements (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "seekable.seek",
+      "signature": "(self, index)",
+      "span": [
+        3085,
+        3089
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "seek (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "seekable.relative_seek",
+      "signature": "(self, count)",
+      "span": [
+        3091,
+        3095
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "relative seek (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "run_length.encode",
+      "signature": "(iterable)",
+      "span": [
+        3122,
+        3123
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with decode",
+      "intent": "encode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "run_length.decode",
+      "signature": "(iterable)",
+      "span": [
+        3126,
+        3127
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with encode",
+      "intent": "decode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "exactly_n",
+      "signature": "(iterable, n, predicate=bool)",
+      "span": [
+        3130,
+        3158
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 62 words",
+      "intent": "Return ``True`` if exactly ``n`` items in the iterable are ``True``",
+      "doc": "Return ``True`` if exactly ``n`` items in the iterable are ``True``\naccording to the *predicate* function.\n\n    >>> exactly_n([True, True, False], 2)\n    True\n    >>> exactly_n([True, True, False], 1)\n    False\n    >>> exactly_n([0, 1, 2, 3, 4, 5], 3, lambda x: x < 3)\n    True\n\nThe iterable will be advanced until ``n + 1`` truthy items are encountered,\nso avoid calling it on infinite iterables."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "circular_shifts",
+      "signature": "(iterable, steps=1)",
+      "span": [
+        3161,
+        3188
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 75 words",
+      "intent": "Yield the circular shifts of *iterable*.",
+      "doc": "Yield the circular shifts of *iterable*.\n\n>>> list(circular_shifts(range(4)))\n[(0, 1, 2, 3), (1, 2, 3, 0), (2, 3, 0, 1), (3, 0, 1, 2)]\n\nSet *steps* to the number of places to rotate to the left\n(or to the right if negative).  Defaults to 1.\n\n>>> list(circular_shifts(range(4), 2))\n[(0, 1, 2, 3), (2, 3, 0, 1)]\n\n>>> list(circular_shifts(range(4), -1))\n[(0, 1, 2, 3), (3, 0, 1, 2), (2, 3, 0, 1), (1, 2, 3, 0)]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "make_decorator",
+      "signature": "(wrapping_func, result_index=0)",
+      "span": [
+        3191,
+        3254
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 174 words",
+      "intent": "Return a decorator version of *wrapping_func*, which is a function that",
+      "doc": "Return a decorator version of *wrapping_func*, which is a function that\nmodifies an iterable. *result_index* is the position in that function's\nsignature where the iterable goes.\n\nThis lets you use itertools on the \"production end,\" i.e. at function\ndefinition. This can augment what the function returns without changing the\nfunction's code.\n\nFor example, to produce a decorator version of :func:`chunked`:\n\n    >>> from more_itertools import chunked\n    >>> chunker = make_decorator(chunked, result_index=0)\n    >>> @chunker(3)\n    ... def iter_range(n):\n    ...     return iter(range(n))\n    ...\n    >>> list(iter_range(9))\n    [[0, 1, 2], [3, 4, 5], [6, 7, 8]]\n\nTo only allow truthy items to be returned:\n\n    >>> truth_serum = make_decorator(filter, result_index=1)\n    >>> @truth_serum(bool)\n    ... def boolean_test():\n    ...     return [0, 1, '', ' ', False, True]\n    ...\n    >>> list(boolean_test())\n    [1, ' ', True]\n\nThe :func:`peekable` and :func:`seekable` wrappers make for practical\ndecorators:\n\n    >>> from more_itertools import peekable\n    >>> peekable_function = make_decorator(peekable)\n    >>> @peekable_function()\n    ... def str_range(*args):\n    ...     return (str(x) for x in range(*args))\n    ...\n    >>> it = str_range(1, 20, 2)\n    >>> next(it), next(it), next(it)\n    ('1', '3', '5')\n    >>> it.peek()\n    '7'\n    >>> next(it)\n    '7'"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "map_reduce",
+      "signature": "(iterable, keyfunc, valuefunc=None, reducefunc=None)",
+      "span": [
+        3257,
+        3334
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 300 words",
+      "intent": "Return a dictionary that maps the items in *iterable* to categories",
+      "doc": "Return a dictionary that maps the items in *iterable* to categories\ndefined by *keyfunc*, transforms them with *valuefunc*, and\nthen summarizes them by category with *reducefunc*.\n\n*valuefunc* defaults to the identity function if it is unspecified.\nIf *reducefunc* is unspecified, no summarization takes place:\n\n    >>> keyfunc = lambda x: x.upper()\n    >>> result = map_reduce('abbccc', keyfunc)\n    >>> sorted(result.items())\n    [('A', ['a']), ('B', ['b', 'b']), ('C', ['c', 'c', 'c'])]\n\nSpecifying *valuefunc* transforms the categorized items:\n\n    >>> keyfunc = lambda x: x.upper()\n    >>> valuefunc = lambda x: 1\n    >>> result = map_reduce('abbccc', keyfunc, valuefunc)\n    >>> sorted(result.items())\n    [('A', [1]), ('B', [1, 1]), ('C', [1, 1, 1])]\n\nSpecifying *reducefunc* summarizes the categorized items:\n\n    >>> keyfunc = lambda x: x.upper()\n    >>> valuefunc = lambda x: 1\n    >>> reducefunc = sum\n    >>> result = map_reduce('abbccc', keyfunc, valuefunc, reducefunc)\n    >>> sorted(result.items())\n    [('A', 1), ('B', 2), ('C', 3)]\n\nYou may want to filter the input iterable before applying the map/reduce\nprocedure:\n\n    >>> all_items = range(30)\n    >>> items = [x for x in all_items if 10 <= x <= 20]  # Filter\n    >>> keyfunc = lambda x: x % 2  # Evens map to 0; odds to 1\n    >>> categories = map_reduce(items, keyfunc=keyfunc)\n    >>> sorted(categories.items())\n    [(0, [10, 12, 14, 16, 18, 20]), (1, [11, 13, 15, 17, 19])]\n    >>> summaries = map_reduce(items, keyfunc=keyfunc, reducefunc=sum)\n    >>> sorted(summaries.items())\n    [(0, 90), (1, 75)]\n\nNote that all items in the iterable are gathered into a list before the\nsummarization step, which may require significant storage.\n\nThe returned object is a :obj:`collections.defaultdict` with the\n``default_factory`` set to ``None``, such that it behaves like a normal\ndictionary.\n\n.. seealso:: :func:`bucket`, :func:`groupby_transform`\n\nIf storage is a concern, :func:`bucket` can be used without consuming the\nentire iterable right away. If the elements with the same key are already\nadjacent, :func:`groupby_transform` or :func:`itertools.groupby` can be\nused without any caching overhead."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "rlocate",
+      "signature": "(iterable, pred=bool, window_size=None)",
+      "span": [
+        3337,
+        3377
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 174 words",
+      "intent": "Yield the index of each item in *iterable* for which *pred* returns",
+      "doc": "Yield the index of each item in *iterable* for which *pred* returns\n``True``, starting from the right and moving left.\n\n*pred* defaults to :func:`bool`, which will select truthy items:\n\n    >>> list(rlocate([0, 1, 1, 0, 1, 0, 0]))  # Truthy at 1, 2, and 4\n    [4, 2, 1]\n\nSet *pred* to a custom function to, e.g., find the indexes for a particular\nitem:\n\n    >>> iterator = iter('abcb')\n    >>> pred = lambda x: x == 'b'\n    >>> list(rlocate(iterator, pred))\n    [3, 1]\n\nIf *window_size* is given, then the *pred* function will be called with\nthat many items. This enables searching for sub-sequences:\n\n    >>> iterable = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]\n    >>> pred = lambda *args: args == (1, 2, 3)\n    >>> list(rlocate(iterable, pred=pred, window_size=3))\n    [9, 5, 1]\n\nBeware, this function won't return anything for infinite iterables.\nIf *iterable* is reversible, ``rlocate`` will reverse it and search from\nthe right. Otherwise, it will search from the left and return the results\nin reverse order.\n\nSee :func:`locate` to for other example applications."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "replace",
+      "signature": "(iterable, pred, substitutes, count=None, window_size=1)",
+      "span": [
+        3380,
+        3445
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 199 words",
+      "intent": "Yield the items from *iterable*, replacing the items for which *pred*",
+      "doc": "Yield the items from *iterable*, replacing the items for which *pred*\nreturns ``True`` with the items from the iterable *substitutes*.\n\n    >>> iterable = [1, 1, 0, 1, 1, 0, 1, 1]\n    >>> pred = lambda x: x == 0\n    >>> substitutes = (2, 3)\n    >>> list(replace(iterable, pred, substitutes))\n    [1, 1, 2, 3, 1, 1, 2, 3, 1, 1]\n\nIf *count* is given, the number of replacements will be limited:\n\n    >>> iterable = [1, 1, 0, 1, 1, 0, 1, 1, 0]\n    >>> pred = lambda x: x == 0\n    >>> substitutes = [None]\n    >>> list(replace(iterable, pred, substitutes, count=2))\n    [1, 1, None, 1, 1, None, 1, 1, 0]\n\nUse *window_size* to control the number of items passed as arguments to\n*pred*. This allows for locating and replacing subsequences.\n\n    >>> iterable = [0, 1, 2, 5, 0, 1, 2, 5]\n    >>> window_size = 3\n    >>> pred = lambda *args: args == (0, 1, 2)  # 3 items passed to pred\n    >>> substitutes = [3, 4] # Splice in these items\n    >>> list(replace(iterable, pred, substitutes, window_size=window_size))\n    [3, 4, 5, 3, 4, 5]\n\n*pred* may receive fewer than *window_size* arguments at the end of\nthe iterable and should be able to handle this."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "partitions",
+      "signature": "(iterable)",
+      "span": [
+        3448,
+        3465
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 35 words",
+      "intent": "Yield all possible order-preserving partitions of *iterable*.",
+      "doc": "Yield all possible order-preserving partitions of *iterable*.\n\n>>> iterable = 'abc'\n>>> for part in partitions(iterable):\n...     print([''.join(p) for p in part])\n['abc']\n['a', 'bc']\n['ab', 'c']\n['a', 'b', 'c']\n\nThis is unrelated to :func:`partition`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "set_partitions",
+      "signature": "(iterable, k=None, min_size=None, max_size=None)",
+      "span": [
+        3468,
+        3546
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 126 words",
+      "intent": "Yield the set partitions of *iterable* into *k* parts. Set partitions are",
+      "doc": "Yield the set partitions of *iterable* into *k* parts. Set partitions are\nnot order-preserving.\n\n>>> iterable = 'abc'\n>>> for part in set_partitions(iterable, 2):\n...     print([''.join(p) for p in part])\n['a', 'bc']\n['ab', 'c']\n['b', 'ac']\n\n\nIf *k* is not given, every set partition is generated.\n\n>>> iterable = 'abc'\n>>> for part in set_partitions(iterable):\n...     print([''.join(p) for p in part])\n['abc']\n['a', 'bc']\n['ab', 'c']\n['b', 'ac']\n['a', 'b', 'c']\n\nif *min_size* and/or *max_size* are given, the minimum and/or maximum size\nper block in partition is set.\n\n>>> iterable = 'abc'\n>>> for part in set_partitions(iterable, min_size=2):\n...     print([''.join(p) for p in part])\n['abc']\n>>> for part in set_partitions(iterable, max_size=2):\n...     print([''.join(p) for p in part])\n['a', 'bc']\n['ab', 'c']\n['b', 'ac']\n['a', 'b', 'c']"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "only",
+      "signature": "(iterable, default=None, too_long=None)",
+      "span": [
+        3599,
+        3633
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 105 words",
+      "intent": "If *iterable* has only one item, return it.",
+      "doc": "If *iterable* has only one item, return it.\nIf it has zero items, return *default*.\nIf it has more than one item, raise the exception given by *too_long*,\nwhich is ``ValueError`` by default.\n\n>>> only([], default='missing')\n'missing'\n>>> only([1])\n1\n>>> only([1, 2])  # doctest: +IGNORE_EXCEPTION_DETAIL\nTraceback (most recent call last):\n...\nValueError: Expected exactly one item in iterable, but got 1, 2,\n and perhaps more.'\n>>> only([1, 2], too_long=TypeError)  # doctest: +IGNORE_EXCEPTION_DETAIL\nTraceback (most recent call last):\n...\nTypeError\n\nNote that :func:`only` attempts to advance *iterable* twice to ensure there\nis only one item.  See :func:`spy` or :func:`peekable` to check\niterable contents less destructively."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "ichunked",
+      "signature": "(iterable, n)",
+      "span": [
+        3636,
+        3662
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 95 words",
+      "intent": "Break *iterable* into sub-iterables with *n* elements each.",
+      "doc": "Break *iterable* into sub-iterables with *n* elements each.\n:func:`ichunked` is like :func:`chunked`, but it yields iterables\ninstead of lists.\n\nIf the sub-iterables are read in order, the elements of *iterable*\nwon't be stored in memory.\nIf they are read out of order, :func:`itertools.tee` is used to cache\nelements as necessary.\n\n>>> from itertools import count\n>>> all_chunks = ichunked(count(), 4)\n>>> c_1, c_2, c_3 = next(all_chunks), next(all_chunks), next(all_chunks)\n>>> list(c_2)  # c_1's elements have been cached; c_3's haven't been\n[4, 5, 6, 7]\n>>> list(c_1)\n[0, 1, 2, 3]\n>>> list(c_3)\n[8, 9, 10, 11]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "iequals",
+      "signature": "(*iterables)",
+      "span": [
+        3665,
+        3685
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 74 words",
+      "intent": "Return ``True`` if all given *iterables* are equal to each other,",
+      "doc": "Return ``True`` if all given *iterables* are equal to each other,\nwhich means that they contain the same elements in the same order.\n\nThe function is useful for comparing iterables of different data types\nor iterables that do not support equality checks.\n\n>>> iequals(\"abc\", ['a', 'b', 'c'], ('a', 'b', 'c'), iter(\"abc\"))\nTrue\n\n>>> iequals(\"abc\", \"acb\")\nFalse\n\nNot to be confused with :func:`all_equal`, which checks whether all\nelements of iterable are equal to each other."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "distinct_combinations",
+      "signature": "(iterable, r)",
+      "span": [
+        3688,
+        3725
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Yield the distinct combinations of *r* items taken from *iterable*.",
+      "doc": "Yield the distinct combinations of *r* items taken from *iterable*.\n\n    >>> list(distinct_combinations([0, 0, 1], 2))\n    [(0, 0), (0, 1)]\n\nEquivalent to ``set(combinations(iterable))``, except duplicates are not\ngenerated and thrown away. For larger input sequences this is much more\nefficient."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "filter_except",
+      "signature": "(validator, iterable, *exceptions)",
+      "span": [
+        3728,
+        3749
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 79 words",
+      "intent": "Yield the items from *iterable* for which the *validator* function does",
+      "doc": "Yield the items from *iterable* for which the *validator* function does\nnot raise one of the specified *exceptions*.\n\n*validator* is called for each item in *iterable*.\nIt should be a function that accepts one argument and raises an exception\nif that item is not valid.\n\n>>> iterable = ['1', '2', 'three', '4', None]\n>>> list(filter_except(int, iterable, ValueError, TypeError))\n['1', '2', '4']\n\nIf an exception other than one given by *exceptions* is raised by\n*validator*, it is raised like normal."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "map_except",
+      "signature": "(function, iterable, *exceptions)",
+      "span": [
+        3752,
+        3770
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 67 words",
+      "intent": "Transform each item from *iterable* with *function* and yield the",
+      "doc": "Transform each item from *iterable* with *function* and yield the\nresult, unless *function* raises one of the specified *exceptions*.\n\n*function* is called to transform each item in *iterable*.\nIt should accept one argument.\n\n>>> iterable = ['1', '2', 'three', '4', None]\n>>> list(map_except(int, iterable, ValueError, TypeError))\n[1, 2, 4]\n\nIf an exception other than one given by *exceptions* is raised by\n*function*, it is raised like normal."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "map_if",
+      "signature": "(iterable, pred, func, func_else=None)",
+      "span": [
+        3773,
+        3798
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 116 words",
+      "intent": "Evaluate each item from *iterable* using *pred*. If the result is",
+      "doc": "Evaluate each item from *iterable* using *pred*. If the result is\nequivalent to ``True``, transform the item with *func* and yield it.\nOtherwise, transform the item with *func_else* and yield it.\n\n*pred*, *func*, and *func_else* should each be functions that accept\none argument. By default, *func_else* is the identity function.\n\n>>> from math import sqrt\n>>> iterable = list(range(-5, 5))\n>>> iterable\n[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]\n>>> list(map_if(iterable, lambda x: x > 3, lambda x: 'toobig'))\n[-5, -4, -3, -2, -1, 0, 1, 2, 3, 'toobig']\n>>> list(map_if(iterable, lambda x: x >= 0,\n... lambda x: f'{sqrt(x):.2f}', lambda x: None))\n[None, None, None, None, None, '0.00', '1.00', '1.41', '1.73', '2.00']"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "sample",
+      "signature": "(iterable, k, weights=None, *, counts=None, strict=False)",
+      "span": [
+        3895,
+        3975
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via _sample_weighted"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 327 words",
+      "intent": "Return a *k*-length list of elements chosen (without replacement)",
+      "doc": "Return a *k*-length list of elements chosen (without replacement)\nfrom the *iterable*.\n\nSimilar to :func:`random.sample`, but works on inputs that aren't\nindexable (such as sets and dictionaries) and on inputs where the\nsize isn't known in advance (such as generators).\n\n>>> iterable = range(100)\n>>> sample(iterable, 5)  # doctest: +SKIP\n[81, 60, 96, 16, 4]\n\nFor iterables with repeated elements, you may supply *counts* to\nindicate the repeats.\n\n>>> iterable = ['a', 'b']\n>>> counts = [3, 4]  # Equivalent to 'a', 'a', 'a', 'b', 'b', 'b', 'b'\n>>> sample(iterable, k=3, counts=counts)  # doctest: +SKIP\n['a', 'a', 'b']\n\nAn iterable with *weights* may be given:\n\n>>> iterable = range(100)\n>>> weights = (i * i + 1 for i in range(100))\n>>> sampled = sample(iterable, 5, weights=weights)  # doctest: +SKIP\n[79, 67, 74, 66, 78]\n\nWeighted selections are made without replacement.\nAfter an element is selected, it is removed from the pool and the\nrelative weights of the other elements increase (this\ndoes not match the behavior of :func:`random.sample`'s *counts*\nparameter). Note that *weights* may not be used with *counts*.\n\nIf the length of *iterable* is less than *k*,\n``ValueError`` is raised if *strict* is ``True`` and\nall elements are returned (in shuffled order) if *strict* is ``False``.\n\nBy default, the `Algorithm L <https://w.wiki/ANrM>`__ reservoir sampling\ntechnique is used. When *weights* are provided,\n`Algorithm A-ExpJ <https://w.wiki/ANrS>`__ is used instead.\n\nNotes on reproducibility:\n\n* The algorithms rely on inexact floating-point functions provided\n  by the underlying math library (e.g. ``log``, ``log1p``, and ``pow``).\n  Those functions can `produce slightly different results\n  <https://members.loria.fr/PZimmermann/papers/accuracy.pdf>`_ on\n  different builds.  Accordingly, selections can vary across builds\n  even for the same seed.\n\n* The algorithms loop over the input and make selections based on\n  ordinal position, so selections from unordered collections (such as\n  sets) won't reproduce across sessions on the same platform using the\n  same seed.  For example, this won't reproduce::\n\n      >> seed(8675309)\n      >> sample(set('abcdefghijklmnopqrstuvwxyz'), 10)\n      ['c', 'p', 'e', 'w', 's', 'a', 'j', 'd', 'n', 't']"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "is_sorted",
+      "signature": "(iterable, key=None, reverse=False, strict=False)",
+      "span": [
+        3978,
+        4007
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 112 words",
+      "intent": "Returns ``True`` if the items of iterable are in sorted order, and",
+      "doc": "Returns ``True`` if the items of iterable are in sorted order, and\n``False`` otherwise. *key* and *reverse* have the same meaning that they do\nin the built-in :func:`sorted` function.\n\n>>> is_sorted(['1', '2', '3', '4', '5'], key=int)\nTrue\n>>> is_sorted([5, 4, 3, 1, 2], reverse=True)\nFalse\n\nIf *strict*, tests for strict sorting, that is, returns ``False`` if equal\nelements are found:\n\n>>> is_sorted([1, 2, 2])\nTrue\n>>> is_sorted([1, 2, 2], strict=True)\nFalse\n\nThe function returns ``False`` after encountering the first out-of-order\nitem, which means it may produce results that differ from the built-in\n:func:`sorted` function for objects with unusual comparison dynamics\n(like ``math.nan``). If there are no out-of-order items, the iterable is\nexhausted."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "callback_iter.done",
+      "signature": "(self)",
+      "span": [
+        4096,
+        4099
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "done (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "callback_iter.result",
+      "signature": "(self)",
+      "span": [
+        4102,
+        4109
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "result (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "windowed_complete",
+      "signature": "(iterable, n)",
+      "span": [
+        4149,
+        4186
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 120 words",
+      "intent": "Yield ``(beginning, middle, end)`` tuples, where:",
+      "doc": "Yield ``(beginning, middle, end)`` tuples, where:\n\n* Each ``middle`` has *n* items from *iterable*\n* Each ``beginning`` has the items before the ones in ``middle``\n* Each ``end`` has the items after the ones in ``middle``\n\n>>> iterable = range(7)\n>>> n = 3\n>>> for beginning, middle, end in windowed_complete(iterable, n):\n...     print(beginning, middle, end)\n() (0, 1, 2) (3, 4, 5, 6)\n(0,) (1, 2, 3) (4, 5, 6)\n(0, 1) (2, 3, 4) (5, 6)\n(0, 1, 2) (3, 4, 5) (6,)\n(0, 1, 2, 3) (4, 5, 6) ()\n\nNote that *n* must be at least 0 and most equal to the length of\n*iterable*.\n\nThis function will exhaust the iterable and may require significant\nstorage."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "all_unique",
+      "signature": "(iterable, key=None)",
+      "span": [
+        4189,
+        4221
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 71 words",
+      "intent": "Returns ``True`` if all the elements of *iterable* are unique (no two",
+      "doc": "Returns ``True`` if all the elements of *iterable* are unique (no two\nelements are equal).\n\n    >>> all_unique('ABCB')\n    False\n\nIf a *key* function is specified, it will be used to make comparisons.\n\n    >>> all_unique('ABCb')\n    True\n    >>> all_unique('ABCb', str.lower)\n    False\n\nThe function returns as soon as the first non-unique element is\nencountered. Iterables with a mix of hashable and unhashable items can\nbe used, but the function will be slower for unhashable items."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "nth_product",
+      "signature": "(index, *iterables, repeat=1)",
+      "span": [
+        4224,
+        4257
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 71 words",
+      "intent": "Equivalent to ``list(product(*iterables, repeat=repeat))[index]``.",
+      "doc": "Equivalent to ``list(product(*iterables, repeat=repeat))[index]``.\n\nThe products of *iterables* can be ordered lexicographically.\n:func:`nth_product` computes the product at sort position *index* without\ncomputing the previous products.\n\n    >>> nth_product(8, range(2), range(2), range(2), range(2))\n    (1, 0, 0, 0)\n\nThe *repeat* keyword argument specifies the number of repetitions\nof the iterables.  The above example is equivalent to::\n\n    >>> nth_product(8, range(2), repeat=4)\n    (1, 0, 0, 0)\n\n``IndexError`` will be raised if the given *index* is invalid."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "nth_permutation",
+      "signature": "(iterable, r, index)",
+      "span": [
+        4260,
+        4294
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 59 words",
+      "intent": "Equivalent to ``list(permutations(iterable, r))[index]```",
+      "doc": "Equivalent to ``list(permutations(iterable, r))[index]```\n\nThe subsequences of *iterable* that are of length *r* where order is\nimportant can be ordered lexicographically. :func:`nth_permutation`\ncomputes the subsequence at sort position *index* directly, without\ncomputing the previous subsequences.\n\n    >>> nth_permutation('ghijk', 2, 5)\n    ('h', 'i')\n\n``ValueError`` will be raised If *r* is negative.\n``IndexError`` will be raised if the given *index* is invalid."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "nth_combination_with_replacement",
+      "signature": "(iterable, r, index)",
+      "span": [
+        4297,
+        4337
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 60 words",
+      "intent": "Equivalent to",
+      "doc": "Equivalent to\n``list(combinations_with_replacement(iterable, r))[index]``.\n\n\nThe subsequences with repetition of *iterable* that are of length *r* can\nbe ordered lexicographically. :func:`nth_combination_with_replacement`\ncomputes the subsequence at sort position *index* directly, without\ncomputing the previous subsequences with replacement.\n\n    >>> nth_combination_with_replacement(range(5), 3, 5)\n    (0, 1, 1)\n\n``ValueError`` will be raised If *r* is negative.\n``IndexError`` will be raised if the given *index* is invalid."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "value_chain",
+      "signature": "(*args)",
+      "span": [
+        4340,
+        4372
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 103 words",
+      "intent": "Yield all arguments passed to the function in the same order in which",
+      "doc": "Yield all arguments passed to the function in the same order in which\nthey were passed. If an argument itself is iterable then iterate over its\nvalues.\n\n    >>> list(value_chain(1, 2, 3, [4, 5, 6]))\n    [1, 2, 3, 4, 5, 6]\n\nBinary and text strings are not considered iterable and are emitted\nas-is:\n\n    >>> list(value_chain('12', '34', ['56', '78']))\n    ['12', '34', '56', '78']\n\nPre- or postpend a single element to an iterable:\n\n    >>> list(value_chain(1, [2, 3, 4, 5, 6]))\n    [1, 2, 3, 4, 5, 6]\n    >>> list(value_chain([1, 2, 3, 4, 5], 6))\n    [1, 2, 3, 4, 5, 6]\n\nMultiple levels of nesting are not flattened."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "product_index",
+      "signature": "(element, *iterables, repeat=1)",
+      "span": [
+        4375,
+        4402
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 63 words",
+      "intent": "Equivalent to ``list(product(*iterables, repeat=repeat)).index(tuple(element))``",
+      "doc": "Equivalent to ``list(product(*iterables, repeat=repeat)).index(tuple(element))``\n\nThe products of *iterables* can be ordered lexicographically.\n:func:`product_index` computes the first index of *element* without\ncomputing the previous products.\n\n    >>> product_index([8, 2], range(10), range(5))\n    42\n\nThe *repeat* keyword argument specifies the number of repetitions\nof the iterables::\n\n    >>> product_index([8, 0, 7], range(10), repeat=3)\n    807\n\n``ValueError`` will be raised if the given *element* isn't in the product\nof *args*."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "combination_index",
+      "signature": "(element, iterable)",
+      "span": [
+        4405,
+        4444
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Equivalent to ``list(combinations(iterable, r)).index(element)``",
+      "doc": "Equivalent to ``list(combinations(iterable, r)).index(element)``\n\nThe subsequences of *iterable* that are of length *r* can be ordered\nlexicographically. :func:`combination_index` computes the index of the\nfirst *element*, without computing the previous combinations.\n\n    >>> combination_index('adf', 'abcdefg')\n    10\n\n``ValueError`` will be raised if the given *element* isn't one of the\ncombinations of *iterable*."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "combination_with_replacement_index",
+      "signature": "(element, iterable)",
+      "span": [
+        4447,
+        4501
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 55 words",
+      "intent": "Equivalent to",
+      "doc": "Equivalent to\n``list(combinations_with_replacement(iterable, r)).index(element)``\n\nThe subsequences with repetition of *iterable* that are of length *r* can\nbe ordered lexicographically. :func:`combination_with_replacement_index`\ncomputes the index of the first *element*, without computing the previous\ncombinations with replacement.\n\n    >>> combination_with_replacement_index('adf', 'abcdefg')\n    20\n\n``ValueError`` will be raised if the given *element* isn't one of the\ncombinations with replacement of *iterable*."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "permutation_index",
+      "signature": "(element, iterable)",
+      "span": [
+        4504,
+        4525
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 56 words",
+      "intent": "Equivalent to ``list(permutations(iterable, r)).index(element)```",
+      "doc": "Equivalent to ``list(permutations(iterable, r)).index(element)```\n\nThe subsequences of *iterable* that are of length *r* where order is\nimportant can be ordered lexicographically. :func:`permutation_index`\ncomputes the index of the first *element* directly, without computing\nthe previous permutations.\n\n    >>> permutation_index([1, 3, 2], range(5))\n    19\n\n``ValueError`` will be raised if the given *element* isn't one of the\npermutations of *iterable*."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "chunked_even",
+      "signature": "(iterable, n)",
+      "span": [
+        4560,
+        4607
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 69 words",
+      "intent": "Break *iterable* into lists of approximately length *n*.",
+      "doc": "Break *iterable* into lists of approximately length *n*.\nItems are distributed such the lengths of the lists differ by at most\n1 item.\n\n>>> iterable = [1, 2, 3, 4, 5, 6, 7]\n>>> n = 3\n>>> list(chunked_even(iterable, n))  # List lengths: 3, 2, 2\n[[1, 2, 3], [4, 5], [6, 7]]\n>>> list(chunked(iterable, n))  # List lengths: 3, 3, 1\n[[1, 2, 3], [4, 5, 6], [7]]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "zip_broadcast",
+      "signature": "(*objects, scalar_types=(str, bytes), strict=False)",
+      "span": [
+        4610,
+        4662
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 107 words",
+      "intent": "A version of :func:`zip` that \"broadcasts\" any scalar",
+      "doc": "A version of :func:`zip` that \"broadcasts\" any scalar\n(i.e., non-iterable) items into output tuples.\n\n>>> iterable_1 = [1, 2, 3]\n>>> iterable_2 = ['a', 'b', 'c']\n>>> scalar = '_'\n>>> list(zip_broadcast(iterable_1, iterable_2, scalar))\n[(1, 'a', '_'), (2, 'b', '_'), (3, 'c', '_')]\n\nThe *scalar_types* keyword argument determines what types are considered\nscalar. It is set to ``(str, bytes)`` by default. Set it to ``None`` to\ntreat strings and byte strings as iterable:\n\n>>> list(zip_broadcast('abc', 0, 'xyz', scalar_types=None))\n[('a', 0, 'x'), ('b', 0, 'y'), ('c', 0, 'z')]\n\nIf the *strict* keyword argument is ``True``, then\n``ValueError`` will be raised if any of the iterables have\ndifferent lengths."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "unique_in_window",
+      "signature": "(iterable, n, key=None)",
+      "span": [
+        4665,
+        4709
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 103 words",
+      "intent": "Yield the items from *iterable* that haven't been seen recently.",
+      "doc": "Yield the items from *iterable* that haven't been seen recently.\n*n* is the size of the sliding window.\n\n    >>> iterable = [0, 1, 0, 2, 3, 0]\n    >>> n = 3\n    >>> list(unique_in_window(iterable, n))\n    [0, 1, 2, 3, 0]\n\nThe *key* function, if provided, will be used to determine uniqueness:\n\n    >>> list(unique_in_window('abAcda', 3, key=lambda x: x.lower()))\n    ['a', 'b', 'c', 'd', 'a']\n\nUpdates a sliding window no larger than n and yields a value\nif the item only occurs once in the updated window.\n\nWhen `n == 1`, *unique_in_window* is memoryless:\n\n    >>> list(unique_in_window('aab', n=1))\n    ['a', 'a', 'b']\n\nThe items in *iterable* must be hashable."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "duplicates_everseen",
+      "signature": "(iterable, key=None)",
+      "span": [
+        4712,
+        4739
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 42 words",
+      "intent": "Yield duplicate elements after their first appearance.",
+      "doc": "Yield duplicate elements after their first appearance.\n\n>>> list(duplicates_everseen('mississippi'))\n['s', 'i', 's', 's', 'i', 'p', 'i']\n>>> list(duplicates_everseen('AaaBbbCccAaa', str.lower))\n['a', 'a', 'b', 'b', 'c', 'c', 'A', 'a', 'a']\n\nThis function is analogous to :func:`unique_everseen` and is subject to\nthe same performance considerations."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "duplicates_justseen",
+      "signature": "(iterable, key=None)",
+      "span": [
+        4742,
+        4753
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Yields serially-duplicate elements after their first appearance.",
+      "doc": "Yields serially-duplicate elements after their first appearance.\n\n>>> list(duplicates_justseen('mississippi'))\n['s', 's', 'p']\n>>> list(duplicates_justseen('AaaBbbCccAaa', str.lower))\n['a', 'a', 'b', 'b', 'c', 'c', 'a', 'a']\n\nThis function is analogous to :func:`unique_justseen`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "classify_unique",
+      "signature": "(iterable, key=None)",
+      "span": [
+        4756,
+        4795
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 97 words",
+      "intent": "Classify each element in terms of its uniqueness.",
+      "doc": "Classify each element in terms of its uniqueness.\n\nFor each element in the input iterable, return a 3-tuple consisting of:\n\n1. The element itself\n2. ``False`` if the element is equal to the one preceding it in the input,\n   ``True`` otherwise (i.e. the equivalent of :func:`unique_justseen`)\n3. ``False`` if this element has been seen anywhere in the input before,\n   ``True`` otherwise (i.e. the equivalent of :func:`unique_everseen`)\n\n>>> list(classify_unique('otto'))    # doctest: +NORMALIZE_WHITESPACE\n[('o', True,  True),\n ('t', True,  True),\n ('t', False, False),\n ('o', True,  False)]\n\nThis function is analogous to :func:`unique_everseen` and is subject to\nthe same performance considerations."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "minmax",
+      "signature": "(iterable_or_value, *others, key=None, default=_marker)",
+      "span": [
+        4798,
+        4880
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 142 words",
+      "intent": "Returns both the smallest and largest items from an iterable",
+      "doc": "Returns both the smallest and largest items from an iterable\nor from two or more arguments.\n\n    >>> minmax([3, 1, 5])\n    (1, 5)\n\n    >>> minmax(4, 2, 6)\n    (2, 6)\n\nIf a *key* function is provided, it will be used to transform the input\nitems for comparison.\n\n    >>> minmax([5, 30], key=str)  # '30' sorts before '5'\n    (30, 5)\n\nIf a *default* value is provided, it will be returned if there are no\ninput items.\n\n    >>> minmax([], default=(0, 0))\n    (0, 0)\n\nOtherwise ``ValueError`` is raised.\n\nThis function makes a single pass over the input elements and takes care to\nminimize the number of comparisons made during processing.\n\nNote that unlike the builtin ``max`` function, which always returns the first\nitem with the maximum value, this function may return another item when there are\nties.\n\nThis function is based on the\n`recipe <https://code.activestate.com/recipes/577916-fast-minmax-function>`__ by\nRaymond Hettinger."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "constrained_batches",
+      "signature": "(iterable, max_size, max_count=None, get_len=len, strict=True)",
+      "span": [
+        4883,
+        4930
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 106 words",
+      "intent": "Yield batches of items from *iterable* with a combined size limited by",
+      "doc": "Yield batches of items from *iterable* with a combined size limited by\n*max_size*.\n\n>>> iterable = [b'12345', b'123', b'12345678', b'1', b'1', b'12', b'1']\n>>> list(constrained_batches(iterable, 10))\n[(b'12345', b'123'), (b'12345678', b'1', b'1'), (b'12', b'1')]\n\nIf a *max_count* is supplied, the number of items per batch is also\nlimited:\n\n>>> iterable = [b'12345', b'123', b'12345678', b'1', b'1', b'12', b'1']\n>>> list(constrained_batches(iterable, 10, max_count = 2))\n[(b'12345', b'123'), (b'12345678', b'1'), (b'1', b'12'), (b'1',)]\n\nIf a *get_len* function is supplied, use that instead of :func:`len` to\ndetermine item size.\n\nIf *strict* is ``True``, raise ``ValueError`` if any single item is bigger\nthan *max_size*. Otherwise, allow single items to exceed *max_size*."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "gray_product",
+      "signature": "(*iterables, repeat=1)",
+      "span": [
+        4933,
+        4976
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 98 words",
+      "intent": "Like :func:`itertools.product`, but return tuples in an order such",
+      "doc": "Like :func:`itertools.product`, but return tuples in an order such\nthat only one element in the generated tuple changes from one iteration\nto the next.\n\n    >>> list(gray_product('AB','CD'))\n    [('A', 'C'), ('B', 'C'), ('B', 'D'), ('A', 'D')]\n\nThe *repeat* keyword argument specifies the number of repetitions\nof the iterables.  For example, ``gray_product('AB', repeat=3)`` is\nequivalent to ``gray_product('AB', 'AB', 'AB')``.\n\nThis function consumes all of the input iterables before producing output.\nIf any of the input iterables have fewer than two items, ``ValueError``\nis raised.\n\nFor information on the algorithm, see\n`this section <https://www-cs-faculty.stanford.edu/~knuth/fasc2a.ps.gz>`__\nof Donald Knuth's *The Art of Computer Programming*."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "partial_product",
+      "signature": "(*iterables, repeat=1)",
+      "span": [
+        4979,
+        5006
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 93 words",
+      "intent": "Yields tuples containing one item from each iterator, with subsequent",
+      "doc": "Yields tuples containing one item from each iterator, with subsequent\ntuples changing a single item at a time by advancing each iterator until it\nis exhausted. This sequence guarantees every value in each iterable is\noutput at least once without generating all possible combinations.\n\nThis may be useful, for example, when testing an expensive function.\n\n    >>> list(partial_product('AB', 'C', 'DEF'))\n    [('A', 'C', 'D'), ('B', 'C', 'D'), ('B', 'C', 'E'), ('B', 'C', 'F')]\n\nThe *repeat* keyword argument specifies the number of repetitions\nof the iterables.  For example, ``partial_product('AB', repeat=3)`` is\nequivalent to ``partial_product('AB', 'AB', 'AB')``."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "takewhile_inclusive",
+      "signature": "(predicate, iterable)",
+      "span": [
+        5009,
+        5020
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "A variant of :func:`takewhile` that yields one additional element.",
+      "doc": "A variant of :func:`takewhile` that yields one additional element.\n\n    >>> list(takewhile_inclusive(lambda x: x < 5, [1, 4, 6, 4, 1]))\n    [1, 4, 6]\n\n:func:`takewhile` would return ``[1, 4]``."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "outer_product",
+      "signature": "(func, xs, ys, *args, **kwargs)",
+      "span": [
+        5023,
+        5054
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 138 words",
+      "intent": "A generalized outer product that applies a binary function to all",
+      "doc": "A generalized outer product that applies a binary function to all\npairs of items. Returns a 2D matrix with ``len(xs)`` rows and ``len(ys)``\ncolumns.\nAlso accepts ``*args`` and ``**kwargs`` that are passed to ``func``.\n\nMultiplication table:\n\n>>> from operator import mul\n>>> list(outer_product(mul, range(1, 4), range(1, 6)))\n[(1, 2, 3, 4, 5), (2, 4, 6, 8, 10), (3, 6, 9, 12, 15)]\n\nCross tabulation:\n\n>>> xs = ['A', 'B', 'A', 'A', 'B', 'B', 'A', 'A', 'B', 'B']\n>>> ys = ['X', 'X', 'X', 'Y', 'Z', 'Z', 'Y', 'Y', 'Z', 'Z']\n>>> pair_counts = Counter(zip(xs, ys))\n>>> count_rows = lambda x, y: pair_counts[x, y]\n>>> list(outer_product(count_rows, sorted(set(xs)), sorted(set(ys))))\n[(2, 3, 0), (1, 0, 4)]\n\nUsage with ``*args`` and ``**kwargs``:\n\n>>> animals = ['cat', 'wolf', 'mouse']\n>>> list(outer_product(min, animals, animals, key=len))\n[('cat', 'cat', 'cat'), ('cat', 'wolf', 'wolf'), ('cat', 'wolf', 'mouse')]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "iter_suppress",
+      "signature": "(iterable, *exceptions)",
+      "span": [
+        5057,
+        5077
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 71 words",
+      "intent": "Yield each of the items from *iterable*. If the iteration raises one of",
+      "doc": "Yield each of the items from *iterable*. If the iteration raises one of\nthe specified *exceptions*, that exception will be suppressed and iteration\nwill stop.\n\n>>> from itertools import chain\n>>> def breaks_at_five(x):\n...     while True:\n...         if x >= 5:\n...             raise RuntimeError\n...         yield x\n...         x += 1\n>>> it_1 = iter_suppress(breaks_at_five(1), RuntimeError)\n>>> it_2 = iter_suppress(breaks_at_five(2), RuntimeError)\n>>> list(chain(it_1, it_2))\n[1, 2, 3, 4, 2, 3, 4]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "filter_map",
+      "signature": "(func, iterable)",
+      "span": [
+        5080,
+        5091
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Apply *func* to every element of *iterable*, yielding only those which",
+      "doc": "Apply *func* to every element of *iterable*, yielding only those which\nare not ``None``.\n\n>>> elems = ['1', 'a', '2', 'b', '3']\n>>> list(filter_map(lambda s: int(s) if s.isnumeric() else None, elems))\n[1, 2, 3]"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "powerset_of_sets",
+      "signature": "(iterable, *, baseset=set)",
+      "span": [
+        5094,
+        5112
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 64 words",
+      "intent": "Yields all possible subsets of the iterable.",
+      "doc": "Yields all possible subsets of the iterable.\n\n    >>> list(powerset_of_sets([1, 2, 3]))  # doctest: +SKIP\n    [set(), {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}]\n    >>> list(powerset_of_sets([1, 1, 0]))  # doctest: +SKIP\n    [set(), {1}, {0}, {0, 1}]\n\n:func:`powerset_of_sets` takes care to minimize the number\nof hash operations performed.\n\nThe *baseset* parameter determines what kind of sets are\nconstructed, either *set* or *frozenset*."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "join_mappings",
+      "signature": "(**field_to_map)",
+      "span": [
+        5115,
+        5130
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 35 words",
+      "intent": "Joins multiple mappings together using their common keys.",
+      "doc": "Joins multiple mappings together using their common keys.\n\n>>> user_scores = {'elliot': 50, 'claris': 60}\n>>> user_times = {'elliot': 30, 'claris': 40}\n>>> join_mappings(score=user_scores, time=user_times)\n{'elliot': {'score': 50, 'time': 30}, 'claris': {'score': 60, 'time': 40}}"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "dft",
+      "signature": "(xarr)",
+      "span": [
+        5147,
+        5168
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 86 words",
+      "intent": "Discrete Fourier Transform. *xarr* is a sequence of complex numbers.",
+      "doc": "Discrete Fourier Transform. *xarr* is a sequence of complex numbers.\nYields the components of the corresponding transformed output vector.\n\n>>> import cmath\n>>> xarr = [1, 2-1j, -1j, -1+2j]  # time domain\n>>> Xarr = [2, -2-2j, -2j, 4+4j]  # frequency domain\n>>> magnitudes, phases = zip(*map(cmath.polar, Xarr))\n>>> all(map(cmath.isclose, dft(xarr), Xarr))\nTrue\n\nInputs are restricted to numeric types that can add and multiply\nwith a complex number.  This includes int, float, complex, and\nFraction, but excludes Decimal.\n\nSee :func:`idft` for the inverse Discrete Fourier Transform."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "idft",
+      "signature": "(Xarr)",
+      "span": [
+        5171,
+        5192
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 80 words",
+      "intent": "Inverse Discrete Fourier Transform. *Xarr* is a sequence of",
+      "doc": "Inverse Discrete Fourier Transform. *Xarr* is a sequence of\ncomplex numbers. Yields the components of the corresponding\ninverse-transformed output vector.\n\n>>> import cmath\n>>> xarr = [1, 2-1j, -1j, -1+2j]  # time domain\n>>> Xarr = [2, -2-2j, -2j, 4+4j]  # frequency domain\n>>> all(map(cmath.isclose, idft(Xarr), xarr))\nTrue\n\nInputs are restricted to numeric types that can add and multiply\nwith a complex number.  This includes int, float, complex, and\nFraction, but excludes Decimal.\n\nSee :func:`dft` for the Discrete Fourier Transform."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "doublestarmap",
+      "signature": "(func, iterable)",
+      "span": [
+        5195,
+        5210
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 69 words",
+      "intent": "Apply *func* to every item of *iterable* by dictionary unpacking",
+      "doc": "Apply *func* to every item of *iterable* by dictionary unpacking\nthe item into *func*.\n\nThe difference between :func:`itertools.starmap` and :func:`doublestarmap`\nparallels the distinction between ``func(*a)`` and ``func(**a)``.\n\n>>> iterable = [{'a': 1, 'b': 2}, {'a': 40, 'b': 60}]\n>>> list(doublestarmap(lambda a, b: a + b, iterable))\n[3, 100]\n\n``TypeError`` will be raised if *func*'s signature doesn't match the\nmapping contained in *iterable* or if *iterable* does not contain mappings."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "nth_prime",
+      "signature": "(n, *, approximate=False)",
+      "span": [
+        5232,
+        5255
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Return the nth prime (counting from 0).",
+      "doc": "Return the nth prime (counting from 0).\n\n>>> nth_prime(0)\n2\n>>> nth_prime(100)\n547\n\nIf *approximate* is set to True, will return a prime close\nto the nth prime.  The estimation is much faster than computing\nan exact result.\n\n>>> nth_prime(200_000_000, approximate=True)  # Exact result is 4222234763\n4217820427"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "argmin",
+      "signature": "(iterable, *, key=None)",
+      "span": [
+        5258,
+        5288
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 101 words",
+      "intent": "Index of the first occurrence of a minimum value in an iterable.",
+      "doc": "Index of the first occurrence of a minimum value in an iterable.\n\n    >>> argmin('efghabcdijkl')\n    4\n    >>> argmin([3, 2, 1, 0, 4, 2, 1, 0])\n    3\n\nFor example, look up a label corresponding to the position\nof a value that minimizes a cost function::\n\n    >>> def cost(x):\n    ...     \"Days for a wound to heal given a subject's age.\"\n    ...     return x**2 - 20*x + 150\n    ...\n    >>> labels =  ['homer', 'marge', 'bart', 'lisa', 'maggie']\n    >>> ages =    [  35,      30,      10,      9,      1    ]\n\n    # Fastest healing family member\n    >>> labels[argmin(ages, key=cost)]\n    'bart'\n\n    # Age with fastest healing\n    >>> min(ages, key=cost)\n    10"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "argmax",
+      "signature": "(iterable, *, key=None)",
+      "span": [
+        5291,
+        5316
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 64 words",
+      "intent": "Index of the first occurrence of a maximum value in an iterable.",
+      "doc": "Index of the first occurrence of a maximum value in an iterable.\n\n    >>> argmax('abcdefghabcd')\n    7\n    >>> argmax([0, 1, 2, 3, 3, 2, 1, 0])\n    3\n\nFor example, identify the best machine learning model::\n\n    >>> models =   ['svm', 'random forest', 'knn', 'na\u00efve bayes']\n    >>> accuracy = [  68,        61,          84,       72      ]\n\n    # Most accurate model\n    >>> models[argmax(accuracy)]\n    'knn'\n\n    # Best accuracy\n    >>> max(accuracy)\n    84"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "extract",
+      "signature": "(iterable, indices, *, monotonic=False)",
+      "span": [
+        5358,
+        5387
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 85 words",
+      "intent": "Yield values at the specified indices.",
+      "doc": "Yield values at the specified indices.\n\nExample:\n\n    >>> data = 'abcdefghijklmnopqrstuvwxyz'\n    >>> list(extract(data, [7, 4, 11, 11, 14]))\n    ['h', 'e', 'l', 'l', 'o']\n\nThe *iterable* is consumed lazily and can be infinite.\n\nWhen *monotonic* is false, the *indices* are consumed immediately\nand must be finite. When *monotonic* is true, *indices* are consumed\nlazily and can be infinite but must be non-decreasing.\n\nRaises ``IndexError`` if an index lies beyond the iterable.\nRaises ``ValueError`` for a negative index or for a decreasing\nindex when *monotonic* is true."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "serialize.send",
+      "signature": "(self, value, /)",
+      "span": [
+        5411,
+        5417
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Send a value to a generator.",
+      "doc": "Send a value to a generator.\n\nRaises AttributeError if not a generator."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "serialize.throw",
+      "signature": "(self, *args)",
+      "span": [
+        5419,
+        5425
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Call throw() on a generator.",
+      "doc": "Call throw() on a generator.\n\nRaises AttributeError if not a generator."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "serialize.close",
+      "signature": "(self)",
+      "span": [
+        5427,
+        5433
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Call close() on a generator.",
+      "doc": "Call close() on a generator.\n\nRaises AttributeError if not a generator."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "synchronized",
+      "signature": "(func)",
+      "span": [
+        5436,
+        5462
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 70 words",
+      "intent": "Wrap an iterator-returning callable to make its iterators thread-safe.",
+      "doc": "Wrap an iterator-returning callable to make its iterators thread-safe.\n\nExisting itertools and more-itertools can be wrapped so that their\niterator instances are serialized.\n\nFor example, ``itertools.count`` does not make thread-safe instances,\nbut that is easily fixed with::\n\n    atomic_counter = synchronized(itertools.count)\n\nCan also be used as a decorator for generator functions definitions\nso that the generator instances are serialized::\n\n    @synchronized\n    def enumerate_and_timestamp(iterable):\n        for count, value in enumerate(iterable):\n            yield count, time_ns(), value"
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "concurrent_tee",
+      "signature": "(iterable, n=2)",
+      "span": [
+        5465,
+        5485
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 59 words",
+      "intent": "Variant of itertools.tee() but with guaranteed threading semantics.",
+      "doc": "Variant of itertools.tee() but with guaranteed threading semantics.\n\nTakes a non-threadsafe iterator as an input and creates concurrent\ntee objects for other threads to have reliable independent copies of\nthe data stream.\n\nThe new iterators are only thread-safe if consumed within a single thread.\nTo share just one of the new iterators across multiple threads, wrap it\nwith :func:`serialize`."
+    },
+    {
+      "module": "more_itertools/more.py",
+      "qualname": "subfactorial",
+      "signature": "(n)",
+      "span": [
+        5515,
+        5538
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "Number of permutations of *n* elements with no fixed points.",
+      "doc": "Number of permutations of *n* elements with no fixed points.\n\nThe :func:`subfactorial` function computes the length of\n:func:`derangements`.  For example, there are 1,854 ways to\nrearrange the letters in word \"epsilon\" without leaving any\nletter in its original position:\n\n    >>> from more_itertools import derangements, ilen\n    >>> ilen(derangements('epsilon'))\n    1854\n    >>> subfactorial(len('epsilon'))\n    1854\n\nReference:  https://oeis.org/A000166"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "take",
+      "signature": "(n, iterable)",
+      "span": [
+        113,
+        126
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 37 words",
+      "intent": "Return first *n* items of the *iterable* as a list.",
+      "doc": "Return first *n* items of the *iterable* as a list.\n\n    >>> take(3, range(10))\n    [0, 1, 2]\n\nIf there are fewer than *n* items in the iterable, all of them are\nreturned.\n\n    >>> take(10, range(3))\n    [0, 1, 2]"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "tabulate",
+      "signature": "(function, start=0)",
+      "span": [
+        129,
+        144
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 63 words",
+      "intent": "Return an iterator over the results of ``func(start)``,",
+      "doc": "Return an iterator over the results of ``func(start)``,\n``func(start + 1)``, ``func(start + 2)``...\n\n*func* should be a function that accepts one integer argument.\n\nIf *start* is not specified it defaults to 0. It will be incremented each\ntime the iterator is advanced.\n\n    >>> square = lambda x: x ** 2\n    >>> iterator = tabulate(square, -3)\n    >>> take(4, iterator)\n    [9, 4, 1, 0]"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "tail",
+      "signature": "(n, iterable)",
+      "span": [
+        147,
+        160
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 20 words",
+      "intent": "Return an iterator over the last *n* items of *iterable*.",
+      "doc": "Return an iterator over the last *n* items of *iterable*.\n\n>>> t = tail(3, 'ABCDEFG')\n>>> list(t)\n['E', 'F', 'G']"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "consume",
+      "signature": "(iterator, n=None)",
+      "span": [
+        163,
+        200
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 111 words",
+      "intent": "Advance *iterable* by *n* steps. If *n* is ``None``, consume it",
+      "doc": "Advance *iterable* by *n* steps. If *n* is ``None``, consume it\nentirely.\n\nEfficiently exhausts an iterator without returning values. Defaults to\nconsuming the whole iterator, but an optional second argument may be\nprovided to limit consumption.\n\n    >>> i = (x for x in range(10))\n    >>> next(i)\n    0\n    >>> consume(i, 3)\n    >>> next(i)\n    4\n    >>> consume(i)\n    >>> next(i)\n    Traceback (most recent call last):\n      File \"<stdin>\", line 1, in <module>\n    StopIteration\n\nIf the iterator has fewer items remaining than the provided limit, the\nwhole iterator will be consumed.\n\n    >>> i = (x for x in range(3))\n    >>> consume(i, 5)\n    >>> next(i)\n    Traceback (most recent call last):\n      File \"<stdin>\", line 1, in <module>\n    StopIteration"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "nth",
+      "signature": "(iterable, n, default=None)",
+      "span": [
+        203,
+        213
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "Returns the nth item or a default value.",
+      "doc": "Returns the nth item or a default value.\n\n>>> l = range(10)\n>>> nth(l, 3)\n3\n>>> nth(l, 20, \"zebra\")\n'zebra'"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "all_equal",
+      "signature": "(iterable, key=None)",
+      "span": [
+        216,
+        239
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Returns ``True`` if all the elements are equal to each other.",
+      "doc": "Returns ``True`` if all the elements are equal to each other.\n\n    >>> all_equal('aaaa')\n    True\n    >>> all_equal('aaab')\n    False\n\nA function that accepts a single argument and returns a transformed version\nof each input item can be specified with *key*:\n\n    >>> all_equal('AaaA', key=str.casefold)\n    True\n    >>> all_equal([1, 2, 3], key=lambda x: x < 10)\n    True"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "quantify",
+      "signature": "(iterable, pred=bool)",
+      "span": [
+        242,
+        249
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the how many times the predicate is true.",
+      "doc": "Return the how many times the predicate is true.\n\n>>> quantify([True, False, True])\n2"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "pad_none",
+      "signature": "(iterable)",
+      "span": [
+        252,
+        263
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 31 words",
+      "intent": "Returns the sequence of elements and then returns ``None`` indefinitely.",
+      "doc": "Returns the sequence of elements and then returns ``None`` indefinitely.\n\n    >>> take(5, pad_none(range(3)))\n    [0, 1, 2, None, None]\n\nUseful for emulating the behavior of the built-in :func:`map` function.\n\nSee also :func:`padded`."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "ncycles",
+      "signature": "(iterable, n)",
+      "span": [
+        269,
+        276
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "Returns the sequence elements *n* times",
+      "doc": "Returns the sequence elements *n* times\n\n>>> list(ncycles([\"a\", \"b\"], 3))\n['a', 'b', 'a', 'b', 'a', 'b']"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "dotproduct",
+      "signature": "(vec1, vec2)",
+      "span": [
+        279,
+        289
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 37 words",
+      "intent": "Returns the dot product of the two iterables.",
+      "doc": "Returns the dot product of the two iterables.\n\n>>> dotproduct([10, 15, 12], [0.65, 0.80, 1.25])\n33.5\n>>> 10 * 0.65 + 15 * 0.80 + 12 * 1.25\n33.5\n\nIn Python 3.12 and later, use ``math.sumprod()`` instead."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "flatten",
+      "signature": "(list_of_lists)",
+      "span": [
+        299,
+        308
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "Return an iterator flattening one level of nesting in a list of lists.",
+      "doc": "Return an iterator flattening one level of nesting in a list of lists.\n\n    >>> list(flatten([[0, 1], [2, 3]]))\n    [0, 1, 2, 3]\n\nSee also :func:`collapse`, which can flatten multiple levels of nesting."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "repeatfunc",
+      "signature": "(function, times=None, *args)",
+      "span": [
+        311,
+        335
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 81 words",
+      "intent": "Call *function* with *args* repeatedly, returning an iterable over the",
+      "doc": "Call *function* with *args* repeatedly, returning an iterable over the\nresults.\n\nIf *times* is specified, the iterable will terminate after that many\nrepetitions:\n\n    >>> from operator import add\n    >>> times = 4\n    >>> args = 3, 5\n    >>> list(repeatfunc(add, times, *args))\n    [8, 8, 8, 8]\n\nIf *times* is ``None`` the iterable will not terminate:\n\n    >>> from random import randrange\n    >>> times = None\n    >>> args = 1, 11\n    >>> take(6, repeatfunc(randrange, times, *args))  # doctest:+SKIP\n    [2, 4, 8, 1, 8, 4]"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "pairwise",
+      "signature": "(iterable)",
+      "span": [
+        338,
+        347
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 22 words",
+      "intent": "Wrapper for :func:`itertools.pairwise`.",
+      "doc": "Wrapper for :func:`itertools.pairwise`.\n\n.. warning::\n\n   This function is deprecated as of version 11.0.0. It will be removed in a future\n   major release."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "grouper",
+      "signature": "(iterable, n, incomplete='fill', fillvalue=None)",
+      "span": [
+        350,
+        388
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 113 words",
+      "intent": "Group elements from *iterable* into fixed-length groups of length *n*.",
+      "doc": "Group elements from *iterable* into fixed-length groups of length *n*.\n\n>>> list(grouper('ABCDEF', 3))\n[('A', 'B', 'C'), ('D', 'E', 'F')]\n\nThe keyword arguments *incomplete* and *fillvalue* control what happens for\niterables whose length is not a multiple of *n*.\n\nWhen *incomplete* is `'fill'`, the last group will contain instances of\n*fillvalue*.\n\n>>> list(grouper('ABCDEFG', 3, incomplete='fill', fillvalue='x'))\n[('A', 'B', 'C'), ('D', 'E', 'F'), ('G', 'x', 'x')]\n\nWhen *incomplete* is `'ignore'`, the last group will not be emitted.\n\n>>> list(grouper('ABCDEFG', 3, incomplete='ignore', fillvalue='x'))\n[('A', 'B', 'C'), ('D', 'E', 'F')]\n\nWhen *incomplete* is `'strict'`, a `ValueError` will be raised.\n\n>>> iterator = grouper('ABCDEFG', 3, incomplete='strict')\n>>> list(iterator)  # doctest: +IGNORE_EXCEPTION_DETAIL\nTraceback (most recent call last):\n...\nValueError"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "roundrobin",
+      "signature": "(*iterables)",
+      "span": [
+        391,
+        406
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 44 words",
+      "intent": "Visit input iterables in a cycle until each is exhausted.",
+      "doc": "Visit input iterables in a cycle until each is exhausted.\n\n    >>> list(roundrobin('ABC', 'D', 'EF'))\n    ['A', 'D', 'E', 'B', 'F', 'C']\n\nThis function produces the same output as :func:`interleave_longest`, but\nmay perform better for some inputs (in particular when the number of\niterables is small)."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "partition",
+      "signature": "(pred, iterable)",
+      "span": [
+        409,
+        446
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 96 words",
+      "intent": "Returns a 2-tuple of iterables derived from the input iterable.",
+      "doc": "Returns a 2-tuple of iterables derived from the input iterable.\nThe first yields the items that have ``pred(item) == False``.\nThe second yields the items that have ``pred(item) == True``.\n\n    >>> is_odd = lambda x: x % 2 != 0\n    >>> iterable = range(10)\n    >>> even_items, odd_items = partition(is_odd, iterable)\n    >>> list(even_items), list(odd_items)\n    ([0, 2, 4, 6, 8], [1, 3, 5, 7, 9])\n\nIf *pred* is None, :func:`bool` is used.\n\n    >>> iterable = [0, 1, False, True, '', ' ']\n    >>> false_items, true_items = partition(None, iterable)\n    >>> list(false_items), list(true_items)\n    ([0, False, ''], [1, True, ' '])"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "powerset",
+      "signature": "(iterable)",
+      "span": [
+        449,
+        467
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 78 words",
+      "intent": "Yields all possible subsets of the iterable.",
+      "doc": "Yields all possible subsets of the iterable.\n\n    >>> list(powerset([1, 2, 3]))\n    [(), (1,), (2,), (3,), (1, 2), (1, 3), (2, 3), (1, 2, 3)]\n\n:func:`powerset` will operate on iterables that aren't :class:`set`\ninstances, so repeated elements in the input will produce repeated elements\nin the output.\n\n    >>> seq = [1, 1, 0]\n    >>> list(powerset(seq))\n    [(), (1,), (1,), (0,), (1, 1), (1, 0), (1, 0), (1, 1, 0)]\n\nFor a variant that efficiently yields actual :class:`set` instances, see\n:func:`powerset_of_sets`."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "unique_everseen",
+      "signature": "(iterable, key=None)",
+      "span": [
+        470,
+        503
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 90 words",
+      "intent": "Yield unique elements, preserving order. Remember all elements ever seen.",
+      "doc": "Yield unique elements, preserving order. Remember all elements ever seen.\n\n    >>> list(unique_everseen('AAAABBBCCDAABBB'))\n    ['A', 'B', 'C', 'D']\n    >>> list(unique_everseen('ABBCcAD', str.casefold))\n    ['A', 'B', 'C', 'D']\n\nRaises ``TypeError`` for unhashable items.\n\nSome unhashable objects can be converted to hashable objects\nusing the *key* parameter:\n\n* For ``list`` objects, try ``key=tuple``.\n* For ``set`` objects, try ``key=frozenset``.\n* For ``dict`` objects, try ``key=lambda x: frozenset(x.items())``\n  or in Python 3.15 and later, set ``key=frozendict``.\n\nAlternatively, consider the ``unique()`` itertool recipe.  It sorts\nthe data and then uses equality to eliminate duplicates.  Hashability\nis not required."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "unique_justseen",
+      "signature": "(iterable, key=None)",
+      "span": [
+        506,
+        518
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 23 words",
+      "intent": "Yields elements in order, ignoring serial duplicates",
+      "doc": "Yields elements in order, ignoring serial duplicates\n\n>>> list(unique_justseen('AAAABBBCCDAABBB'))\n['A', 'B', 'C', 'D', 'A', 'B']\n>>> list(unique_justseen('ABBCcAD', str.lower))\n['A', 'B', 'C', 'A', 'D']"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "unique",
+      "signature": "(iterable, key=None, reverse=False)",
+      "span": [
+        521,
+        538
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 56 words",
+      "intent": "Yields unique elements in sorted order.",
+      "doc": "Yields unique elements in sorted order.\n\n>>> list(unique([[1, 2], [3, 4], [1, 2]]))\n[[1, 2], [3, 4]]\n\n*key* and *reverse* are passed to :func:`sorted`.\n\n>>> list(unique('ABBcCAD', str.casefold))\n['A', 'B', 'c', 'D']\n>>> list(unique('ABBcCAD', str.casefold, reverse=True))\n['D', 'c', 'B', 'A']\n\nThe elements in *iterable* need not be hashable, but they must be\ncomparable for sorting to work."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "iter_except",
+      "signature": "(function, exception, first=None)",
+      "span": [
+        541,
+        567
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 93 words",
+      "intent": "Yields results from a function repeatedly until an exception is raised.",
+      "doc": "Yields results from a function repeatedly until an exception is raised.\n\nConverts a call-until-exception interface to an iterator interface.\nLike ``iter(function, sentinel)``, but uses an exception instead of a sentinel\nto end the loop.\n\n    >>> l = [0, 1, 2]\n    >>> list(iter_except(l.pop, IndexError))\n    [2, 1, 0]\n\nMultiple exceptions can be specified as a stopping condition:\n\n    >>> l = [1, 2, 3, '...', 4, 5, 6]\n    >>> list(iter_except(lambda: 1 + l.pop(), (IndexError, TypeError)))\n    [7, 6, 5]\n    >>> list(iter_except(lambda: 1 + l.pop(), (IndexError, TypeError)))\n    [4, 3, 2]\n    >>> list(iter_except(lambda: 1 + l.pop(), (IndexError, TypeError)))\n    []"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "first_true",
+      "signature": "(iterable, default=None, pred=None)",
+      "span": [
+        570,
+        587
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 51 words",
+      "intent": "Returns the first true value in the iterable.",
+      "doc": "Returns the first true value in the iterable.\n\nIf no true value is found, returns *default*\n\nIf *pred* is not None, returns the first item for which\n``pred(item) == True`` .\n\n    >>> first_true(range(10))\n    1\n    >>> first_true(range(10), pred=lambda x: x > 5)\n    6\n    >>> first_true(range(10), default='missing', pred=lambda x: x > 9)\n    'missing'"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "random_product",
+      "signature": "(*iterables, repeat=1)",
+      "span": [
+        590,
+        607
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 57 words",
+      "intent": "Draw an item at random from each of the input iterables.",
+      "doc": "Draw an item at random from each of the input iterables.\n\n    >>> random_product('abc', range(4), 'XYZ')  # doctest:+SKIP\n    ('c', 3, 'Z')\n\nIf *repeat* is provided as a keyword argument, that many items will be\ndrawn from each iterable.\n\n    >>> random_product('abcd', range(4), repeat=2)  # doctest:+SKIP\n    ('a', 2, 'd', 3)\n\nThis equivalent to taking a random selection from\n``itertools.product(*args, repeat=repeat)``."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "random_permutation",
+      "signature": "(iterable, r=None)",
+      "span": [
+        610,
+        625
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to random.sample"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 46 words",
+      "intent": "Return a random *r* length permutation of the elements in *iterable*.",
+      "doc": "Return a random *r* length permutation of the elements in *iterable*.\n\nIf *r* is not specified or is ``None``, then *r* defaults to the length of\n*iterable*.\n\n    >>> random_permutation(range(5))  # doctest:+SKIP\n    (3, 4, 0, 1, 2)\n\nThis equivalent to taking a random selection from\n``itertools.permutations(iterable, r)``."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "random_combination",
+      "signature": "(iterable, r)",
+      "span": [
+        628,
+        641
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to random.sample"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Return a random *r* length subsequence of the elements in *iterable*.",
+      "doc": "Return a random *r* length subsequence of the elements in *iterable*.\n\n    >>> random_combination(range(5), 3)  # doctest:+SKIP\n    (2, 3, 4)\n\nThis equivalent to taking a random selection from\n``itertools.combinations(iterable, r)``."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "random_combination_with_replacement",
+      "signature": "(iterable, r)",
+      "span": [
+        644,
+        658
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to random.randrange"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 36 words",
+      "intent": "Return a random *r* length subsequence of elements in *iterable*,",
+      "doc": "Return a random *r* length subsequence of elements in *iterable*,\nallowing individual elements to be repeated.\n\n    >>> random_combination_with_replacement(range(3), 5) # doctest:+SKIP\n    (0, 0, 1, 2, 2)\n\nThis equivalent to taking a random selection from\n``itertools.combinations_with_replacement(iterable, r)``."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "nth_combination",
+      "signature": "(iterable, r, index)",
+      "span": [
+        661,
+        692
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 56 words",
+      "intent": "Equivalent to ``list(combinations(iterable, r))[index]``.",
+      "doc": "Equivalent to ``list(combinations(iterable, r))[index]``.\n\nThe subsequences of *iterable* that are of length *r* can be ordered\nlexicographically. :func:`nth_combination` computes the subsequence at\nsort position *index* directly, without computing the previous\nsubsequences.\n\n    >>> nth_combination(range(5), 3, 5)\n    (0, 3, 4)\n\n``ValueError`` will be raised If *r* is negative.\n``IndexError`` will be raised if the given *index* is invalid."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "prepend",
+      "signature": "(value, iterable)",
+      "span": [
+        695,
+        707
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Yield *value*, followed by the elements in *iterable*.",
+      "doc": "Yield *value*, followed by the elements in *iterable*.\n\n    >>> value = '0'\n    >>> iterable = ['1', '2', '3']\n    >>> list(prepend(value, iterable))\n    ['0', '1', '2', '3']\n\nTo prepend multiple values, see :func:`itertools.chain`\nor :func:`value_chain`."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "convolve",
+      "signature": "(signal, kernel)",
+      "span": [
+        710,
+        750
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 146 words",
+      "intent": "Discrete linear convolution of two iterables.",
+      "doc": "Discrete linear convolution of two iterables.\nEquivalent to polynomial multiplication.\n\nFor example, multiplying ``(x\u00b2 -x - 20)`` by ``(x - 3)``\ngives ``(x\u00b3 -4x\u00b2 -17x + 60)``.\n\n    >>> list(convolve([1, -1, -20], [1, -3]))\n    [1, -4, -17, 60]\n\nExamples of popular kinds of kernels:\n\n* The kernel ``[0.25, 0.25, 0.25, 0.25]`` computes a moving average.\n  For image data, this blurs the image and reduces noise.\n* The kernel ``[1/2, 0, -1/2]`` estimates the first derivative of\n  a function evaluated at evenly spaced inputs.\n* The kernel ``[1, -2, 1]`` estimates the second derivative of a\n  function evaluated at evenly spaced inputs.\n\nConvolutions are mathematically commutative; however, the inputs are\nevaluated differently.  The signal is consumed lazily and can be\ninfinite. The kernel is fully consumed before the calculations begin.\n\nSupports all numeric types: int, float, complex, Decimal, Fraction.\n\nReferences:\n\n* Article:  https://betterexplained.com/articles/intuitive-convolution/\n* Video by 3Blue1Brown:  https://www.youtube.com/watch?v=KuXjwB4LzSA"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "before_and_after",
+      "signature": "(predicate, it)",
+      "span": [
+        753,
+        769
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "A variant of :func:`takewhile` that allows complete access to the",
+      "doc": "A variant of :func:`takewhile` that allows complete access to the\nremainder of the iterator.\n\n     >>> it = iter('ABCdEfGhI')\n     >>> all_upper, remainder = before_and_after(str.isupper, it)\n     >>> ''.join(all_upper)\n     'ABC'\n     >>> ''.join(remainder) # takewhile() would lose the 'd'\n     'dEfGhI'\n\nNote that the first iterator must be fully consumed before the second\niterator can generate valid results."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "triplewise",
+      "signature": "(iterable)",
+      "span": [
+        772,
+        785
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "Return overlapping triplets from *iterable*.",
+      "doc": "Return overlapping triplets from *iterable*.\n\n>>> list(triplewise('ABCDE'))\n[('A', 'B', 'C'), ('B', 'C', 'D'), ('C', 'D', 'E')]"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "sliding_window",
+      "signature": "(iterable, n)",
+      "span": [
+        805,
+        827
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Return a sliding window of width *n* over *iterable*.",
+      "doc": "Return a sliding window of width *n* over *iterable*.\n\n    >>> list(sliding_window(range(6), 4))\n    [(0, 1, 2, 3), (1, 2, 3, 4), (2, 3, 4, 5)]\n\nIf *iterable* has fewer than *n* items, then nothing is yielded:\n\n    >>> list(sliding_window(range(3), 4))\n    []\n\nFor a variant with more features, see :func:`windowed`."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "subslices",
+      "signature": "(iterable)",
+      "span": [
+        830,
+        841
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 31 words",
+      "intent": "Return all contiguous non-empty subslices of *iterable*.",
+      "doc": "Return all contiguous non-empty subslices of *iterable*.\n\n    >>> list(subslices('ABC'))\n    [['A'], ['A', 'B'], ['A', 'B', 'C'], ['B'], ['B', 'C'], ['C']]\n\nThis is similar to :func:`substrings`, but emits items in a different\norder."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "polynomial_from_roots",
+      "signature": "(roots)",
+      "span": [
+        844,
+        863
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 60 words",
+      "intent": "Compute a polynomial's coefficients from its roots.",
+      "doc": "Compute a polynomial's coefficients from its roots.\n\n>>> roots = [5, -4, 3]            # (x - 5) * (x + 4) * (x - 3)\n>>> polynomial_from_roots(roots)  # x\u00b3 - 4 x\u00b2 - 17 x + 60\n[1, -4, -17, 60]\n\nNote that polynomial coefficients are specified in descending power order.\n\nSupports all numeric types: int, float, complex, Decimal, Fraction."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "iter_index",
+      "signature": "(iterable, value, start=0, stop=None)",
+      "span": [
+        866,
+        911
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 107 words",
+      "intent": "Yield the index of each place in *iterable* that *value* occurs,",
+      "doc": "Yield the index of each place in *iterable* that *value* occurs,\nbeginning with index *start* and ending before index *stop*.\n\n\n>>> list(iter_index('AABCADEAF', 'A'))\n[0, 1, 4, 7]\n>>> list(iter_index('AABCADEAF', 'A', 1))  # start index is inclusive\n[1, 4, 7]\n>>> list(iter_index('AABCADEAF', 'A', 1, 7))  # stop index is not inclusive\n[1, 4]\n\nThe behavior for non-scalar *values* matches the built-in Python types.\n\n>>> list(iter_index('ABCDABCD', 'AB'))\n[0, 4]\n>>> list(iter_index([0, 1, 2, 3, 0, 1, 2, 3], [0, 1]))\n[]\n>>> list(iter_index([[0, 1], [2, 3], [0, 1], [2, 3]], [0, 1]))\n[0, 2]\n\nSee :func:`locate` for a more general means of finding the indexes\nassociated with particular values."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "sieve",
+      "signature": "(n)",
+      "span": [
+        914,
+        932
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 18 words",
+      "intent": "Yield the primes less than n.",
+      "doc": "Yield the primes less than n.\n\n>>> list(sieve(30))\n[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "transpose",
+      "signature": "(matrix)",
+      "span": [
+        966,
+        975
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 44 words",
+      "intent": "Swap the rows and columns of the input matrix.",
+      "doc": "Swap the rows and columns of the input matrix.\n\n>>> list(transpose([(1, 2, 3), (11, 22, 33)]))\n[(1, 11), (2, 22), (3, 33)]\n\nThe caller should ensure that the dimensions of the input are compatible.\nIf the input is empty, no output will be produced."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "reshape",
+      "signature": "(matrix, shape)",
+      "span": [
+        1001,
+        1039
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 206 words",
+      "intent": "Change the shape of a *matrix*.",
+      "doc": "Change the shape of a *matrix*.\n\nIf *shape* is an integer, the matrix must be two dimensional\nand the shape is interpreted as the desired number of columns:\n\n    >>> matrix = [(0, 1), (2, 3), (4, 5)]\n    >>> cols = 3\n    >>> list(reshape(matrix, cols))\n    [(0, 1, 2), (3, 4, 5)]\n\nIf *shape* is a tuple (or other iterable), the input matrix can have\nany number of dimensions. It will first be flattened and then rebuilt\nto the desired shape which can also be multidimensional:\n\n    >>> matrix = [(0, 1), (2, 3), (4, 5)]    # Start with a 3 x 2 matrix\n\n    >>> list(reshape(matrix, (2, 3)))        # Make a 2 x 3 matrix\n    [(0, 1, 2), (3, 4, 5)]\n\n    >>> list(reshape(matrix, (6,)))          # Make a vector of length six\n    [0, 1, 2, 3, 4, 5]\n\n    >>> list(reshape(matrix, (2, 1, 3, 1)))  # Make 2 x 1 x 3 x 1 tensor\n    [(((0,), (1,), (2,)),), (((3,), (4,), (5,)),)]\n\nEach dimension is assumed to be uniform, either all arrays or all scalars.\nFlattening stops when the first value in a dimension is a scalar.\nScalars are bytes, strings, and non-iterables.\nThe reshape iterator stops when the requested shape is complete\nor when the input is exhausted, whichever comes first."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "matmul",
+      "signature": "(m1, m2)",
+      "span": [
+        1042,
+        1054
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Multiply two matrices.",
+      "doc": "Multiply two matrices.\n\n>>> list(matmul([(7, 5), (3, 5)], [(2, 5), (7, 9)]))\n[(49, 80), (41, 60)]\n\nThe caller should ensure that the dimensions of the input matrices are\ncompatible with each other.\n\nSupports all numeric types: int, float, complex, Decimal, Fraction."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "factor",
+      "signature": "(n)",
+      "span": [
+        1076,
+        1106
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 38 words",
+      "intent": "Yield the prime factors of n.",
+      "doc": "Yield the prime factors of n.\n\n>>> list(factor(360))\n[2, 2, 2, 3, 3, 5]\n\nFinds small factors with trial division.  Larger factors are\neither verified as prime with ``is_prime`` or split into\nsmaller factors with Pollard's rho algorithm."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "polynomial_eval",
+      "signature": "(coefficients, x)",
+      "span": [
+        1109,
+        1129
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 65 words",
+      "intent": "Evaluate a polynomial at a specific value.",
+      "doc": "Evaluate a polynomial at a specific value.\n\nComputes with better numeric stability than Horner's method.\n\nEvaluate ``x^3 - 4 * x^2 - 17 * x + 60`` at ``x = 2.5``:\n\n>>> coefficients = [1, -4, -17, 60]\n>>> x = 2.5\n>>> polynomial_eval(coefficients, x)\n8.125\n\nNote that polynomial coefficients are specified in descending power order.\n\nSupports all numeric types: int, float, complex, Decimal, Fraction."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "sum_of_squares",
+      "signature": "(iterable)",
+      "span": [
+        1132,
+        1140
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 24 words",
+      "intent": "Return the sum of the squares of the input values.",
+      "doc": "Return the sum of the squares of the input values.\n\n>>> sum_of_squares([10, 20, 30])\n1400\n\nSupports all numeric types: int, float, complex, Decimal, Fraction."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "polynomial_derivative",
+      "signature": "(coefficients)",
+      "span": [
+        1143,
+        1159
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 55 words",
+      "intent": "Compute the first derivative of a polynomial.",
+      "doc": "Compute the first derivative of a polynomial.\n\nEvaluate the derivative of ``x\u00b3 - 4 x\u00b2 - 17 x + 60``:\n\n>>> coefficients = [1, -4, -17, 60]\n>>> derivative_coefficients = polynomial_derivative(coefficients)\n>>> derivative_coefficients\n[3, -8, -17]\n\nNote that polynomial coefficients are specified in descending power order.\n\nSupports all numeric types: int, float, complex, Decimal, Fraction."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "totient",
+      "signature": "(n)",
+      "span": [
+        1162,
+        1183
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 75 words",
+      "intent": "Return the count of natural numbers up to *n* that are coprime with *n*.",
+      "doc": "Return the count of natural numbers up to *n* that are coprime with *n*.\n\nEuler's totient function \u03c6(n) gives the number of totatives.\nTotative are integers k in the range 1 \u2264 k \u2264 n such that gcd(n, k) = 1.\n\n>>> n = 9\n>>> totient(n)\n6\n\n>>> totatives = [x for x in range(1, n) if gcd(n, x) == 1]\n>>> totatives\n[1, 2, 4, 5, 7, 8]\n>>> len(totatives)\n6\n\nReference:  https://en.wikipedia.org/wiki/Euler%27s_totient_function"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "is_prime",
+      "signature": "(n)",
+      "span": [
+        1233,
+        1278
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 95 words",
+      "intent": "Return ``True`` if *n* is prime and ``False`` otherwise.",
+      "doc": "Return ``True`` if *n* is prime and ``False`` otherwise.\n\nBasic examples:\n\n    >>> is_prime(37)\n    True\n    >>> is_prime(3 * 13)\n    False\n    >>> is_prime(18_446_744_073_709_551_557)\n    True\n\nFind the next prime over one billion:\n\n    >>> next(filter(is_prime, count(10**9)))\n    1000000007\n\nGenerate random primes up to 200 bits and up to 60 decimal digits:\n\n    >>> from random import seed, randrange, getrandbits\n    >>> seed(18675309)\n\n    >>> next(filter(is_prime, map(getrandbits, repeat(200))))\n    893303929355758292373272075469392561129886005037663238028407\n\n    >>> next(filter(is_prime, map(randrange, repeat(10**60))))\n    269638077304026462407872868003560484232362454342414618963649\n\nThis function is exact for values of *n* below 10**24.  For larger inputs,\nthe probabilistic Miller-Rabin primality test has a less than 1 in 2**128\nchance of a false positive."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "loops",
+      "signature": "(n)",
+      "span": [
+        1281,
+        1292
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 31 words",
+      "intent": "Returns an iterable with *n* elements for efficient looping.",
+      "doc": "Returns an iterable with *n* elements for efficient looping.\nLike ``range(n)`` but doesn't create integers.\n\n>>> i = 0\n>>> for _ in loops(5):\n...     i += 1\n>>> i\n5"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "multinomial",
+      "signature": "(*counts)",
+      "span": [
+        1295,
+        1337
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 199 words",
+      "intent": "Number of distinct arrangements of a multiset.",
+      "doc": "Number of distinct arrangements of a multiset.\n\nThe expression ``multinomial(3, 4, 2)`` has several equivalent\ninterpretations:\n\n* In the expansion of ``(a + b + c)\u2079``, the coefficient of the\n  ``a\u00b3b\u2074c\u00b2`` term is 1260.\n\n* There are 1260 distinct ways to arrange 9 balls consisting of 3 reds, 4\n  greens, and 2 blues.\n\n* There are 1260 unique ways to place 9 distinct objects into three bins\n  with sizes 3, 4, and 2.\n\nThe :func:`multinomial` function computes the length of\n:func:`distinct_permutations`.  For example, there are 83,160 distinct\nanagrams of the word \"abracadabra\":\n\n    >>> from more_itertools import distinct_permutations, ilen\n    >>> ilen(distinct_permutations('abracadabra'))\n    83160\n\nThis can be computed directly from the letter counts, 5a 2b 2r 1c 1d:\n\n    >>> from collections import Counter\n    >>> list(Counter('abracadabra').values())\n    [5, 2, 2, 1, 1]\n    >>> multinomial(5, 2, 2, 1, 1)\n    83160\n\nA binomial coefficient is a special case of multinomial where there are\nonly two categories.  For example, the number of ways to arrange 12 balls\nwith 5 reds and 7 blues is ``multinomial(5, 7)`` or ``math.comb(12, 5)``.\n\nLikewise, factorial is a special case of multinomial where\nthe multiplicities are all just 1 so that\n``multinomial(1, 1, 1, 1, 1, 1, 1) == math.factorial(7)``.\n\nReference:  https://en.wikipedia.org/wiki/Multinomial_theorem"
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "running_median",
+      "signature": "(iterable, *, maxlen=None)",
+      "span": [
+        1391,
+        1425
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 115 words",
+      "intent": "Cumulative median of values seen so far or values in a sliding window.",
+      "doc": "Cumulative median of values seen so far or values in a sliding window.\n\nSet *maxlen* to a positive integer to specify the maximum size\nof the sliding window.  The default of *None* is equivalent to\nan unbounded window.\n\nFor example:\n\n    >>> list(running_median([5.0, 9.0, 4.0, 12.0, 8.0, 9.0]))\n    [5.0, 7.0, 5.0, 7.0, 8.0, 8.5]\n    >>> list(running_median([5.0, 9.0, 4.0, 12.0, 8.0, 9.0], maxlen=3))\n    [5.0, 7.0, 5.0, 9.0, 8.0, 9.0]\n\nSupports numeric types such as int, float, Decimal, and Fraction,\nbut not complex numbers which are unorderable.\n\nOn version Python 3.13 and prior, max-heaps are simulated with\nnegative values. The negation causes Decimal inputs to apply context\nrounding, making the results slightly different than that obtained\nby statistics.median()."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "running_mean",
+      "signature": "(iterable, *, maxlen=None)",
+      "span": [
+        1439,
+        1469
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 99 words",
+      "intent": "Cumulative mean of values seen so far or values in a sliding window.",
+      "doc": "Cumulative mean of values seen so far or values in a sliding window.\n\nSet *maxlen* to a positive integer to specify the maximum size\nof the sliding window.  The default of *None* is equivalent to\nan unbounded window.\n\nFor example:\n\n    >>> list(running_mean([40, 30, 50, 46, 39, 44]))\n    [40.0, 35.0, 40.0, 41.5, 41.0, 41.5]\n\n    >>> list(running_mean([40, 30, 50, 46, 39, 44], maxlen=3))\n    [40.0, 35.0, 40.0, 42.0, 45.0, 43.0]\n\nSupports numeric types such as int, float, complex, Decimal, and Fraction.\n\nNo extra effort is made to reduce round-off errors for float inputs.\nSo the results may be slightly different from `statistics.mean`."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "running_min",
+      "signature": "(iterable, *, maxlen=None)",
+      "span": [
+        1483,
+        1510
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 99 words",
+      "intent": "Smallest of values seen so far or values in a sliding window.",
+      "doc": "Smallest of values seen so far or values in a sliding window.\n\nSet *maxlen* to a positive integer to specify the maximum size\nof the sliding window.  The default of *None* is equivalent to\nan unbounded window.\n\nFor example:\n\n    >>> list(running_min([4, 3, 7, 0, 8, 1, 6, 2, 9, 5]))\n    [4, 3, 3, 0, 0, 0, 0, 0, 0, 0]\n\n    >>> list(running_min([4, 3, 7, 0, 8, 1, 6, 2, 9, 5], maxlen=3))\n    [4, 3, 3, 0, 0, 0, 1, 1, 2, 2]\n\nSupports numeric types such as int, float, Decimal, and Fraction,\nbut not complex numbers which are unorderable."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "running_max",
+      "signature": "(iterable, *, maxlen=None)",
+      "span": [
+        1524,
+        1551
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 99 words",
+      "intent": "Largest of values seen so far or values in a sliding window.",
+      "doc": "Largest of values seen so far or values in a sliding window.\n\nSet *maxlen* to a positive integer to specify the maximum size\nof the sliding window.  The default of *None* is equivalent to\nan unbounded window.\n\nFor example:\n\n    >>> list(running_max([4, 3, 7, 0, 8, 1, 6, 2, 9, 5]))\n    [4, 4, 7, 7, 8, 8, 8, 8, 9, 9]\n\n    >>> list(running_max([4, 3, 7, 0, 8, 1, 6, 2, 9, 5], maxlen=3))\n    [4, 4, 7, 7, 8, 8, 8, 6, 9, 9]\n\nSupports numeric types such as int, float, Decimal, and Fraction,\nbut not complex numbers which are unorderable."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "running_statistics",
+      "signature": "(iterable, *, maxlen=None)",
+      "span": [
+        1563,
+        1586
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 76 words",
+      "intent": "Statistics for values seen so far or values in a sliding window.",
+      "doc": "Statistics for values seen so far or values in a sliding window.\n\nSet *maxlen* to a positive integer to specify the maximum size\nof the sliding window.  The default of *None* is equivalent to\nan unbounded window.\n\nYields instances of a ``Stats`` dataclass with fields for the dataset *size*,\n*minimum* value, *median* value, *maximum* value, and the arithmetic *mean*.\n\nSupports numeric types such as int, float, Decimal, and Fraction,\nbut not complex numbers which are unorderable."
+    },
+    {
+      "module": "more_itertools/recipes.py",
+      "qualname": "random_derangement",
+      "signature": "(iterable)",
+      "span": [
+        1590,
+        1606
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to random.shuffle"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "Return a random derangement of elements in the iterable.",
+      "doc": "Return a random derangement of elements in the iterable.\n\nEquivalent to but much faster than ``choice(list(derangements(iterable)))``."
+    }
+  ],
+  "summary": {
+    "total_public_functions": 174,
+    "auditability": {
+      "spec": 159,
+      "invariant": 2,
+      "none": 13
+    },
+    "deterministic": 167,
+    "auditable": 154
+  }
+}

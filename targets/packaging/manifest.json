@@ -1,0 +1,1582 @@
+{
+  "target": "packaging",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/packaging/repo",
+  "commit": "07265129295b4b95b9143b50e3ce4709f31a8c49",
+  "package_dir": "src/packaging",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "src/packaging/_elffile.py",
+      "qualname": "ELFFile.interpreter",
+      "signature": "(self) -> str | None",
+      "span": [
+        94,
+        108
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The path recorded in the ``PT_INTERP`` section header.",
+      "doc": "The path recorded in the ``PT_INTERP`` section header."
+    },
+    {
+      "module": "src/packaging/_manylinux.py",
+      "qualname": "platform_tags",
+      "signature": "(archs: Sequence[str]) -> Iterator[str]",
+      "span": [
+        237,
+        280
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via _have_compatible_abi"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 60 words",
+      "intent": "Generate manylinux tags compatible to the current platform.",
+      "doc": "Generate manylinux tags compatible to the current platform.\n\n:param archs: Sequence of compatible architectures.\n    The first one shall be the closest to the actual architecture and be the part of\n    platform tag after the ``linux_`` prefix, e.g. ``x86_64``.\n    The ``linux_`` prefix is assumed as a prerequisite for the current platform to\n    be manylinux-compatible.\n\n:returns: An iterator of compatible manylinux tags."
+    },
+    {
+      "module": "src/packaging/_musllinux.py",
+      "qualname": "platform_tags",
+      "signature": "(archs: Sequence[str]) -> Iterator[str]",
+      "span": [
+        59,
+        75
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via _get_musl_version"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 60 words",
+      "intent": "Generate musllinux tags compatible to the current platform.",
+      "doc": "Generate musllinux tags compatible to the current platform.\n\n:param archs: Sequence of compatible architectures.\n    The first one shall be the closest to the actual architecture and be the part of\n    platform tag after the ``linux_`` prefix, e.g. ``x86_64``.\n    The ``linux_`` prefix is assumed as a prerequisite for the current platform to\n    be musllinux-compatible.\n\n:returns: An iterator of compatible musllinux tags."
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "Node.serialize",
+      "signature": "(self) -> str",
+      "span": [
+        28,
+        29
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "serialize (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "Variable.serialize",
+      "signature": "(self) -> str",
+      "span": [
+        63,
+        64
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "serialize (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "Value.serialize",
+      "signature": "(self) -> str",
+      "span": [
+        70,
+        71
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "serialize (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "Op.serialize",
+      "signature": "(self) -> str",
+      "span": [
+        77,
+        78
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "serialize (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "parse_requirement",
+      "signature": "(source: str) -> ParsedRequirement",
+      "span": [
+        99,
+        100
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parse requirement (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "parse_marker",
+      "signature": "(source: str) -> MarkerList",
+      "span": [
+        293,
+        294
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parse marker (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "process_env_var",
+      "signature": "(env_var: str) -> Variable",
+      "span": [
+        365,
+        369
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "process env var (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_parser.py",
+      "qualname": "process_python_str",
+      "signature": "(python_str: str) -> Value",
+      "span": [
+        372,
+        374
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "process python str (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "trim_release",
+      "signature": "(release: tuple[int, ...]) -> tuple[int, ...]",
+      "span": [
+        292,
+        297
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Strip trailing zeros from a release tuple for normalized comparison.",
+      "doc": "Strip trailing zeros from a release tuple for normalized comparison."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "coerce_version",
+      "signature": "(version: Version | str) -> Version | None",
+      "span": [
+        311,
+        317
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "coerce version (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "intersect_ranges",
+      "signature": "(left: Sequence[VersionRange], right: Sequence[VersionRange]) -> list[VersionRange]",
+      "span": [
+        449,
+        472
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Intersect two sorted, non-overlapping range lists (two-pointer merge).",
+      "doc": "Intersect two sorted, non-overlapping range lists (two-pointer merge)."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "filter_by_ranges",
+      "signature": "(ranges: Sequence[VersionRange], iterable: Iterable[Any], key: Callable[[Any], Version | str] | None, prereleases: bool | None) -> Iterator[Any]",
+      "span": [
+        475,
+        569
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 30 words",
+      "intent": "Filter *iterable* against precomputed version *ranges*.",
+      "doc": "Filter *iterable* against precomputed version *ranges*.\n\nWith ``prereleases=None``, the PEP 440 default applies: pre-releases\nare excluded unless no final matches, in which case buffered\npre-releases come out at the end."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "ranges_are_prerelease_only",
+      "signature": "(ranges: Sequence[VersionRange]) -> bool",
+      "span": [
+        593,
+        607
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "True when every range in *ranges* contains only pre-releases.",
+      "doc": "True when every range in *ranges* contains only pre-releases.\n\nUsed to detect unsatisfiable specifier sets when ``prereleases=False``:\nif every range is pre-release-only, every contained version is excluded."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "wildcard_ranges",
+      "signature": "(op: str, base: Version) -> list[VersionRange]",
+      "span": [
+        610,
+        623
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Ranges for ==V.* and !=V.*.",
+      "doc": "Ranges for ==V.* and !=V.*.\n\n==1.2.* -> [1.2.dev0, 1.3.dev0);  !=1.2.* -> complement."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "standard_ranges",
+      "signature": "(op: str, version: Version, has_local: bool) -> list[VersionRange]",
+      "span": [
+        626,
+        696
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 37 words",
+      "intent": "Ranges for the standard PEP 440 operators (no wildcard, no ===).",
+      "doc": "Ranges for the standard PEP 440 operators (no wildcard, no ===).\n\n*has_local* indicates whether the spec string included a ``+local``\nsegment; relevant only for ``==`` / ``!=`` to decide whether the\nupper bound includes V's local family."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "bounds_for_spec",
+      "signature": "(op: str, version_str: str, version: Version) -> list[VersionRange]",
+      "span": [
+        699,
+        710
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 40 words",
+      "intent": "Ranges for one specifier's ``(op, version_str)``.",
+      "doc": "Ranges for one specifier's ``(op, version_str)``.\n\nDispatches between the wildcard and standard builders. ``version`` is the\nparsed ``version_str`` (its base, without the trailing ``.*``, for\nwildcards). ``===`` is not handled here; its match is a literal string\ncompared in :mod:`packaging.specifiers`."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "intersect_specifier_bounds",
+      "signature": "(per_specifier_ranges: Iterable[Sequence[VersionRange]]) -> Sequence[VersionRange]",
+      "span": [
+        713,
+        733
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Intersect each specifier's ranges into a single sequence.",
+      "doc": "Intersect each specifier's ranges into a single sequence.\n\nShort-circuits once the running intersection is empty, since no later\nspecifier can revive it. Callers must pass at least one specifier."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "matches_bounds_only",
+      "signature": "(ranges: Sequence[VersionRange], version: Version) -> bool",
+      "span": [
+        736,
+        752
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Whether ``version`` falls within any of ``ranges``.",
+      "doc": "Whether ``version`` falls within any of ``ranges``.\n\nThe pure bounds membership test, for a single already-parsed version with\nno pre-release policy applied. ``ranges`` are sorted and non-overlapping,\nso a version below one range's lower bound is below every later range too."
+    },
+    {
+      "module": "src/packaging/_ranges.py",
+      "qualname": "resolve_prereleases",
+      "signature": "(configured: bool | None, autodetected: bool | None) -> bool | None",
+      "span": [
+        755,
+        769
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "Resolve a specifier's effective default pre-release policy.",
+      "doc": "Resolve a specifier's effective default pre-release policy.\n\nAn explicit ``configured`` value wins; otherwise an autodetected ``True``\npropagates and anything else falls back to the PEP 440 default (``None``)."
+    },
+    {
+      "module": "src/packaging/_tokenizer.py",
+      "qualname": "Tokenizer.consume",
+      "signature": "(self, name: str) -> None",
+      "span": [
+        116,
+        119
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Move beyond provided token name, if at current position.",
+      "doc": "Move beyond provided token name, if at current position."
+    },
+    {
+      "module": "src/packaging/_tokenizer.py",
+      "qualname": "Tokenizer.check",
+      "signature": "(self, name: str, *, peek: bool=False) -> bool",
+      "span": [
+        121,
+        140
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Check whether the next token has the provided name.",
+      "doc": "Check whether the next token has the provided name.\n\nBy default, if the check succeeds, the token *must* be read before\nanother check. If `peek` is set to `True`, the token is not loaded and\nwould need to be checked again."
+    },
+    {
+      "module": "src/packaging/_tokenizer.py",
+      "qualname": "Tokenizer.expect",
+      "signature": "(self, name: str, *, expected: str) -> Token",
+      "span": [
+        142,
+        149
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Expect a certain token name next, failing with a syntax error otherwise.",
+      "doc": "Expect a certain token name next, failing with a syntax error otherwise.\n\nThe token is *not* read."
+    },
+    {
+      "module": "src/packaging/_tokenizer.py",
+      "qualname": "Tokenizer.read",
+      "signature": "(self) -> Token",
+      "span": [
+        151,
+        159
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Consume the next token and return it.",
+      "doc": "Consume the next token and return it."
+    },
+    {
+      "module": "src/packaging/_tokenizer.py",
+      "qualname": "Tokenizer.raise_syntax_error",
+      "signature": "(self, message: str, *, span_start: int | None=None, span_end: int | None=None) -> NoReturn",
+      "span": [
+        161,
+        177
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Raise ParserSyntaxError at the given position.",
+      "doc": "Raise ParserSyntaxError at the given position."
+    },
+    {
+      "module": "src/packaging/_tokenizer.py",
+      "qualname": "Tokenizer.enclosing_tokens",
+      "signature": "(self, open_token: str, close_token: str, *, around: str) -> Generator[None, None, None]",
+      "span": [
+        180,
+        200
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "enclosing tokens (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/dependency_groups.py",
+      "qualname": "DependencyGroupResolver.lookup",
+      "signature": "(self, group: str) -> tuple[Requirement | DependencyGroupInclude, ...]",
+      "span": [
+        129,
+        141
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 26 words",
+      "intent": "Lookup a group name, returning the parsed dependency data for that group.",
+      "doc": "Lookup a group name, returning the parsed dependency data for that group.\nThis will not resolve includes.\n\n:param group: the name of the group to lookup"
+    },
+    {
+      "module": "src/packaging/dependency_groups.py",
+      "qualname": "DependencyGroupResolver.resolve",
+      "signature": "(self, group: str) -> tuple[Requirement, ...]",
+      "span": [
+        143,
+        154
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 18 words",
+      "intent": "Resolve a dependency group to a list of requirements.",
+      "doc": "Resolve a dependency group to a list of requirements.\n\n:param group: the name of the group to resolve"
+    },
+    {
+      "module": "src/packaging/dependency_groups.py",
+      "qualname": "resolve_dependency_groups",
+      "signature": "(dependency_groups: Mapping[str, Sequence[str | Mapping[str, str]]], /, *groups: str) -> tuple[str, ...]",
+      "span": [
+        281,
+        294
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Resolve a dependency group to a tuple of requirements, as strings.",
+      "doc": "Resolve a dependency group to a tuple of requirements, as strings.\n\n:param dependency_groups: the parsed contents of the ``[dependency-groups]`` table\n    from ``pyproject.toml``\n:param groups: the name of the group(s) to resolve\n\n.. versionadded:: 26.1"
+    },
+    {
+      "module": "src/packaging/direct_url.py",
+      "qualname": "DirectUrl.from_dict",
+      "signature": "(cls, d: Mapping[str, Any], /) -> Self",
+      "span": [
+        301,
+        303
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Create and validate a DirectUrl instance from a JSON dictionary.",
+      "doc": "Create and validate a DirectUrl instance from a JSON dictionary."
+    },
+    {
+      "module": "src/packaging/direct_url.py",
+      "qualname": "DirectUrl.to_dict",
+      "signature": "(self, *, generate_legacy_hash: bool=False, strip_user_password: bool=True, safe_user_passwords: Collection[str]=('git',)) -> Mapping[str, Any]",
+      "span": [
+        305,
+        330
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 80 words",
+      "intent": "Convert the DirectUrl instance to a JSON dictionary.",
+      "doc": "Convert the DirectUrl instance to a JSON dictionary.\n\n:param generate_legacy_hash: If True, include a legacy `hash` field in\n    `archive_info` for backward compatibility with tools that don't\n    support the `hashes` field.\n:param strip_user_password: If True, strip user:password from the URL\n    unless it is formed with environment variables as specified in PEP\n    610, or it is a safe user:password such as `git`.\n:param safe_user_passwords: A collection of user:password strings that\n    should not be stripped from the URL even if `strip_user_password` is\n    True."
+    },
+    {
+      "module": "src/packaging/direct_url.py",
+      "qualname": "DirectUrl.validate",
+      "signature": "(self) -> None",
+      "span": [
+        332,
+        337
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Validate the DirectUrl instance against the specification.",
+      "doc": "Validate the DirectUrl instance against the specification.\n\nRaises :class:`DirectUrlValidationError` if invalid."
+    },
+    {
+      "module": "src/packaging/licenses/__init__.py",
+      "qualname": "canonicalize_license_expression",
+      "signature": "(raw_license_expression: str) -> NormalizedLicenseExpression",
+      "span": [
+        71,
+        186
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to compile()"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 106 words",
+      "intent": "This function takes a valid License-Expression, and returns the normalized",
+      "doc": "This function takes a valid License-Expression, and returns the normalized\nform of it.\n\nThe return type is typed as :class:`NormalizedLicenseExpression`. This\nallows type checkers to help require that a string has passed through this\nfunction before use.\n\n:param str raw_license_expression: The License-Expression to canonicalize.\n:raises InvalidLicenseExpression: If the License-Expression is invalid due to an\n    invalid/unknown license identifier or invalid syntax.\n\n.. doctest::\n\n    >>> from packaging.licenses import canonicalize_license_expression\n    >>> canonicalize_license_expression(\"mit\")\n    'MIT'\n    >>> canonicalize_license_expression(\"mit and (apache-2.0 or bsd-2-clause)\")\n    'MIT AND (Apache-2.0 OR BSD-2-Clause)'\n    >>> canonicalize_license_expression(\"(mit\")\n    Traceback (most recent call last):\n      ...\n    InvalidLicenseExpression: Invalid license expression: '(mit'\n    >>> canonicalize_license_expression(\"Use-it-after-midnight\")\n    Traceback (most recent call last):\n      ...\n    InvalidLicenseExpression: Unknown license: 'Use-it-after-midnight'"
+    },
+    {
+      "module": "src/packaging/markers.py",
+      "qualname": "default_environment",
+      "signature": "() -> Environment",
+      "span": [
+        301,
+        320
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 18 words",
+      "intent": "Return the default marker environment for the current Python process.",
+      "doc": "Return the default marker environment for the current Python process.\n\nThis is the base environment used by :meth:`Marker.evaluate`."
+    },
+    {
+      "module": "src/packaging/markers.py",
+      "qualname": "Marker.evaluate",
+      "signature": "(self, environment: Mapping[str, str | AbstractSet[str]] | None=None, context: EvaluateContext='metadata') -> bool",
+      "span": [
+        439,
+        486
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 117 words",
+      "intent": "Evaluate a marker.",
+      "doc": "Evaluate a marker.\n\nReturn the boolean from evaluating this marker against the environment.\nThe environment is determined from the current Python process unless\npassed in explicitly.\n\n:param environment: Mapping containing keys and values to override the\n   detected environment.\n:param EvaluateContext context: The context in which the marker is\n    evaluated, which influences what marker names are considered valid.\n    Accepted values are ``\"metadata\"`` (for core metadata; default),\n    ``\"lock_file\"``, and ``\"requirement\"`` (i.e. all other situations).\n:raises UndefinedComparison: If the marker uses a comparison on values\n    that are not valid versions per the :ref:`specification of version\n    specifiers <pypug:version-specifiers>`.\n:raises UndefinedEnvironmentName: If the marker references a value that\n    is missing from the evaluation environment.\n:returns: ``True`` if the marker matches, otherwise ``False``."
+    },
+    {
+      "module": "src/packaging/metadata.py",
+      "qualname": "RFC822Policy.header_store_parse",
+      "signature": "(self, name: str, value: str) -> tuple[str, str]",
+      "span": [
+        304,
+        307
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "header store parse (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/metadata.py",
+      "qualname": "RFC822Message.as_bytes",
+      "signature": "(self, unixfrom: bool=False, policy: email.policy.Policy | None=None) -> bytes",
+      "span": [
+        321,
+        329
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the bytes representation of the message.",
+      "doc": "Return the bytes representation of the message.\n\nThis handles unicode encoding."
+    },
+    {
+      "module": "src/packaging/metadata.py",
+      "qualname": "parse_email",
+      "signature": "(data: bytes | str) -> tuple[RawMetadata, dict[str, list[str]]]",
+      "span": [
+        332,
+        510
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 116 words",
+      "intent": "Parse a distribution's metadata stored as email headers (e.g. from ``METADATA``).",
+      "doc": "Parse a distribution's metadata stored as email headers (e.g. from ``METADATA``).\n\nThis function returns a two-item tuple of dicts. The first dict is of\nrecognized fields from the core metadata specification. Fields that can be\nparsed and translated into Python's built-in types are converted\nappropriately. All other fields are left as-is. Fields that are allowed to\nappear multiple times are stored as lists.\n\nThe second dict contains all other fields from the metadata. This includes\nany unrecognized fields. It also includes any fields which are expected to\nbe parsed into a built-in type but were not formatted appropriately. Finally,\nany fields that are expected to appear only once but are repeated are\nincluded in this dict."
+    },
+    {
+      "module": "src/packaging/metadata.py",
+      "qualname": "Metadata.from_raw",
+      "signature": "(cls, data: RawMetadata, *, validate: bool=True) -> Metadata",
+      "span": [
+        784,
+        835
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "Create an instance from :class:`RawMetadata`.",
+      "doc": "Create an instance from :class:`RawMetadata`.\n\nIf *validate* is true, all metadata will be validated. All exceptions\nrelated to validation will be gathered and raised as an :class:`ExceptionGroup`."
+    },
+    {
+      "module": "src/packaging/metadata.py",
+      "qualname": "Metadata.from_email",
+      "signature": "(cls, data: bytes | str, *, validate: bool=True) -> Metadata",
+      "span": [
+        838,
+        860
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "Parse metadata from email headers.",
+      "doc": "Parse metadata from email headers.\n\nIf *validate* is true, the metadata will be validated. All exceptions\nrelated to validation will be gathered and raised as an :class:`ExceptionGroup`."
+    },
+    {
+      "module": "src/packaging/metadata.py",
+      "qualname": "Metadata.as_rfc822",
+      "signature": "(self) -> RFC822Message",
+      "span": [
+        947,
+        953
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return an RFC822 message with the metadata.",
+      "doc": "Return an RFC822 message with the metadata."
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "is_valid_pylock_path",
+      "signature": "(path: Path) -> bool",
+      "span": [
+        79,
+        81
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Check if the given path is a valid pylock file path.",
+      "doc": "Check if the given path is a valid pylock file path."
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "PackageSdist.filename",
+      "signature": "(self) -> str",
+      "span": [
+        471,
+        476
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Get the filename of the sdist.",
+      "doc": "Get the filename of the sdist."
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "PackageWheel.filename",
+      "signature": "(self) -> str",
+      "span": [
+        520,
+        525
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Get the filename of the wheel.",
+      "doc": "Get the filename of the wheel."
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "Package.is_direct",
+      "signature": "(self) -> bool",
+      "span": [
+        658,
+        659
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "is direct (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "Pylock.from_dict",
+      "signature": "(cls, d: Mapping[str, Any], /) -> Self",
+      "span": [
+        724,
+        730
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 19 words",
+      "intent": "Create and validate a Pylock instance from a TOML dictionary.",
+      "doc": "Create and validate a Pylock instance from a TOML dictionary.\n\nRaises :class:`PylockValidationError` if the input data is not\nspec-compliant."
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "Pylock.to_dict",
+      "signature": "(self) -> Mapping[str, Any]",
+      "span": [
+        732,
+        734
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Convert the Pylock instance to a TOML dictionary.",
+      "doc": "Convert the Pylock instance to a TOML dictionary."
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "Pylock.validate",
+      "signature": "(self) -> None",
+      "span": [
+        736,
+        740
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Validate the Pylock instance against the specification.",
+      "doc": "Validate the Pylock instance against the specification.\n\nRaises :class:`PylockValidationError` otherwise."
+    },
+    {
+      "module": "src/packaging/pylock.py",
+      "qualname": "Pylock.select",
+      "signature": "(self, *, environment: Environment | None=None, tags: Sequence[Tag] | None=None, extras: Collection[str] | None=None, dependency_groups: Collection[str] | None=None) -> Iterator[tuple[Package, PackageVcs | PackageDirectory | PackageArchive | PackageWheel | PackageSdist]]",
+      "span": [
+        742,
+        916
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 73 words",
+      "intent": "Select what to install from the lock file.",
+      "doc": "Select what to install from the lock file.\n\nThe *environment* and *tags* parameters represent the environment being\nselected for. If unspecified, ``packaging.markers.default_environment()`` and\n``packaging.tags.sys_tags()`` are used.\n\nThe *extras* parameter represents the extras to install.\n\nThe *dependency_groups* parameter represents the groups to install. If\nunspecified, the default groups are used.\n\nThis method must be used on valid Pylock instances (i.e. one obtained\nfrom :meth:`Pylock.from_dict` or if constructed manually, after calling\n:meth:`Pylock.validate`).\n\n.. versionadded:: 26.1"
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "BaseSpecifier.prereleases",
+      "signature": "(self) -> bool | None",
+      "span": [
+        166,
+        171
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 37 words",
+      "intent": "Whether or not pre-releases as a whole are allowed.",
+      "doc": "Whether or not pre-releases as a whole are allowed.\n\nThis can be set to either ``True`` or ``False`` to explicitly enable or disable\nprereleases or it can be set to ``None`` (the default) to use default semantics."
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "BaseSpecifier.prereleases",
+      "signature": "(self, value: bool) -> None",
+      "span": [
+        174,
+        178
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Setter for :attr:`prereleases`.",
+      "doc": "Setter for :attr:`prereleases`.\n\n:param value: The value to set."
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "BaseSpecifier.contains",
+      "signature": "(self, item: str, prereleases: bool | None=None) -> bool",
+      "span": [
+        181,
+        184
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Determines if the given item is contained within this specifier.",
+      "doc": "Determines if the given item is contained within this specifier."
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "BaseSpecifier.filter",
+      "signature": "(self, iterable: Iterable[Any], prereleases: bool | None=None, key: Callable[[Any], UnparsedVersion] | None=None) -> Iterator[Any]",
+      "span": [
+        203,
+        212
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 22 words",
+      "intent": "Takes an iterable of items and filters them so that only items which",
+      "doc": "Takes an iterable of items and filters them so that only items which\nare contained within this specifier are allowed in it."
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "Specifier.prereleases",
+      "signature": "(self) -> bool | None",
+      "span": [
+        429,
+        454
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "prereleases (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "Specifier.prereleases",
+      "signature": "(self, value: bool | None) -> None",
+      "span": [
+        457,
+        458
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "prereleases (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "Specifier.operator",
+      "signature": "(self) -> str",
+      "span": [
+        500,
+        506
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The operator of this specifier.",
+      "doc": "The operator of this specifier.\n\n>>> Specifier(\"==1.2.3\").operator\n'=='"
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "Specifier.version",
+      "signature": "(self) -> str",
+      "span": [
+        509,
+        515
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The version of this specifier.",
+      "doc": "The version of this specifier.\n\n>>> Specifier(\"==1.2.3\").version\n'1.2.3'"
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "Specifier.contains",
+      "signature": "(self, item: UnparsedVersion, prereleases: bool | None=None) -> bool",
+      "span": [
+        612,
+        658
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 80 words",
+      "intent": "Return whether or not the item is contained in this specifier.",
+      "doc": "Return whether or not the item is contained in this specifier.\n\n:param item:\n    The item to check for, which can be a version string or a\n    :class:`~packaging.version.Version` instance.\n:param prereleases:\n    Whether or not to match prereleases with this Specifier. If set to\n    ``None`` (the default), it will follow the recommendation from\n    :pep:`440` and match prereleases, as there are no other versions.\n\n>>> Specifier(\">=1.2.3\").contains(\"1.2.3\")\nTrue\n>>> Specifier(\">=1.2.3\").contains(Version(\"1.2.3\"))\nTrue\n>>> Specifier(\">=1.2.3\").contains(\"1.0.0\")\nFalse\n>>> Specifier(\">=1.2.3\").contains(\"1.3.0a1\")\nTrue\n>>> Specifier(\">=1.2.3\", prereleases=False).contains(\"1.3.0a1\")\nFalse\n>>> Specifier(\">=1.2.3\").contains(\"1.3.0a1\")\nTrue"
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "Specifier.filter",
+      "signature": "(self, iterable: Iterable[Any], prereleases: bool | None=None, key: Callable[[Any], UnparsedVersion] | None=None) -> Iterator[Any]",
+      "span": [
+        676,
+        728
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 144 words",
+      "intent": "Filter items in the given iterable, that match the specifier.",
+      "doc": "Filter items in the given iterable, that match the specifier.\n\n:param iterable:\n    An iterable that can contain version strings and\n    :class:`~packaging.version.Version` instances. The items in the\n    iterable will be filtered according to the specifier.\n:param prereleases:\n    Whether or not to allow prereleases in the returned iterator. If set to\n    ``None`` (the default), it will follow the recommendation from :pep:`440`\n    and match prereleases if there are no other versions.\n:param key:\n    A callable that takes a single argument (an item from the iterable) and\n    returns a version string or :class:`~packaging.version.Version`\n    instance to be used for filtering.\n\n>>> list(Specifier(\">=1.2.3\").filter([\"1.2\", \"1.3\", \"1.5a1\"]))\n['1.3']\n>>> list(Specifier(\">=1.2.3\").filter([\"1.2\", \"1.2.3\", \"1.3\", Version(\"1.4\")]))\n['1.2.3', '1.3', <Version('1.4')>]\n>>> list(Specifier(\">=1.2.3\").filter([\"1.2\", \"1.5a1\"]))\n['1.5a1']\n>>> list(Specifier(\">=1.2.3\").filter([\"1.3\", \"1.5a1\"], prereleases=True))\n['1.3', '1.5a1']\n>>> list(Specifier(\">=1.2.3\", prereleases=True).filter([\"1.3\", \"1.5a1\"]))\n['1.3', '1.5a1']\n>>> list(Specifier(\">=1.2.3\").filter(\n... [{\"ver\": \"1.2\"}, {\"ver\": \"1.3\"}],\n... key=lambda x: x[\"ver\"]))\n[{'ver': '1.3'}]\n\n.. versionchanged:: 26.1\n\n    Added the ``key`` parameter."
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "SpecifierSet.prereleases",
+      "signature": "(self) -> bool | None",
+      "span": [
+        833,
+        850
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "prereleases (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "SpecifierSet.prereleases",
+      "signature": "(self, value: bool | None) -> None",
+      "span": [
+        853,
+        855
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "prereleases (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "SpecifierSet.is_unsatisfiable",
+      "signature": "(self) -> bool",
+      "span": [
+        1041,
+        1074
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Check whether this specifier set can never be satisfied.",
+      "doc": "Check whether this specifier set can never be satisfied.\n\nReturns True if no version can satisfy all specifiers simultaneously.\n\n>>> SpecifierSet(\">=2.0,<1.0\").is_unsatisfiable()\nTrue\n>>> SpecifierSet(\">=1.0,<2.0\").is_unsatisfiable()\nFalse\n>>> SpecifierSet(\"\").is_unsatisfiable()\nFalse\n>>> SpecifierSet(\"==1.0,!=1.0\").is_unsatisfiable()\nTrue\n\n.. versionadded:: 26.1"
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "SpecifierSet.contains",
+      "signature": "(self, item: UnparsedVersion, prereleases: bool | None=None, installed: bool | None=None) -> bool",
+      "span": [
+        1136,
+        1214
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 107 words",
+      "intent": "Return whether or not the item is contained in this SpecifierSet.",
+      "doc": "Return whether or not the item is contained in this SpecifierSet.\n\n:param item:\n    The item to check for, which can be a version string or a\n    :class:`~packaging.version.Version` instance.\n:param prereleases:\n    Whether or not to match prereleases with this SpecifierSet. If set to\n    ``None`` (the default), it will follow the recommendation from :pep:`440`\n    and match prereleases, as there are no other versions.\n:param installed:\n    Whether or not the item is installed. If set to ``True``, it will\n    accept prerelease versions even if the specifier does not allow them.\n\n>>> SpecifierSet(\">=1.0.0,!=1.0.1\").contains(\"1.2.3\")\nTrue\n>>> SpecifierSet(\">=1.0.0,!=1.0.1\").contains(Version(\"1.2.3\"))\nTrue\n>>> SpecifierSet(\">=1.0.0,!=1.0.1\").contains(\"1.0.1\")\nFalse\n>>> SpecifierSet(\">=1.0.0,!=1.0.1\").contains(\"1.3.0a1\")\nTrue\n>>> SpecifierSet(\">=1.0.0,!=1.0.1\", prereleases=False).contains(\"1.3.0a1\")\nFalse\n>>> SpecifierSet(\">=1.0.0,!=1.0.1\").contains(\"1.3.0a1\", prereleases=True)\nTrue"
+    },
+    {
+      "module": "src/packaging/specifiers.py",
+      "qualname": "SpecifierSet.filter",
+      "signature": "(self, iterable: Iterable[Any], prereleases: bool | None=None, key: Callable[[Any], UnparsedVersion] | None=None) -> Iterator[Any]",
+      "span": [
+        1232,
+        1310
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 180 words",
+      "intent": "Filter items in the given iterable, that match the specifiers in this set.",
+      "doc": "Filter items in the given iterable, that match the specifiers in this set.\n\n:param iterable:\n    An iterable that can contain version strings and\n    :class:`~packaging.version.Version` instances. The items in the\n    iterable will be filtered according to the specifier.\n:param prereleases:\n    Whether or not to allow prereleases in the returned iterator. If set to\n    ``None`` (the default), it will follow the recommendation from :pep:`440`\n    and match prereleases if there are no other versions.\n:param key:\n    A callable that takes a single argument (an item from the iterable) and\n    returns a version string or :class:`~packaging.version.Version`\n    instance to be used for filtering.\n\n>>> list(SpecifierSet(\">=1.2.3\").filter([\"1.2\", \"1.3\", \"1.5a1\"]))\n['1.3']\n>>> list(SpecifierSet(\">=1.2.3\").filter([\"1.2\", \"1.3\", Version(\"1.4\")]))\n['1.3', <Version('1.4')>]\n>>> list(SpecifierSet(\">=1.2.3\").filter([\"1.2\", \"1.5a1\"]))\n['1.5a1']\n>>> list(SpecifierSet(\">=1.2.3\").filter([\"1.3\", \"1.5a1\"], prereleases=True))\n['1.3', '1.5a1']\n>>> list(SpecifierSet(\">=1.2.3\", prereleases=True).filter([\"1.3\", \"1.5a1\"]))\n['1.3', '1.5a1']\n>>> list(SpecifierSet(\">=1.2.3\").filter(\n... [{\"ver\": \"1.2\"}, {\"ver\": \"1.3\"}],\n... key=lambda x: x[\"ver\"]))\n[{'ver': '1.3'}]\n\nAn \"empty\" SpecifierSet will filter items based on the presence of prerelease\nversions in the set.\n\n>>> list(SpecifierSet(\"\").filter([\"1.3\", \"1.5a1\"]))\n['1.3']\n>>> list(SpecifierSet(\"\").filter([\"1.5a1\"]))\n['1.5a1']\n>>> list(SpecifierSet(\"\", prereleases=True).filter([\"1.3\", \"1.5a1\"]))\n['1.3', '1.5a1']\n>>> list(SpecifierSet(\"\").filter([\"1.3\", \"1.5a1\"], prereleases=True))\n['1.3', '1.5a1']\n\n.. versionchanged:: 26.1\n\n    Added the ``key`` parameter."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "Tag.interpreter",
+      "signature": "(self) -> str",
+      "span": [
+        136,
+        142
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "The interpreter name, e.g. ``\"py\"`` (see",
+      "doc": "The interpreter name, e.g. ``\"py\"`` (see\n:attr:`INTERPRETER_SHORT_NAMES` for mapping well-known interpreter\nnames to their short names)."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "Tag.abi",
+      "signature": "(self) -> str",
+      "span": [
+        145,
+        149
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The supported ABI.",
+      "doc": "The supported ABI."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "Tag.platform",
+      "signature": "(self) -> str",
+      "span": [
+        152,
+        156
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The OS/platform.",
+      "doc": "The OS/platform."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "parse_tag",
+      "signature": "(tag: str, *, validate_order: bool=False) -> frozenset[Tag]",
+      "span": [
+        211,
+        254
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 132 words",
+      "intent": "Parses the provided tag (e.g. `py3-none-any`) into a frozenset of",
+      "doc": "Parses the provided tag (e.g. `py3-none-any`) into a frozenset of\n:class:`Tag` instances.\n\nReturning a set is required due to the possibility that the tag is a\n`compressed tag set`_, e.g. ``\"py2.py3-none-any\"`` which supports both\nPython 2 and Python 3.\n\nIf **validate_order** is true, compressed tag set components are checked\nto be in sorted order as required by PEP 425.\n\n:param str tag: The tag to parse, e.g. ``\"py3-none-any\"``.\n:param bool validate_order: Check whether compressed tag set components\n    are in sorted order.\n:raises UnsortedTagsError: If **validate_order** is true and any compressed tag\n    set component is not in sorted order.\n:raises InvalidTag: If the interpreter, ABI, or platform field (or any member\n    of a compressed tag set) is empty.\n\n.. versionadded:: 26.1\n   The *validate_order* parameter.\n\n.. versionadded:: 26.3\n   Raises :class:`InvalidTag` on empty tag components."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "cpython_tags",
+      "signature": "(python_version: PythonVersion | None=None, abis: Iterable[str] | None=None, platforms: Iterable[str] | None=None, *, warn: bool=False) -> Iterator[Tag]",
+      "span": [
+        342,
+        418
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via platform_tags"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 139 words",
+      "intent": "Yields the tags for the CPython interpreter.",
+      "doc": "Yields the tags for the CPython interpreter.\n\nThe specific tags generated are:\n\n- ``cp<python_version>-<abi>-<platform>``\n- ``cp<python_version>-<stable_abi>-<platform>``\n- ``cp<python_version>-none-<platform>``\n- ``cp<older version>-<stable_abi>-<platform>`` where \"older version\" is all older\n  minor versions down to Python 3.2 (when ``abi3`` was introduced)\n\nIf ``python_version`` only provides a major-only version then only\nuser-provided ABIs via ``abis`` and the ``none`` ABI will be used.\n\nThe ``stable_abi`` will be either ``abi3`` or ``abi3t`` if `abi` is a\nGIL-enabled ABI like `\"cp315\"` or a free-threaded ABI like `\"cp315t\"`,\nrespectively.\n\n:param Sequence python_version: A one- or two-item sequence representing the\n                             targeted Python version. Defaults to\n                             ``sys.version_info[:2]``.\n:param Iterable abis: Iterable of compatible ABIs. Defaults to the ABIs\n                      compatible with the current system.\n:param Iterable platforms: Iterable of compatible platforms. Defaults to the\n                           platforms compatible with the current system.\n:param bool warn: Whether warnings should be logged. Defaults to ``False``."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "generic_tags",
+      "signature": "(interpreter: str | None=None, abis: Iterable[str] | None=None, platforms: Iterable[str] | None=None, *, warn: bool=False) -> Iterator[Tag]",
+      "span": [
+        462,
+        500
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via platform_tags"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 111 words",
+      "intent": "Yields the tags for an interpreter which requires no specialization.",
+      "doc": "Yields the tags for an interpreter which requires no specialization.\n\nThis function should be used if one of the other interpreter-specific\nfunctions provided by this module is not appropriate (i.e. not calculating\ntags for a CPython interpreter).\n\nThe specific tags generated are:\n\n- ``<interpreter>-<abi>-<platform>``\n\nThe ``\"none\"`` ABI will be added if it was not explicitly provided.\n\n:param str interpreter: The name of the interpreter. Defaults to being\n                        calculated.\n:param Iterable abis: Iterable of compatible ABIs. Defaults to the ABIs\n                      compatible with the current system.\n:param Iterable platforms: Iterable of compatible platforms. Defaults to the\n                           platforms compatible with the current system.\n:param bool warn: Whether warnings should be logged. Defaults to ``False``."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "compatible_tags",
+      "signature": "(python_version: PythonVersion | None=None, interpreter: str | None=None, platforms: Iterable[str] | None=None) -> Iterator[Tag]",
+      "span": [
+        518,
+        550
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via platform_tags"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 79 words",
+      "intent": "Yields the tags for an interpreter compatible with the Python version",
+      "doc": "Yields the tags for an interpreter compatible with the Python version\nspecified by ``python_version``.\n\nThe specific tags generated are:\n\n- ``py*-none-<platform>``\n- ``<interpreter>-none-any`` if ``interpreter`` is provided\n- ``py*-none-any``\n\n:param Sequence python_version: A one- or two-item sequence representing the\n                             compatible version of Python. Defaults to\n                             ``sys.version_info[:2]``.\n:param str interpreter: The name of the interpreter (if known), e.g.\n                        ``\"cp38\"``. Defaults to the current interpreter.\n:param Iterable platforms: Iterable of compatible platforms. Defaults to the\n                           platforms compatible with the current system."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "mac_platforms",
+      "signature": "(version: AppleVersion | None=None, arch: str | None=None) -> Iterator[str]",
+      "span": [
+        595,
+        683
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to subprocess.run"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 113 words",
+      "intent": "Yields the :attr:`~Tag.platform` tags for macOS.",
+      "doc": "Yields the :attr:`~Tag.platform` tags for macOS.\n\nThe `version` parameter is a two-item tuple specifying the macOS version to\ngenerate platform tags for. The `arch` parameter is the CPU architecture to\ngenerate platform tags for. Both parameters default to the appropriate value\nfor the current system.\n\n:param tuple version: A two-item tuple representing the version of macOS.\n                      Defaults to the current system's version.\n:param str arch: The CPU architecture. Defaults to the architecture of the\n                 current system, e.g. ``\"x86_64\"``.\n\n.. note::\n    Equivalent support for the other major platforms is purposefully not\n    provided:\n\n    - On Windows, platform compatibility is statically specified\n    - On Linux, code must be run on the system itself to determine\n      compatibility"
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "ios_platforms",
+      "signature": "(version: AppleVersion | None=None, multiarch: str | None=None) -> Iterator[str]",
+      "span": [
+        686,
+        745
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 71 words",
+      "intent": "Yields the :attr:`~Tag.platform` tags for iOS.",
+      "doc": "Yields the :attr:`~Tag.platform` tags for iOS.\n\n:param tuple version: A two-item tuple representing the version of iOS.\n                      Defaults to the current system's version.\n:param str multiarch: The CPU architecture+ABI to be used. This should be in\n                      the format by ``sys.implementation._multiarch`` (e.g.,\n                      ``arm64_iphoneos`` or ``x86_64_iphonesimulator``).\n                      Defaults to the current system's multiarch value.\n\n.. note::\n    Behavior of this method is undefined if invoked on non-iOS platforms\n    without providing explicit version and multiarch arguments."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "android_platforms",
+      "signature": "(api_level: int | None=None, abi: str | None=None) -> Iterator[str]",
+      "span": [
+        748,
+        782
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 69 words",
+      "intent": "Yields the :attr:`~Tag.platform` tags for Android. If this function is invoked on",
+      "doc": "Yields the :attr:`~Tag.platform` tags for Android. If this function is invoked on\nnon-Android platforms, the ``api_level`` and ``abi`` arguments are required.\n\n:param int api_level: The maximum `API level\n    <https://developer.android.com/tools/releases/platforms>`__ to return. Defaults\n    to the current system's version, as returned by ``platform.android_ver``.\n:param str abi: The `Android ABI <https://developer.android.com/ndk/guides/abis>`__,\n    e.g. ``arm64_v8a``. Defaults to the current system's ABI , as returned by\n    ``sysconfig.get_platform``. Hyphens and periods will be replaced with\n    underscores."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "platform_tags",
+      "signature": "() -> Iterator[str]",
+      "span": [
+        817,
+        832
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via mac_platforms"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Yields the :attr:`~Tag.platform` tags for the running interpreter.",
+      "doc": "Yields the :attr:`~Tag.platform` tags for the running interpreter."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "interpreter_name",
+      "signature": "() -> str",
+      "span": [
+        835,
+        845
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 30 words",
+      "intent": "Returns the name of the running interpreter.",
+      "doc": "Returns the name of the running interpreter.\n\nSome implementations have a reserved, two-letter abbreviation which will\nbe returned when appropriate.\n\nThis typically acts as the prefix to the :attr:`~Tag.interpreter` tag."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "interpreter_version",
+      "signature": "(*, warn: bool=False) -> str",
+      "span": [
+        848,
+        857
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 26 words",
+      "intent": "Returns the running interpreter's version.",
+      "doc": "Returns the running interpreter's version.\n\nThis typically acts as the suffix to the :attr:`~Tag.interpreter` tag.\n\n:param bool warn: Whether warnings should be logged. Defaults to ``False``."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "sys_tags",
+      "signature": "(*, warn: bool=False) -> Iterator[Tag]",
+      "span": [
+        864,
+        908
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via cpython_tags"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 164 words",
+      "intent": "Yields the sequence of tag triples that the running interpreter supports.",
+      "doc": "Yields the sequence of tag triples that the running interpreter supports.\n\nThe iterable is ordered so that the best-matching tag is first in the\nsequence. The exact preferential order to tags is interpreter-specific, but\nin general the tag importance is in the order of:\n\n1. Interpreter\n2. Platform\n3. ABI\n\nThis order is due to the fact that an ABI is inherently tied to the\nplatform, but platform-specific code is not necessarily tied to the ABI. The\ninterpreter is the most important tag as it dictates basic support for any\nwheel.\n\nThe function returns an iterable in order to allow for the possible\nshort-circuiting of tag generation if the entire sequence is not necessary\nand tag calculation happens to be expensive.\n\n:param bool warn: Whether warnings should be logged. Defaults to ``False``.\n\n.. versionchanged:: 21.3\n    Added the `pp3-none-any` tag (:issue:`311`).\n.. versionchanged:: 26.1\n    Added the `abi3t` tag (:issue:`1099`).\n.. versionchanged:: 26.3\n    Native ``linux_*`` platform tags are now ordered before ``manylinux``\n    and ``musllinux`` tags (:issue:`160`)."
+    },
+    {
+      "module": "src/packaging/tags.py",
+      "qualname": "create_compatible_tags_selector",
+      "signature": "(tags: Iterable[Tag]) -> Callable[[Iterable[tuple[_T, AbstractSet[Tag]]]], Iterator[_T]]",
+      "span": [
+        911,
+        954
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 88 words",
+      "intent": "Create a callable to select things compatible with supported tags.",
+      "doc": "Create a callable to select things compatible with supported tags.\n\nThis function accepts an ordered sequence of tags, with the preferred\ntags first.\n\nThe returned callable accepts an iterable of tuples (thing, set[Tag]),\nand returns an iterator of things, with the things with the best\nmatching tags first.\n\nExample to select compatible wheel filenames:\n\n>>> from packaging import tags\n>>> from packaging.utils import parse_wheel_filename\n>>> selector = tags.create_compatible_tags_selector(tags.sys_tags())\n>>> filenames = [\"foo-1.0-py3-none-any.whl\", \"foo-1.0-py2-none-any.whl\"]\n>>> list(selector([\n...     (filename, parse_wheel_filename(filename)[-1]) for filename in filenames\n... ]))\n['foo-1.0-py3-none-any.whl']\n\n.. versionadded:: 26.1"
+    },
+    {
+      "module": "src/packaging/utils.py",
+      "qualname": "canonicalize_name",
+      "signature": "(name: str, *, validate: bool=False) -> NormalizedName",
+      "span": [
+        68,
+        107
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 120 words",
+      "intent": "This function takes a valid Python package or extra name, and returns the",
+      "doc": "This function takes a valid Python package or extra name, and returns the\nnormalized form of it.\n\nThe return type is typed as :class:`NormalizedName`. This allows type\ncheckers to help require that a string has passed through this function\nbefore use.\n\nIf **validate** is true, then the function will check if **name** is a valid\ndistribution name before normalizing.\n\n:param str name: The name to normalize.\n:param bool validate: Check whether the name is a valid distribution name.\n:raises InvalidName: If **validate** is true and the name is not an\n    acceptable distribution name.\n\n>>> from packaging.utils import canonicalize_name\n>>> canonicalize_name(\"Django\")\n'django'\n>>> canonicalize_name(\"oslo.concurrency\")\n'oslo-concurrency'\n>>> canonicalize_name(\"requests\")\n'requests'\n\n.. versionadded:: 16.2\n\n.. versionchanged:: 20.4\n   The return type was changed to :class:`NormalizedName`."
+    },
+    {
+      "module": "src/packaging/utils.py",
+      "qualname": "is_normalized_name",
+      "signature": "(name: str) -> bool",
+      "span": [
+        110,
+        123
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Check if a name is already normalized (i.e. :func:`canonicalize_name` would",
+      "doc": "Check if a name is already normalized (i.e. :func:`canonicalize_name` would\nroundtrip to the same value).\n\n:param str name: The name to check.\n\n>>> from packaging.utils import is_normalized_name\n>>> is_normalized_name(\"requests\")\nTrue\n>>> is_normalized_name(\"Django\")\nFalse"
+    },
+    {
+      "module": "src/packaging/utils.py",
+      "qualname": "canonicalize_version",
+      "signature": "(version: Version | str, *, strip_trailing_zero: bool=True) -> str",
+      "span": [
+        126,
+        161
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 84 words",
+      "intent": "Return a canonical form of a version as a string.",
+      "doc": "Return a canonical form of a version as a string.\n\nThis function takes a string representing a package version (or a\n:class:`~packaging.version.Version` instance), and returns the\nnormalized form of it. By default, it strips trailing zeros from\nthe release segment.\n\n>>> from packaging.utils import canonicalize_version\n>>> canonicalize_version('1.0.1')\n'1.0.1'\n\nPer PEP 625, versions may have multiple canonical forms, differing\nonly by trailing zeros.\n\n>>> canonicalize_version('1.0.0')\n'1'\n>>> canonicalize_version('1.0.0', strip_trailing_zero=False)\n'1.0.0'\n\nInvalid versions are returned unaltered.\n\n>>> canonicalize_version('foo bar baz')\n'foo bar baz'\n\n>>> canonicalize_version('1.4.0.0.0')\n'1.4'"
+    },
+    {
+      "module": "src/packaging/utils.py",
+      "qualname": "parse_wheel_filename",
+      "signature": "(filename: str, *, validate_order: bool=False) -> tuple[NormalizedName, Version, BuildTag, frozenset[Tag]]",
+      "span": [
+        164,
+        257
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 206 words",
+      "intent": "This function takes the filename of a wheel file, and parses it,",
+      "doc": "This function takes the filename of a wheel file, and parses it,\nreturning a tuple of name, version, build number, and tags.\n\nThe name part of the tuple is normalized and typed as\n:class:`NormalizedName`. The version portion is an instance of\n:class:`~packaging.version.Version`. The build number is ``()`` if\nthere is no build number in the wheel filename, otherwise a\ntwo-item tuple of an integer for the leading digits and\na string for the rest of the build number. The tags portion is a\nfrozen set of :class:`~packaging.tags.Tag` instances (as the tag\nstring format allows multiple tags to be combined into a single\nstring).\n\nIf **validate_order** is true, compressed tag set components are\nchecked to be in sorted order as required by PEP 425.\n\n:param str filename: The name of the wheel file.\n:param bool validate_order: Check whether compressed tag set components\n    are in sorted order.\n:raises InvalidWheelFilename: If the filename in question\n    does not follow the :ref:`wheel specification\n    <pypug:binary-distribution-format>`.\n\n>>> from packaging.utils import parse_wheel_filename\n>>> from packaging.tags import Tag\n>>> from packaging.version import Version\n>>> name, ver, build, tags = parse_wheel_filename(\"foo-1.0-py3-none-any.whl\")\n>>> name\n'foo'\n>>> ver == Version('1.0')\nTrue\n>>> tags == {Tag(\"py3\", \"none\", \"any\")}\nTrue\n>>> not build\nTrue\n\n.. versionadded:: 26.1\n   The *validate_order* parameter."
+    },
+    {
+      "module": "src/packaging/utils.py",
+      "qualname": "parse_sdist_filename",
+      "signature": "(filename: str) -> tuple[NormalizedName, Version]",
+      "span": [
+        260,
+        307
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 105 words",
+      "intent": "This function takes the filename of a sdist file (as specified",
+      "doc": "This function takes the filename of a sdist file (as specified\nin the `Source distribution format`_ documentation), and parses\nit, returning a tuple of the normalized name and version as\nrepresented by an instance of :class:`~packaging.version.Version`.\n\n:param str filename: The name of the sdist file.\n:raises InvalidSdistFilename: If the filename does not end\n    with an sdist extension (``.zip`` or ``.tar.gz``), or if it does not\n    contain a dash separating the name and the version of the distribution.\n\n>>> from packaging.utils import parse_sdist_filename\n>>> from packaging.version import Version\n>>> name, ver = parse_sdist_filename(\"foo-1.0.tar.gz\")\n>>> name\n'foo'\n>>> ver == Version('1.0')\nTrue\n\n.. _Source distribution format: https://packaging.python.org/specifications/source-distribution-format/#source-distribution-file-name"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "normalize_pre",
+      "signature": "(letter: str, /) -> str",
+      "span": [
+        89,
+        107
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 35 words",
+      "intent": "Normalize the pre-release segment of a version string.",
+      "doc": "Normalize the pre-release segment of a version string.\n\nReturns a lowercase version of the string if not a known pre-release\nidentifier.\n\n>>> normalize_pre('alpha')\n'a'\n>>> normalize_pre('BETA')\n'b'\n>>> normalize_pre('rc')\n'rc'\n\n:param letter:\n\n.. versionadded:: 26.1"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "parse",
+      "signature": "(version: str) -> Version",
+      "span": [
+        110,
+        121
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Parse the given version string.",
+      "doc": "Parse the given version string.\n\nThis is identical to the :class:`Version` constructor.\n\n>>> parse('1.0.dev1')\n<Version('1.0.dev1')>\n\n:param version: The version string to parse.\n:raises InvalidVersion: When the version string is not a valid version."
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.from_parts",
+      "signature": "(cls, *, epoch: int=0, release: tuple[int, ...], pre: tuple[str, int] | None=None, post: int | None=None, dev: int | None=None, local: str | None=None) -> Self",
+      "span": [
+        454,
+        498
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 56 words",
+      "intent": "Return a new version composed of the various parts.",
+      "doc": "Return a new version composed of the various parts.\n\nThis allows you to build a version without going though a string and\nrunning a regular expression. It normalizes pre-release strings. The\n``release=`` keyword argument is required.\n\n>>> Version.from_parts(release=(1,2,3))\n<Version('1.2.3')>\n>>> Version.from_parts(release=(0,1,0), pre=(\"b\", 1))\n<Version('0.1.0b1')>\n\n:param epoch:\n:param release: This version tuple is required\n\n.. versionadded:: 26.1"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.epoch",
+      "signature": "(self) -> int",
+      "span": [
+        884,
+        892
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The epoch of the version.",
+      "doc": "The epoch of the version.\n\n>>> Version(\"2.0.0\").epoch\n0\n>>> Version(\"1!2.0.0\").epoch\n1"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.release",
+      "signature": "(self) -> tuple[int, ...]",
+      "span": [
+        895,
+        908
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "The components of the \"release\" segment of the version.",
+      "doc": "The components of the \"release\" segment of the version.\n\n>>> Version(\"1.2.3\").release\n(1, 2, 3)\n>>> Version(\"2.0.0\").release\n(2, 0, 0)\n>>> Version(\"1!2.0.0.post0\").release\n(2, 0, 0)\n\nIncludes trailing zeroes but not the epoch or any pre-release / development /\npost-release suffixes."
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.pre",
+      "signature": "(self) -> tuple[Literal['a', 'b', 'rc'], int] | None",
+      "span": [
+        911,
+        923
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "The pre-release segment of the version.",
+      "doc": "The pre-release segment of the version.\n\n>>> print(Version(\"1.2.3\").pre)\nNone\n>>> Version(\"1.2.3a1\").pre\n('a', 1)\n>>> Version(\"1.2.3b1\").pre\n('b', 1)\n>>> Version(\"1.2.3rc1\").pre\n('rc', 1)"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.post",
+      "signature": "(self) -> int | None",
+      "span": [
+        926,
+        934
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The post-release number of the version.",
+      "doc": "The post-release number of the version.\n\n>>> print(Version(\"1.2.3\").post)\nNone\n>>> Version(\"1.2.3.post1\").post\n1"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.dev",
+      "signature": "(self) -> int | None",
+      "span": [
+        937,
+        945
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The development number of the version.",
+      "doc": "The development number of the version.\n\n>>> print(Version(\"1.2.3\").dev)\nNone\n>>> Version(\"1.2.3.dev1\").dev\n1"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.local",
+      "signature": "(self) -> str | None",
+      "span": [
+        948,
+        959
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The local version segment of the version.",
+      "doc": "The local version segment of the version.\n\n>>> print(Version(\"1.2.3\").local)\nNone\n>>> Version(\"1.2.3+abc\").local\n'abc'"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.public",
+      "signature": "(self) -> str",
+      "span": [
+        962,
+        975
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "The public portion of the version.",
+      "doc": "The public portion of the version.\n\nThis returns a string. If you want a :class:`Version` again and care\nabout performance, use ``v.__replace__(local=None)`` instead.\n\n>>> Version(\"1.2.3\").public\n'1.2.3'\n>>> Version(\"1.2.3+abc\").public\n'1.2.3'\n>>> Version(\"1!1.2.3dev1+abc\").public\n'1!1.2.3.dev1'"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.base_version",
+      "signature": "(self) -> str",
+      "span": [
+        978,
+        996
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "The \"base version\" of the version.",
+      "doc": "The \"base version\" of the version.\n\nThis returns a string. If you want a :class:`Version` again and care\nabout performance, use\n``v.__replace__(pre=None, post=None, dev=None, local=None)`` instead.\n\n>>> Version(\"1.2.3\").base_version\n'1.2.3'\n>>> Version(\"1.2.3+abc\").base_version\n'1.2.3'\n>>> Version(\"1!1.2.3dev1+abc\").base_version\n'1!1.2.3'\n\nThe \"base version\" is the public version of the project without any pre or post\nrelease markers."
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.is_prerelease",
+      "signature": "(self) -> bool",
+      "span": [
+        999,
+        1013
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "Whether this version is a pre-release.",
+      "doc": "Whether this version is a pre-release.\n\n>>> Version(\"1.2.3\").is_prerelease\nFalse\n>>> Version(\"1.2.3a1\").is_prerelease\nTrue\n>>> Version(\"1.2.3b1\").is_prerelease\nTrue\n>>> Version(\"1.2.3rc1\").is_prerelease\nTrue\n>>> Version(\"1.2.3dev1\").is_prerelease\nTrue"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.is_postrelease",
+      "signature": "(self) -> bool",
+      "span": [
+        1016,
+        1024
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Whether this version is a post-release.",
+      "doc": "Whether this version is a post-release.\n\n>>> Version(\"1.2.3\").is_postrelease\nFalse\n>>> Version(\"1.2.3.post1\").is_postrelease\nTrue"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.is_devrelease",
+      "signature": "(self) -> bool",
+      "span": [
+        1027,
+        1035
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Whether this version is a development release.",
+      "doc": "Whether this version is a development release.\n\n>>> Version(\"1.2.3\").is_devrelease\nFalse\n>>> Version(\"1.2.3.dev1\").is_devrelease\nTrue"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.major",
+      "signature": "(self) -> int",
+      "span": [
+        1038,
+        1044
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The first item of :attr:`release` or ``0`` if unavailable.",
+      "doc": "The first item of :attr:`release` or ``0`` if unavailable.\n\n>>> Version(\"1.2.3\").major\n1"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.minor",
+      "signature": "(self) -> int",
+      "span": [
+        1047,
+        1055
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "The second item of :attr:`release` or ``0`` if unavailable.",
+      "doc": "The second item of :attr:`release` or ``0`` if unavailable.\n\n>>> Version(\"1.2.3\").minor\n2\n>>> Version(\"1\").minor\n0"
+    },
+    {
+      "module": "src/packaging/version.py",
+      "qualname": "Version.micro",
+      "signature": "(self) -> int",
+      "span": [
+        1058,
+        1066
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "The third item of :attr:`release` or ``0`` if unavailable.",
+      "doc": "The third item of :attr:`release` or ``0`` if unavailable.\n\n>>> Version(\"1.2.3\").micro\n3\n>>> Version(\"1\").micro\n0"
+    }
+  ],
+  "summary": {
+    "total_public_functions": 103,
+    "auditability": {
+      "spec": 57,
+      "invariant": 0,
+      "none": 46
+    },
+    "deterministic": 94,
+    "auditable": 49
+  }
+}

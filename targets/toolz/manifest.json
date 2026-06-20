@@ -1,0 +1,1416 @@
+{
+  "target": "toolz",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/toolz/repo",
+  "commit": "568c2b8393973cd172a466546c9d95779c452438",
+  "package_dir": "toolz",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "num_pos_args",
+      "signature": "(sigspec)",
+      "span": [
+        598,
+        602
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the number of positional arguments.  ``f(x, y=1)`` has 1",
+      "doc": "Return the number of positional arguments.  ``f(x, y=1)`` has 1"
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "get_exclude_keywords",
+      "signature": "(num_pos_only, sigspec)",
+      "span": [
+        605,
+        614
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the names of position-only arguments if func has **kwargs",
+      "doc": "Return the names of position-only arguments if func has **kwargs"
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "signature_or_spec",
+      "signature": "(func)",
+      "span": [
+        617,
+        621
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "signature or spec (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "expand_sig",
+      "signature": "(sig)",
+      "span": [
+        624,
+        655
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 82 words",
+      "intent": "Convert the signature spec in ``module_info`` to add to ``signatures``",
+      "doc": "Convert the signature spec in ``module_info`` to add to ``signatures``\n\nThe input signature spec is one of:\n    - ``lambda_func``\n    - ``(num_position_args, lambda_func)``\n    - ``(num_position_args, lambda_func, keyword_only_args)``\n\nThe output signature spec is:\n    ``(num_position_args, lambda_func, keyword_exclude, sigspec)``\n\nwhere ``keyword_exclude`` includes keyword only arguments and, if variadic\nkeywords is present, the names of position-only argument.  The latter is\nincluded to support builtins such as ``partial(func, *args, **kwargs)``,\nwhich allows ``func=`` to be used as a keyword even though it's the name\nof a positional argument."
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "create_signature_registry",
+      "signature": "(module_info=module_info, signatures=signatures)",
+      "span": [
+        661,
+        668
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "create signature registry (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "check_valid",
+      "signature": "(sig, args, kwargs)",
+      "span": [
+        671,
+        684
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Like ``is_valid_args`` for the given signature spec",
+      "doc": "Like ``is_valid_args`` for the given signature spec"
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "check_partial",
+      "signature": "(sig, args, kwargs)",
+      "span": [
+        695,
+        705
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Like ``is_partial_args`` for the given signature spec",
+      "doc": "Like ``is_partial_args`` for the given signature spec"
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "check_arity",
+      "signature": "(n, sig)",
+      "span": [
+        716,
+        720
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "check arity (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "check_varargs",
+      "signature": "(sig)",
+      "span": [
+        735,
+        737
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "check varargs (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "check_keywords",
+      "signature": "(sig)",
+      "span": [
+        752,
+        756
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "check keywords (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/_signatures.py",
+      "qualname": "check_required_args",
+      "signature": "(sig)",
+      "span": [
+        771,
+        773
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "check required args (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/curried/exceptions.py",
+      "qualname": "merge_with",
+      "signature": "(func, d, *dicts, **kwargs)",
+      "span": [
+        8,
+        9
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "merge with (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/curried/exceptions.py",
+      "qualname": "merge",
+      "signature": "(d, *dicts, **kwargs)",
+      "span": [
+        13,
+        14
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "merge (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "merge",
+      "signature": "(*dicts, **kwargs)",
+      "span": [
+        19,
+        40
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 36 words",
+      "intent": "Merge a collection of dictionaries",
+      "doc": "Merge a collection of dictionaries\n\n>>> merge({1: 'one'}, {2: 'two'})\n{1: 'one', 2: 'two'}\n\nLater dictionaries have precedence\n\n>>> merge({1: 2, 3: 4}, {3: 3, 4: 4})\n{1: 2, 3: 3, 4: 4}\n\nSee Also:\n    merge_with"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "merge_with",
+      "signature": "(func, *dicts, **kwargs)",
+      "span": [
+        43,
+        70
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 74 words",
+      "intent": "Merge dictionaries and apply function to combined values",
+      "doc": "Merge dictionaries and apply function to combined values\n\nA key may occur in more than one dict, and all values mapped from the key\nwill be passed to the function as a list, such as func([val1, val2, ...]).\n\n>>> merge_with(sum, {1: 1, 2: 2}, {1: 10, 2: 20})\n{1: 11, 2: 22}\n\n>>> merge_with(first, {1: 1, 2: 2}, {2: 20, 3: 30})  # doctest: +SKIP\n{1: 1, 2: 2, 3: 30}\n\nSee Also:\n    merge"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "valmap",
+      "signature": "(func, d, factory=dict)",
+      "span": [
+        73,
+        86
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 30 words",
+      "intent": "Apply function to values of dictionary",
+      "doc": "Apply function to values of dictionary\n\n>>> bills = {\"Alice\": [20, 15, 30], \"Bob\": [10, 35]}\n>>> valmap(sum, bills)  # doctest: +SKIP\n{'Alice': 65, 'Bob': 45}\n\nSee Also:\n    keymap\n    itemmap"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "keymap",
+      "signature": "(func, d, factory=dict)",
+      "span": [
+        89,
+        102
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Apply function to keys of dictionary",
+      "doc": "Apply function to keys of dictionary\n\n>>> bills = {\"Alice\": [20, 15, 30], \"Bob\": [10, 35]}\n>>> keymap(str.lower, bills)  # doctest: +SKIP\n{'alice': [20, 15, 30], 'bob': [10, 35]}\n\nSee Also:\n    valmap\n    itemmap"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "itemmap",
+      "signature": "(func, d, factory=dict)",
+      "span": [
+        105,
+        118
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "Apply function to items of dictionary",
+      "doc": "Apply function to items of dictionary\n\n>>> accountids = {\"Alice\": 10, \"Bob\": 20}\n>>> itemmap(reversed, accountids)  # doctest: +SKIP\n{10: \"Alice\", 20: \"Bob\"}\n\nSee Also:\n    keymap\n    valmap"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "valfilter",
+      "signature": "(predicate, d, factory=dict)",
+      "span": [
+        121,
+        138
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Filter items in dictionary by value",
+      "doc": "Filter items in dictionary by value\n\n>>> iseven = lambda x: x % 2 == 0\n>>> d = {1: 2, 2: 3, 3: 4, 4: 5}\n>>> valfilter(iseven, d)\n{1: 2, 3: 4}\n\nSee Also:\n    keyfilter\n    itemfilter\n    valmap"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "keyfilter",
+      "signature": "(predicate, d, factory=dict)",
+      "span": [
+        141,
+        158
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Filter items in dictionary by key",
+      "doc": "Filter items in dictionary by key\n\n>>> iseven = lambda x: x % 2 == 0\n>>> d = {1: 2, 2: 3, 3: 4, 4: 5}\n>>> keyfilter(iseven, d)\n{2: 3, 4: 5}\n\nSee Also:\n    valfilter\n    itemfilter\n    keymap"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "itemfilter",
+      "signature": "(predicate, d, factory=dict)",
+      "span": [
+        161,
+        182
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 46 words",
+      "intent": "Filter items in dictionary by item",
+      "doc": "Filter items in dictionary by item\n\n>>> def isvalid(item):\n...     k, v = item\n...     return k % 2 == 0 and v < 4\n\n>>> d = {1: 2, 2: 3, 3: 4, 4: 5}\n>>> itemfilter(isvalid, d)\n{2: 3}\n\nSee Also:\n    keyfilter\n    valfilter\n    itemmap"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "assoc",
+      "signature": "(d, key, value, factory=dict)",
+      "span": [
+        185,
+        198
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Return a new dict with new key value pair",
+      "doc": "Return a new dict with new key value pair\n\nNew dict has d[key] set to value. Does not modify the initial dictionary.\n\n>>> assoc({'x': 1}, 'x', 2)\n{'x': 2}\n>>> assoc({'x': 1}, 'y', 3)   # doctest: +SKIP\n{'x': 1, 'y': 3}"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "dissoc",
+      "signature": "(d, *keys, **kwargs)",
+      "span": [
+        201,
+        227
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 50 words",
+      "intent": "Return a new dict with the given key(s) removed.",
+      "doc": "Return a new dict with the given key(s) removed.\n\nNew dict has d[key] deleted for each supplied key.\nDoes not modify the initial dictionary.\n\n>>> dissoc({'x': 1, 'y': 2}, 'y')\n{'x': 1}\n>>> dissoc({'x': 1, 'y': 2}, 'y', 'x')\n{}\n>>> dissoc({'x': 1}, 'y') # Ignores missing keys\n{'x': 1}"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "assoc_in",
+      "signature": "(d, keys, value, factory=dict)",
+      "span": [
+        230,
+        242
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 50 words",
+      "intent": "Return a new dict with new, potentially nested, key value pair",
+      "doc": "Return a new dict with new, potentially nested, key value pair\n\n>>> purchase = {'name': 'Alice',\n...             'order': {'items': ['Apple', 'Orange'],\n...                       'costs': [0.50, 1.25]},\n...             'credit card': '5555-1234-1234-1234'}\n>>> assoc_in(purchase, ['order', 'costs'], [0.25, 1.00]) # doctest: +SKIP\n{'credit card': '5555-1234-1234-1234',\n 'name': 'Alice',\n 'order': {'costs': [0.25, 1.00], 'items': ['Apple', 'Orange']}}"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "update_in",
+      "signature": "(d, keys, func, default=None, factory=dict)",
+      "span": [
+        245,
+        300
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 181 words",
+      "intent": "Update value in a (potentially) nested dictionary",
+      "doc": "Update value in a (potentially) nested dictionary\n\ninputs:\nd - dictionary on which to operate\nkeys - list or tuple giving the location of the value to be changed in d\nfunc - function to operate on that value\n\nIf keys == [k0,..,kX] and d[k0]..[kX] == v, update_in returns a copy of the\noriginal dictionary with v replaced by func(v), but does not mutate the\noriginal dictionary.\n\nIf k0 is not a key in d, update_in creates nested dictionaries to the depth\nspecified by the keys, with the innermost value set to func(default).\n\n>>> inc = lambda x: x + 1\n>>> update_in({'a': 0}, ['a'], inc)\n{'a': 1}\n\n>>> transaction = {'name': 'Alice',\n...                'purchase': {'items': ['Apple', 'Orange'],\n...                             'costs': [0.50, 1.25]},\n...                'credit card': '5555-1234-1234-1234'}\n>>> update_in(transaction, ['purchase', 'costs'], sum) # doctest: +SKIP\n{'credit card': '5555-1234-1234-1234',\n 'name': 'Alice',\n 'purchase': {'costs': 1.75, 'items': ['Apple', 'Orange']}}\n\n>>> # updating a value when k0 is not in d\n>>> update_in({}, [1, 2, 3], str, default=\"bar\")\n{1: {2: {3: 'bar'}}}\n>>> update_in({1: 'foo'}, [2, 3, 4], inc, 0)\n{1: 'foo', 2: {3: {4: 1}}}"
+    },
+    {
+      "module": "toolz/dicttoolz.py",
+      "qualname": "get_in",
+      "signature": "(keys, coll, default=None, no_default=False)",
+      "span": [
+        303,
+        339
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 103 words",
+      "intent": "Returns coll[i0][i1]...[iX] where [i0, i1, ..., iX]==keys.",
+      "doc": "Returns coll[i0][i1]...[iX] where [i0, i1, ..., iX]==keys.\n\nIf coll[i0][i1]...[iX] cannot be found, returns ``default``, unless\n``no_default`` is specified, then it raises KeyError or IndexError.\n\n``get_in`` is a generalization of ``operator.getitem`` for nested data\nstructures such as dictionaries and lists.\n\n>>> transaction = {'name': 'Alice',\n...                'purchase': {'items': ['Apple', 'Orange'],\n...                             'costs': [0.50, 1.25]},\n...                'credit card': '5555-1234-1234-1234'}\n>>> get_in(['purchase', 'items', 0], transaction)\n'Apple'\n>>> get_in(['name'], transaction)\n'Alice'\n>>> get_in(['purchase', 'total'], transaction)\n>>> get_in(['purchase', 'items', 'apple'], transaction)\n>>> get_in(['purchase', 'items', 10], transaction)\n>>> get_in(['purchase', 'total'], transaction, 0)\n0\n>>> get_in(['y'], {}, no_default=True)\nTraceback (most recent call last):\n    ...\nKeyError: 'y'\n\nSee Also:\n    itertoolz.get\n    operator.getitem"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "identity",
+      "signature": "(x)",
+      "span": [
+        20,
+        26
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Identity function. Return x",
+      "doc": "Identity function. Return x\n\n>>> identity(3)\n3"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "apply",
+      "signature": "(*func_and_args, **kwargs)",
+      "span": [
+        29,
+        43
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Applies a function and returns the results",
+      "doc": "Applies a function and returns the results\n\n>>> def double(x): return 2*x\n>>> def inc(x):    return x + 1\n>>> apply(double, 5)\n10\n\n>>> tuple(map(apply, [double, inc, double], [10, 500, 8000]))\n(20, 501, 16000)"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "thread_first",
+      "signature": "(val, *forms)",
+      "span": [
+        46,
+        77
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 89 words",
+      "intent": "Thread value through a sequence of functions/forms",
+      "doc": "Thread value through a sequence of functions/forms\n\n>>> def double(x): return 2*x\n>>> def inc(x):    return x + 1\n>>> thread_first(1, inc, double)\n4\n\nIf the function expects more than one input you can specify those inputs\nin a tuple.  The value is used as the first input.\n\n>>> def add(x, y): return x + y\n>>> def pow(x, y): return x**y\n>>> thread_first(1, (add, 4), (pow, 2))  # pow(add(1, 4), 2)\n25\n\nSo in general\n    thread_first(x, f, (g, y, z))\nexpands to\n    g(f(x), y, z)\n\nSee Also:\n    thread_last"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "thread_last",
+      "signature": "(val, *forms)",
+      "span": [
+        80,
+        116
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 109 words",
+      "intent": "Thread value through a sequence of functions/forms",
+      "doc": "Thread value through a sequence of functions/forms\n\n>>> def double(x): return 2*x\n>>> def inc(x):    return x + 1\n>>> thread_last(1, inc, double)\n4\n\nIf the function expects more than one input you can specify those inputs\nin a tuple.  The value is used as the last input.\n\n>>> def add(x, y): return x + y\n>>> def pow(x, y): return x**y\n>>> thread_last(1, (add, 4), (pow, 2))  # pow(2, add(4, 1))\n32\n\nSo in general\n    thread_last(x, f, (g, y, z))\nexpands to\n    g(y, z, f(x))\n\n>>> def iseven(x):\n...     return x % 2 == 0\n>>> list(thread_last([1, 2, 3], (map, inc), (filter, iseven)))\n[2, 4]\n\nSee Also:\n    thread_first"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "instanceproperty",
+      "signature": "(fget=None, fset=None, fdel=None, doc=None, classval=None)",
+      "span": [
+        119,
+        145
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 59 words",
+      "intent": "Like @property, but returns ``classval`` when used as a class attribute",
+      "doc": "Like @property, but returns ``classval`` when used as a class attribute\n\n>>> class MyClass(object):\n...     '''The class docstring'''\n...     @instanceproperty(classval=__doc__)\n...     def __doc__(self):\n...         return 'An object docstring'\n...     @instanceproperty\n...     def val(self):\n...         return 42\n...\n>>> MyClass.__doc__\n'The class docstring'\n>>> MyClass.val is None\nTrue\n>>> obj = MyClass()\n>>> obj.__doc__\n'An object docstring'\n>>> obj.val\n42"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "curry.func",
+      "signature": "(self)",
+      "span": [
+        231,
+        232
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "func (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "curry.args",
+      "signature": "(self)",
+      "span": [
+        273,
+        274
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "args (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "curry.keywords",
+      "signature": "(self)",
+      "span": [
+        277,
+        278
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "keywords (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "curry.func_name",
+      "signature": "(self)",
+      "span": [
+        281,
+        282
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "func name (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "curry.bind",
+      "signature": "(self, *args, **kwargs)",
+      "span": [
+        336,
+        337
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "bind (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "curry.call",
+      "signature": "(self, *args, **kwargs)",
+      "span": [
+        339,
+        340
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "call (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "memoize",
+      "signature": "(func, cache=None, key=None)",
+      "span": [
+        393,
+        470
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 165 words",
+      "intent": "Cache a function's result for speedy future evaluation",
+      "doc": "Cache a function's result for speedy future evaluation\n\nConsiderations:\n    Trades memory for speed.\n    Only use on pure functions.\n\n>>> def add(x, y):  return x + y\n>>> add = memoize(add)\n\nOr use as a decorator\n\n>>> @memoize\n... def add(x, y):\n...     return x + y\n\nUse the ``cache`` keyword to provide a dict-like object as an initial cache\n\n>>> @memoize(cache={(1, 2): 3})\n... def add(x, y):\n...     return x + y\n\nNote that the above works as a decorator because ``memoize`` is curried.\n\nIt is also possible to provide a ``key(args, kwargs)`` function that\ncalculates keys used for the cache, which receives an ``args`` tuple and\n``kwargs`` dict as input, and must return a hashable value.  However,\nthe default key function should be sufficient most of the time.\n\n>>> # Use key function that ignores extraneous keyword arguments\n>>> @memoize(key=lambda args, kwargs: args)\n... def add(x, y, verbose=False):\n...     if verbose:\n...         print('Calculating %s + %s' % (x, y))\n...     return x + y"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "compose",
+      "signature": "(*funcs)",
+      "span": [
+        560,
+        583
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 63 words",
+      "intent": "Compose functions to operate in series.",
+      "doc": "Compose functions to operate in series.\n\nReturns a function that applies other functions in sequence.\n\nFunctions are applied from right to left so that\n``compose(f, g, h)(x, y)`` is the same as ``f(g(h(x, y)))``.\n\nIf no arguments are provided, the identity function (f(x) = x) is returned.\n\n>>> inc = lambda i: i + 1\n>>> compose(str, inc)(3)\n'4'\n\nSee Also:\n    compose_left\n    pipe"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "compose_left",
+      "signature": "(*funcs)",
+      "span": [
+        586,
+        604
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 63 words",
+      "intent": "Compose functions to operate in series.",
+      "doc": "Compose functions to operate in series.\n\nReturns a function that applies other functions in sequence.\n\nFunctions are applied from left to right so that\n``compose_left(f, g, h)(x, y)`` is the same as ``h(g(f(x, y)))``.\n\nIf no arguments are provided, the identity function (f(x) = x) is returned.\n\n>>> inc = lambda i: i + 1\n>>> compose_left(inc, str)(3)\n'4'\n\nSee Also:\n    compose\n    pipe"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "pipe",
+      "signature": "(data, *funcs)",
+      "span": [
+        607,
+        629
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 63 words",
+      "intent": "Pipe a value through a sequence of functions",
+      "doc": "Pipe a value through a sequence of functions\n\nI.e. ``pipe(data, f, g, h)`` is equivalent to ``h(g(f(data)))``\n\nWe think of the value as progressing through a pipe of several\ntransformations, much like pipes in UNIX\n\n``$ cat data | f | g | h``\n\n>>> double = lambda i: 2 * i\n>>> pipe(3, double, str)\n'6'\n\nSee Also:\n    compose\n    compose_left\n    thread_first\n    thread_last"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "complement",
+      "signature": "(func)",
+      "span": [
+        632,
+        645
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 44 words",
+      "intent": "Convert a predicate function to its logical complement.",
+      "doc": "Convert a predicate function to its logical complement.\n\nIn other words, return a function that, for inputs that normally\nyield True, yields False, and vice-versa.\n\n>>> def iseven(n): return n % 2 == 0\n>>> isodd = complement(iseven)\n>>> iseven(2)\nTrue\n>>> isodd(2)\nFalse"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "do",
+      "signature": "(func, x)",
+      "span": [
+        681,
+        704
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 75 words",
+      "intent": "Runs ``func`` on ``x``, returns ``x``",
+      "doc": "Runs ``func`` on ``x``, returns ``x``\n\nBecause the results of ``func`` are not returned, only the side\neffects of ``func`` are relevant.\n\nLogging functions can be made by composing ``do`` with a storage function\nlike ``list.append`` or ``file.write``\n\n>>> from toolz import compose\n>>> from toolz.curried import do\n\n>>> log = []\n>>> inc = lambda x: x + 1\n>>> inc = compose(inc, do(log.append))\n>>> inc(1)\n2\n>>> inc(11)\n12\n>>> log\n[1, 11]"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "flip",
+      "signature": "(func, a, b)",
+      "span": [
+        708,
+        731
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 79 words",
+      "intent": "Call the function call with the arguments flipped",
+      "doc": "Call the function call with the arguments flipped\n\nThis function is curried.\n\n>>> def div(a, b):\n...     return a // b\n...\n>>> flip(div, 2, 6)\n3\n>>> div_by_two = flip(div, 2)\n>>> div_by_two(4)\n2\n\nThis is particularly useful for built in functions and functions defined\nin C extensions that accept positional only arguments. For example:\nisinstance, issubclass.\n\n>>> data = [1, 'a', 'b', 2, 1.5, object(), 3]\n>>> only_ints = list(filter(flip(isinstance, int), data))\n>>> only_ints\n[1, 2, 3]"
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "return_none",
+      "signature": "(exc)",
+      "span": [
+        734,
+        737
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Returns None.",
+      "doc": "Returns None.\n    "
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "num_required_args",
+      "signature": "(func, sigspec=None)",
+      "span": [
+        866,
+        873
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "num required args (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "has_varargs",
+      "signature": "(func, sigspec=None)",
+      "span": [
+        876,
+        881
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "has varargs (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "has_keywords",
+      "signature": "(func, sigspec=None)",
+      "span": [
+        884,
+        890
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "has keywords (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "is_valid_args",
+      "signature": "(func, args, kwargs, sigspec=None)",
+      "span": [
+        893,
+        902
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "is valid args (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "is_partial_args",
+      "signature": "(func, args, kwargs, sigspec=None)",
+      "span": [
+        905,
+        914
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "is partial args (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/functoolz.py",
+      "qualname": "is_arity",
+      "signature": "(n, func, sigspec=None)",
+      "span": [
+        917,
+        948
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Does a function have only n positional arguments?",
+      "doc": "Does a function have only n positional arguments?\n\nThis function relies on introspection and does not call the function.\nReturns None if validity can't be determined.\n\n>>> def f(x):\n...     return x\n>>> is_arity(1, f)\nTrue\n>>> def g(x, y=1):\n...     return x + y\n>>> is_arity(1, g)\nFalse"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "remove",
+      "signature": "(predicate, seq)",
+      "span": [
+        19,
+        27
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "Return those items of sequence for which predicate(item) is False",
+      "doc": "Return those items of sequence for which predicate(item) is False\n\n>>> def iseven(x):\n...     return x % 2 == 0\n>>> list(remove(iseven, [1, 2, 3, 4]))\n[1, 3]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "accumulate",
+      "signature": "(binop, seq, initial=no_default)",
+      "span": [
+        30,
+        68
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 113 words",
+      "intent": "Repeatedly apply binary function to a sequence, accumulating results",
+      "doc": "Repeatedly apply binary function to a sequence, accumulating results\n\n>>> from operator import add, mul\n>>> list(accumulate(add, [1, 2, 3, 4, 5]))\n[1, 3, 6, 10, 15]\n>>> list(accumulate(mul, [1, 2, 3, 4, 5]))\n[1, 2, 6, 24, 120]\n\nAccumulate is similar to ``reduce`` and is good for making functions like\ncumulative sum:\n\n>>> from functools import partial, reduce\n>>> sum    = partial(reduce, add)\n>>> cumsum = partial(accumulate, add)\n\nAccumulate also takes an optional argument that will be used as the first\nvalue. This is similar to reduce.\n\n>>> list(accumulate(add, [1, 2, 3], -1))\n[-1, 0, 2, 5]\n>>> list(accumulate(add, [], 1))\n[1]\n\nSee Also:\n    itertools.accumulate :  In standard itertools for Python 3.2+"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "groupby",
+      "signature": "(key, seq)",
+      "span": [
+        71,
+        104
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 112 words",
+      "intent": "Group a collection by a key function",
+      "doc": "Group a collection by a key function\n\n>>> names = ['Alice', 'Bob', 'Charlie', 'Dan', 'Edith', 'Frank']\n>>> groupby(len, names)  # doctest: +SKIP\n{3: ['Bob', 'Dan'], 5: ['Alice', 'Edith', 'Frank'], 7: ['Charlie']}\n\n>>> iseven = lambda x: x % 2 == 0\n>>> groupby(iseven, [1, 2, 3, 4, 5, 6, 7, 8])  # doctest: +SKIP\n{False: [1, 3, 5, 7], True: [2, 4, 6, 8]}\n\nNon-callable keys imply grouping on a member.\n\n>>> groupby('gender', [{'name': 'Alice', 'gender': 'F'},\n...                    {'name': 'Bob', 'gender': 'M'},\n...                    {'name': 'Charlie', 'gender': 'M'}]) # doctest:+SKIP\n{'F': [{'gender': 'F', 'name': 'Alice'}],\n 'M': [{'gender': 'M', 'name': 'Bob'},\n       {'gender': 'M', 'name': 'Charlie'}]}\n\nNot to be confused with ``itertools.groupby``\n\nSee Also:\n    countby"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "merge_sorted",
+      "signature": "(*seqs, **kwargs)",
+      "span": [
+        107,
+        132
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 67 words",
+      "intent": "Merge and sort a collection of sorted collections",
+      "doc": "Merge and sort a collection of sorted collections\n\nThis works lazily and only keeps one value from each iterable in memory.\n\n>>> list(merge_sorted([1, 3, 5], [2, 4, 6]))\n[1, 2, 3, 4, 5, 6]\n\n>>> ''.join(merge_sorted('abc', 'abc', 'abc'))\n'aaabbbccc'\n\nThe \"key\" function used to sort the input may be passed as a keyword.\n\n>>> list(merge_sorted([2, 3], [1, 3], key=lambda x: x // 3))\n[2, 1, 3, 3]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "interleave",
+      "signature": "(seqs)",
+      "span": [
+        218,
+        239
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Interleave a sequence of sequences",
+      "doc": "Interleave a sequence of sequences\n\n>>> list(interleave([[1, 2], [3, 4]]))\n[1, 3, 2, 4]\n\n>>> ''.join(interleave(('ABC', 'XY')))\n'AXBYC'\n\nBoth the individual sequences and the sequence of sequences may be infinite\n\nReturns a lazy iterator"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "unique",
+      "signature": "(seq, key=None)",
+      "span": [
+        242,
+        267
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 37 words",
+      "intent": "Return only unique elements of a sequence",
+      "doc": "Return only unique elements of a sequence\n\n>>> tuple(unique((1, 2, 3)))\n(1, 2, 3)\n>>> tuple(unique((1, 2, 1, 3)))\n(1, 2, 3)\n\nUniqueness can be defined by key keyword\n\n>>> tuple(unique(['cat', 'mouse', 'dog', 'hen'], key=len))\n('cat', 'mouse')"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "isiterable",
+      "signature": "(x)",
+      "span": [
+        270,
+        284
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Is x iterable?",
+      "doc": "Is x iterable?\n\n>>> isiterable([1, 2, 3])\nTrue\n>>> isiterable('abc')\nTrue\n>>> isiterable(5)\nFalse"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "isdistinct",
+      "signature": "(seq)",
+      "span": [
+        287,
+        309
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 22 words",
+      "intent": "All values in sequence are distinct",
+      "doc": "All values in sequence are distinct\n\n>>> isdistinct([1, 2, 3])\nTrue\n>>> isdistinct([1, 2, 1])\nFalse\n\n>>> isdistinct(\"Hello\")\nFalse\n>>> isdistinct(\"World\")\nTrue"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "take",
+      "signature": "(n, seq)",
+      "span": [
+        312,
+        322
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 20 words",
+      "intent": "The first n elements of a sequence",
+      "doc": "The first n elements of a sequence\n\n>>> list(take(2, [10, 20, 30, 40, 50]))\n[10, 20]\n\nSee Also:\n    drop\n    tail"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "tail",
+      "signature": "(n, seq)",
+      "span": [
+        325,
+        338
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 20 words",
+      "intent": "The last n elements of a sequence",
+      "doc": "The last n elements of a sequence\n\n>>> tail(2, [10, 20, 30, 40, 50])\n[40, 50]\n\nSee Also:\n    drop\n    take"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "drop",
+      "signature": "(n, seq)",
+      "span": [
+        341,
+        351
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "The sequence following the first n elements",
+      "doc": "The sequence following the first n elements\n\n>>> list(drop(2, [10, 20, 30, 40, 50]))\n[30, 40, 50]\n\nSee Also:\n    take\n    tail"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "take_nth",
+      "signature": "(n, seq)",
+      "span": [
+        354,
+        360
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Every nth item in seq",
+      "doc": "Every nth item in seq\n\n>>> list(take_nth(2, [10, 20, 30, 40, 50]))\n[10, 30, 50]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "first",
+      "signature": "(seq)",
+      "span": [
+        363,
+        369
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The first element in a sequence",
+      "doc": "The first element in a sequence\n\n>>> first('ABC')\n'A'"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "second",
+      "signature": "(seq)",
+      "span": [
+        372,
+        380
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The second element in a sequence",
+      "doc": "The second element in a sequence\n\n>>> second('ABC')\n'B'"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "nth",
+      "signature": "(n, seq)",
+      "span": [
+        383,
+        392
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The nth element in a sequence",
+      "doc": "The nth element in a sequence\n\n>>> nth(1, 'ABC')\n'B'"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "last",
+      "signature": "(seq)",
+      "span": [
+        395,
+        401
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "The last element in a sequence",
+      "doc": "The last element in a sequence\n\n>>> last('ABC')\n'C'"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "get",
+      "signature": "(ind, seq, default=no_default)",
+      "span": [
+        414,
+        468
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 87 words",
+      "intent": "Get element in a sequence or dict",
+      "doc": "Get element in a sequence or dict\n\nProvides standard indexing\n\n>>> get(1, 'ABC')       # Same as 'ABC'[1]\n'B'\n\nPass a list to get multiple values\n\n>>> get([1, 2], 'ABC')  # ('ABC'[1], 'ABC'[2])\n('B', 'C')\n\nWorks on any value that supports indexing/getitem\nFor example here we see that it works with dictionaries\n\n>>> phonebook = {'Alice':  '555-1234',\n...              'Bob':    '555-5678',\n...              'Charlie':'555-9999'}\n>>> get('Alice', phonebook)\n'555-1234'\n\n>>> get(['Alice', 'Bob'], phonebook)\n('555-1234', '555-5678')\n\nProvide a default for missing values\n\n>>> get(['Alice', 'Dennis'], phonebook, None)\n('555-1234', None)\n\nSee Also:\n    pluck"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "concat",
+      "signature": "(seqs)",
+      "span": [
+        471,
+        486
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Concatenate zero or more iterables, any of which may be infinite.",
+      "doc": "Concatenate zero or more iterables, any of which may be infinite.\n\nAn infinite sequence will prevent the rest of the arguments from\nbeing included.\n\nWe use chain.from_iterable rather than ``chain(*seqs)`` so that seqs\ncan be a generator.\n\n>>> list(concat([[], [1], [2, 3]]))\n[1, 2, 3]\n\nSee also:\n    itertools.chain.from_iterable  equivalent"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "concatv",
+      "signature": "(*seqs)",
+      "span": [
+        489,
+        498
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Variadic version of concat",
+      "doc": "Variadic version of concat\n\n>>> list(concatv([], [\"a\"], [\"b\", \"c\"]))\n['a', 'b', 'c']\n\nSee also:\n    itertools.chain"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "mapcat",
+      "signature": "(func, seqs)",
+      "span": [
+        501,
+        508
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "Apply func to each sequence in seqs, concatenating results.",
+      "doc": "Apply func to each sequence in seqs, concatenating results.\n\n>>> list(mapcat(lambda s: [c.upper() for c in s],\n...             [[\"a\", \"b\"], [\"c\", \"d\", \"e\"]]))\n['A', 'B', 'C', 'D', 'E']"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "cons",
+      "signature": "(el, seq)",
+      "span": [
+        511,
+        517
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "Add el to beginning of (possibly infinite) sequence seq.",
+      "doc": "Add el to beginning of (possibly infinite) sequence seq.\n\n>>> list(cons(1, [2, 3]))\n[1, 2, 3]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "interpose",
+      "signature": "(el, seq)",
+      "span": [
+        520,
+        528
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 19 words",
+      "intent": "Introduce element between each pair of elements in seq",
+      "doc": "Introduce element between each pair of elements in seq\n\n>>> list(interpose(\"a\", [1, 2, 3]))\n[1, 'a', 2, 'a', 3]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "frequencies",
+      "signature": "(seq)",
+      "span": [
+        531,
+        544
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "Find number of occurrences of each value in seq",
+      "doc": "Find number of occurrences of each value in seq\n\n>>> frequencies(['cat', 'cat', 'ox', 'pig', 'pig', 'cat'])  #doctest: +SKIP\n{'cat': 3, 'ox': 1, 'pig': 2}\n\nSee Also:\n    countby\n    groupby"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "reduceby",
+      "signature": "(key, binop, seq, init=no_default)",
+      "span": [
+        547,
+        624
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 255 words",
+      "intent": "Perform a simultaneous groupby and reduction",
+      "doc": "Perform a simultaneous groupby and reduction\n\nThe computation:\n\n>>> result = reduceby(key, binop, seq, init)      # doctest: +SKIP\n\nis equivalent to the following:\n\n>>> def reduction(group):                           # doctest: +SKIP\n...     return reduce(binop, group, init)           # doctest: +SKIP\n\n>>> groups = groupby(key, seq)                    # doctest: +SKIP\n>>> result = valmap(reduction, groups)              # doctest: +SKIP\n\nBut the former does not build the intermediate groups, allowing it to\noperate in much less space.  This makes it suitable for larger datasets\nthat do not fit comfortably in memory\n\nThe ``init`` keyword argument is the default initialization of the\nreduction.  This can be either a constant value like ``0`` or a callable\nlike ``lambda : 0`` as might be used in ``defaultdict``.\n\nSimple Examples\n---------------\n\n>>> from operator import add, mul\n>>> iseven = lambda x: x % 2 == 0\n\n>>> data = [1, 2, 3, 4, 5]\n\n>>> reduceby(iseven, add, data)  # doctest: +SKIP\n{False: 9, True: 6}\n\n>>> reduceby(iseven, mul, data)  # doctest: +SKIP\n{False: 15, True: 8}\n\nComplex Example\n---------------\n\n>>> projects = [{'name': 'build roads', 'state': 'CA', 'cost': 1000000},\n...             {'name': 'fight crime', 'state': 'IL', 'cost': 100000},\n...             {'name': 'help farmers', 'state': 'IL', 'cost': 2000000},\n...             {'name': 'help farmers', 'state': 'CA', 'cost': 200000}]\n\n>>> reduceby('state',                        # doctest: +SKIP\n...          lambda acc, x: acc + x['cost'],\n...          projects, 0)\n{'CA': 1200000, 'IL': 2100000}\n\nExample Using ``init``\n----------------------\n\n>>> def set_add(s, i):\n...     s.add(i)\n...     return s\n\n>>> reduceby(iseven, set_add, [1, 2, 3, 4, 1, 2, 3], set)  # doctest: +SKIP\n{True:  set([2, 4]),\n False: set([1, 3])}"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "iterate",
+      "signature": "(func, x)",
+      "span": [
+        627,
+        654
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 64 words",
+      "intent": "Repeatedly apply a function func onto an original input",
+      "doc": "Repeatedly apply a function func onto an original input\n\nYields x, then func(x), then func(func(x)), then func(func(func(x))), etc..\n\n>>> def inc(x):  return x + 1\n>>> counter = iterate(inc, 0)\n>>> next(counter)\n0\n>>> next(counter)\n1\n>>> next(counter)\n2\n\n>>> double = lambda x: x * 2\n>>> powers_of_two = iterate(double, 1)\n>>> next(powers_of_two)\n1\n>>> next(powers_of_two)\n2\n>>> next(powers_of_two)\n4\n>>> next(powers_of_two)\n8"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "sliding_window",
+      "signature": "(n, seq)",
+      "span": [
+        657,
+        671
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "A sequence of overlapping subsequences",
+      "doc": "A sequence of overlapping subsequences\n\n>>> list(sliding_window(2, [1, 2, 3, 4]))\n[(1, 2), (2, 3), (3, 4)]\n\nThis function creates a sliding window suitable for transformations like\nsliding means / smoothing\n\n>>> mean = lambda seq: float(sum(seq)) / len(seq)\n>>> list(map(mean, sliding_window(2, [1, 2, 3, 4])))\n[1.5, 2.5, 3.5]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "partition",
+      "signature": "(n, seq, pad=no_pad)",
+      "span": [
+        677,
+        699
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 73 words",
+      "intent": "Partition sequence into tuples of length n",
+      "doc": "Partition sequence into tuples of length n\n\n>>> list(partition(2, [1, 2, 3, 4]))\n[(1, 2), (3, 4)]\n\nIf the length of ``seq`` is not evenly divisible by ``n``, the final tuple\nis dropped if ``pad`` is not specified, or filled to length ``n`` by pad:\n\n>>> list(partition(2, [1, 2, 3, 4, 5]))\n[(1, 2), (3, 4)]\n\n>>> list(partition(2, [1, 2, 3, 4, 5], pad=None))\n[(1, 2), (3, 4), (5, None)]\n\nSee Also:\n    partition_all"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "partition_all",
+      "signature": "(n, seq)",
+      "span": [
+        702,
+        749
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Partition all elements of sequence into tuples of length at most n",
+      "doc": "Partition all elements of sequence into tuples of length at most n\n\nThe final tuple may be shorter to accommodate extra elements.\n\n>>> list(partition_all(2, [1, 2, 3, 4]))\n[(1, 2), (3, 4)]\n\n>>> list(partition_all(2, [1, 2, 3, 4, 5]))\n[(1, 2), (3, 4), (5,)]\n\nSee Also:\n    partition"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "count",
+      "signature": "(seq)",
+      "span": [
+        752,
+        764
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Count the number of items in seq",
+      "doc": "Count the number of items in seq\n\nLike the builtin ``len`` but works on lazy sequences.\n\nNot to be confused with ``itertools.count``\n\nSee also:\n    len"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "pluck",
+      "signature": "(ind, seqs, default=no_default)",
+      "span": [
+        767,
+        796
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 91 words",
+      "intent": "plucks an element or several elements from each item in a sequence.",
+      "doc": "plucks an element or several elements from each item in a sequence.\n\n``pluck`` maps ``itertoolz.get`` over a sequence and returns one or more\nelements of each item in the sequence.\n\nThis is equivalent to running `map(curried.get(ind), seqs)`\n\n``ind`` can be either a single string/index or a list of strings/indices.\n``seqs`` should be sequence containing sequences or dicts.\n\ne.g.\n\n>>> data = [{'id': 1, 'name': 'Cheese'}, {'id': 2, 'name': 'Pies'}]\n>>> list(pluck('name', data))\n['Cheese', 'Pies']\n>>> list(pluck([0, 1], [[1, 2, 3], [4, 5, 7]]))\n[(1, 2), (4, 5)]\n\nSee Also:\n    get\n    map"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "getter",
+      "signature": "(index)",
+      "span": [
+        799,
+        809
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getter (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "join",
+      "signature": "(leftkey, leftseq, rightkey, rightseq, left_default=no_default, right_default=no_default)",
+      "span": [
+        812,
+        921
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 267 words",
+      "intent": "Join two sequences on common attributes",
+      "doc": "Join two sequences on common attributes\n\nThis is a semi-streaming operation.  The LEFT sequence is fully evaluated\nand placed into memory.  The RIGHT sequence is evaluated lazily and so can\nbe arbitrarily large.\n\n(Note: If right_default is defined, then unique keys of rightseq\n    will also be stored in memory.)\n\n>>> friends = [('Alice', 'Edith'),\n...            ('Alice', 'Zhao'),\n...            ('Edith', 'Alice'),\n...            ('Zhao', 'Alice'),\n...            ('Zhao', 'Edith')]\n\n>>> cities = [('Alice', 'NYC'),\n...           ('Alice', 'Chicago'),\n...           ('Dan', 'Sydney'),\n...           ('Edith', 'Paris'),\n...           ('Edith', 'Berlin'),\n...           ('Zhao', 'Shanghai')]\n\n>>> # Vacation opportunities\n>>> # In what cities do people have friends?\n>>> result = join(second, friends,\n...               first, cities)\n>>> for ((a, b), (c, d)) in sorted(unique(result)):\n...     print((a, d))\n('Alice', 'Berlin')\n('Alice', 'Paris')\n('Alice', 'Shanghai')\n('Edith', 'Chicago')\n('Edith', 'NYC')\n('Zhao', 'Chicago')\n('Zhao', 'NYC')\n('Zhao', 'Berlin')\n('Zhao', 'Paris')\n\nSpecify outer joins with keyword arguments ``left_default`` and/or\n``right_default``.  Here is a full outer join in which unmatched elements\nare paired with None.\n\n>>> identity = lambda x: x\n>>> list(join(identity, [1, 2, 3],\n...           identity, [2, 3, 4],\n...           left_default=None, right_default=None))\n[(2, 2), (3, 3), (None, 4), (1, None)]\n\nUsually the key arguments are callables to be applied to the sequences.  If\nthe keys are not obviously callable then it is assumed that indexing was\nintended, e.g. the following is a legal change.\nThe join is implemented as a hash join and the keys of leftseq must be\nhashable. Additionally, if right_default is defined, then keys of rightseq\nmust also be hashable.\n\n>>> # result = join(second, friends, first, cities)\n>>> result = join(1, friends, 0, cities)  # doctest: +SKIP"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "diff",
+      "signature": "(*seqs, **kwargs)",
+      "span": [
+        924,
+        961
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 61 words",
+      "intent": "Return those items that differ between sequences",
+      "doc": "Return those items that differ between sequences\n\n>>> list(diff([1, 2, 3], [1, 2, 10, 100]))\n[(3, 10)]\n\nShorter sequences may be padded with a ``default`` value:\n\n>>> list(diff([1, 2, 3], [1, 2, 10, 100], default=None))\n[(3, 10), (None, 100)]\n\nA ``key`` function may also be applied to each item to use during\ncomparisons:\n\n>>> list(diff(['apples', 'bananas'], ['Apples', 'Oranges'], key=str.lower))\n[('bananas', 'Oranges')]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "topk",
+      "signature": "(k, seq, key=None)",
+      "span": [
+        964,
+        982
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Find the k largest elements of a sequence",
+      "doc": "Find the k largest elements of a sequence\n\nOperates lazily in ``n*log(k)`` time\n\n>>> topk(2, [1, 100, 10, 1000])\n(1000, 100)\n\nUse a key function to change sorted order\n\n>>> topk(2, ['Alice', 'Bob', 'Charlie', 'Dan'], key=len)\n('Charlie', 'Alice')\n\nSee also:\n    heapq.nlargest"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "peek",
+      "signature": "(seq)",
+      "span": [
+        985,
+        1000
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Retrieve the next element of a sequence",
+      "doc": "Retrieve the next element of a sequence\n\nReturns the first element and an iterable equivalent to the original\nsequence, still having the element retrieved.\n\n>>> seq = [0, 1, 2, 3, 4]\n>>> first, seq = peek(seq)\n>>> first\n0\n>>> list(seq)\n[0, 1, 2, 3, 4]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "peekn",
+      "signature": "(n, seq)",
+      "span": [
+        1003,
+        1018
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "Retrieve the next n elements of a sequence",
+      "doc": "Retrieve the next n elements of a sequence\n\nReturns a tuple of the first n elements and an iterable equivalent\nto the original, still having the elements retrieved.\n\n>>> seq = [0, 1, 2, 3, 4]\n>>> first_two, seq = peekn(2, seq)\n>>> first_two\n(0, 1)\n>>> list(seq)\n[0, 1, 2, 3, 4]"
+    },
+    {
+      "module": "toolz/itertoolz.py",
+      "qualname": "random_sample",
+      "signature": "(prob, seq, random_state=None)",
+      "span": [
+        1021,
+        1057
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to random.Random"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 177 words",
+      "intent": "Return elements from a sequence with probability of prob",
+      "doc": "Return elements from a sequence with probability of prob\n\nReturns a lazy iterator of random items from seq.\n\n``random_sample`` considers each item independently and without\nreplacement. See below how the first time it returned 13 items and the\nnext time it returned 6 items.\n\n>>> seq = list(range(100))\n>>> list(random_sample(0.1, seq)) # doctest: +SKIP\n[6, 9, 19, 35, 45, 50, 58, 62, 68, 72, 78, 86, 95]\n>>> list(random_sample(0.1, seq)) # doctest: +SKIP\n[6, 44, 54, 61, 69, 94]\n\nProviding an integer seed for ``random_state`` will result in\ndeterministic sampling. Given the same seed it will return the same sample\nevery time.\n\n>>> list(random_sample(0.1, seq, random_state=2016))\n[7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]\n>>> list(random_sample(0.1, seq, random_state=2016))\n[7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]\n\n``random_state`` can also be any object with a method ``random`` that\nreturns floats between 0.0 and 1.0 (exclusive).\n\n>>> from random import Random\n>>> randobj = Random(2016)\n>>> list(random_sample(0.1, seq, random_state=randobj))\n[7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]"
+    },
+    {
+      "module": "toolz/recipes.py",
+      "qualname": "countby",
+      "signature": "(key, seq)",
+      "span": [
+        8,
+        23
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Count elements of a collection by a key function",
+      "doc": "Count elements of a collection by a key function\n\n>>> countby(len, ['cat', 'mouse', 'dog'])\n{3: 2, 5: 1}\n\n>>> def iseven(x): return x % 2 == 0\n>>> countby(iseven, [1, 2, 3])  # doctest:+SKIP\n{True: 1, False: 2}\n\nSee Also:\n    groupby"
+    },
+    {
+      "module": "toolz/recipes.py",
+      "qualname": "partitionby",
+      "signature": "(func, seq)",
+      "span": [
+        26,
+        46
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 102 words",
+      "intent": "Partition a sequence according to a function",
+      "doc": "Partition a sequence according to a function\n\nPartition `s` into a sequence of lists such that, when traversing\n`s`, every time the output of `func` changes a new list is started\nand that and subsequent items are collected into that list.\n\n>>> is_space = lambda c: c == \" \"\n>>> list(partitionby(is_space, \"I have space\"))\n[('I',), (' ',), ('h', 'a', 'v', 'e'), (' ',), ('s', 'p', 'a', 'c', 'e')]\n\n>>> is_large = lambda x: x > 10\n>>> list(partitionby(is_large, [1, 2, 1, 99, 88, 33, 99, -1, 5]))\n[(1, 2, 1), (99, 88, 33, 99), (-1, 5)]\n\nSee also:\n    partition\n    groupby\n    itertools.groupby"
+    },
+    {
+      "module": "toolz/sandbox/core.py",
+      "qualname": "unzip",
+      "signature": "(seq)",
+      "span": [
+        98,
+        133
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 82 words",
+      "intent": "Inverse of ``zip``",
+      "doc": "Inverse of ``zip``\n\n>>> a, b = unzip([('a', 1), ('b', 2)])\n>>> list(a)\n['a', 'b']\n>>> list(b)\n[1, 2]\n\nUnlike the naive implementation ``def unzip(seq): zip(*seq)`` this\nimplementation can handle an infinite sequence ``seq``.\n\nCaveats:\n\n* The implementation uses ``tee``, and so can use a significant amount\n  of auxiliary storage if the resulting iterators are consumed at\n  different times.\n\n* The inner sequence cannot be infinite. In Python 3 ``zip(*seq)`` can be\n  used if ``seq`` is a finite sequence of infinite sequences."
+    },
+    {
+      "module": "toolz/sandbox/parallel.py",
+      "qualname": "fold",
+      "signature": "(binop, seq, default=no_default, map=map, chunksize=128, combine=None)",
+      "span": [
+        13,
+        83
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 261 words",
+      "intent": "Reduce without guarantee of ordered reduction.",
+      "doc": "Reduce without guarantee of ordered reduction.\n\nParameters\n----------\nbinops\n    Associative operator. The associative property allows us to\n    leverage a parallel map to perform reductions in parallel.\n\n\ninputs:\n\n``binop``     - associative operator. The associative property allows us to\n                leverage a parallel map to perform reductions in parallel.\n\n``seq``       - a sequence to be aggregated\n``default``   - an identity element like 0 for ``add`` or 1 for mul\n\n``map``       - an implementation of ``map``. This may be parallel and\n                determines how work is distributed.\n``chunksize`` - Number of elements of ``seq`` that should be handled\n                within a single function call\n``combine``   - Binary operator to combine two intermediate results.\n                If ``binop`` is of type (total, item) -> total\n                then ``combine`` is of type (total, total) -> total\n                Defaults to ``binop`` for common case of operators like add\n\nFold chunks up the collection into blocks of size ``chunksize`` and then\nfeeds each of these to calls to ``reduce``. This work is distributed\nwith a call to ``map``, gathered back and then refolded to finish the\ncomputation. In this way ``fold`` specifies only how to chunk up data but\nleaves the distribution of this work to an externally provided ``map``\nfunction. This function can be sequential or rely on multithreading,\nmultiprocessing, or even distributed solutions.\n\nIf ``map`` intends to serialize functions it should be prepared to accept\nand serialize lambdas. Note that the standard ``pickle`` module fails\nhere.\n\nExample\n-------\n\n>>> # Provide a parallel map to accomplish a parallel sum\n>>> from operator import add\n>>> fold(add, [1, 2, 3, 4], chunksize=2, map=map)\n10"
+    },
+    {
+      "module": "toolz/utils.py",
+      "qualname": "raises",
+      "signature": "(err, lamda)",
+      "span": [
+        1,
+        6
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "raises (no docstring)",
+      "doc": ""
+    }
+  ],
+  "summary": {
+    "total_public_functions": 93,
+    "auditability": {
+      "spec": 61,
+      "invariant": 0,
+      "none": 32
+    },
+    "deterministic": 92,
+    "auditable": 60
+  }
+}

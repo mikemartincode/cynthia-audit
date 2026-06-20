@@ -1,0 +1,114 @@
+{
+  "target": "slugify",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/python-slugify/repo",
+  "commit": "7b6d5d96c1995e6dccb39a19a13ba78d7d0a3ee4",
+  "package_dir": "slugify",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "slugify/__main__.py",
+      "qualname": "parse_args",
+      "signature": "(argv: list[str]) -> argparse.Namespace",
+      "span": [
+        10,
+        65
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "read of sys.stdin"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parse args (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "slugify/__main__.py",
+      "qualname": "slugify_params",
+      "signature": "(args: argparse.Namespace) -> dict[str, Any]",
+      "span": [
+        68,
+        82
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "slugify params (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "slugify/__main__.py",
+      "qualname": "main",
+      "signature": "(argv: list[str] | None=None) -> None",
+      "span": [
+        85,
+        94
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to print()",
+        "read of sys.argv"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Run this program",
+      "doc": "Run this program "
+    },
+    {
+      "module": "slugify/slugify.py",
+      "qualname": "smart_truncate",
+      "signature": "(string: str, max_length: int=0, word_boundary: bool=False, separator: str=' ', save_order: bool=False) -> str",
+      "span": [
+        27,
+        72
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 40 words",
+      "intent": "Truncate a string.",
+      "doc": "Truncate a string.\n:param string (str): string for modification\n:param max_length (int): output string length\n:param word_boundary (bool):\n:param save_order (bool): if True then word order of output string is like input string\n:param separator (str): separator between words\n:return:"
+    },
+    {
+      "module": "slugify/slugify.py",
+      "qualname": "slugify",
+      "signature": "(text: str, entities: bool=True, decimal: bool=True, hexadecimal: bool=True, max_length: int=0, word_boundary: bool=False, separator: str=DEFAULT_SEPARATOR, save_order: bool=False, stopwords: Iterable[str]=(), regex_pattern: re.Pattern[str] | str | None=None, lowercase: bool=True, replacements: Iterable[Iterable[str]]=(), allow_unicode: bool=False) -> str",
+      "span": [
+        75,
+        197
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 123 words",
+      "intent": "Make a slug from the given text.",
+      "doc": "Make a slug from the given text.\n:param text (str): initial text\n:param entities (bool): converts html entities to unicode\n:param decimal (bool): converts html decimal to unicode\n:param hexadecimal (bool): converts html hexadecimal to unicode\n:param max_length (int): output string length\n:param word_boundary (bool): truncates to complete word even if length ends up shorter than max_length\n:param save_order (bool): when set, does not include shorter subsequent words even if they fit\n:param separator (str): separator between words\n:param stopwords (iterable): words to discount\n:param regex_pattern (str): regex pattern for disallowed characters\n:param lowercase (bool): activate case sensitivity by setting it to False\n:param replacements (iterable): list of replacement rules e.g. [['|', 'or'], ['%', 'percent']]\n:param allow_unicode (bool): allow unicode characters\n:return (str):"
+    },
+    {
+      "module": "slugify/special.py",
+      "qualname": "add_uppercase_char",
+      "signature": "(char_list: list[tuple[str, str]]) -> list[tuple[str, str]]",
+      "span": [
+        4,
+        12
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Given a replacement char list, this adds uppercase chars to the list",
+      "doc": "Given a replacement char list, this adds uppercase chars to the list "
+    }
+  ],
+  "summary": {
+    "total_public_functions": 6,
+    "auditability": {
+      "spec": 2,
+      "invariant": 0,
+      "none": 4
+    },
+    "deterministic": 4,
+    "auditable": 2
+  }
+}

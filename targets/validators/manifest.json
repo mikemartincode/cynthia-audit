@@ -1,0 +1,848 @@
+{
+  "target": "validators",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/validators/repo",
+  "commit": "70de324322def13a49a93d222f798ec1ab700885",
+  "package_dir": "src/validators",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "src/validators/between.py",
+      "qualname": "between",
+      "signature": "(value: PossibleValueTypes, /, *, min_val: Union[PossibleValueTypes, AbsMin, None]=None, max_val: Union[PossibleValueTypes, AbsMax, None]=None)",
+      "span": [
+        15,
+        79
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 170 words",
+      "intent": "Validate that a number is between minimum and/or maximum value.",
+      "doc": "Validate that a number is between minimum and/or maximum value.\n\nThis will work with any comparable type, such as floats, decimals and dates\nnot just integers. This validator is originally based on [WTForms-NumberRange-Validator][1].\n\n[1]: https://github.com/wtforms/wtforms/blob/master/src/wtforms/validators.py#L166-L220\n\nExamples:\n    >>> from datetime import datetime\n    >>> between(5, min_val=2)\n    True\n    >>> between(13.2, min_val=13, max_val=14)\n    True\n    >>> between(500, max_val=400)\n    ValidationError(func=between, args={'value': 500, 'max_val': 400})\n    >>> between(\n    ...     datetime(2000, 11, 11),\n    ...     min_val=datetime(1999, 11, 11)\n    ... )\n    True\n\nArgs:\n    value:\n        Value which is to be compared.\n    min_val:\n        The minimum required value of the number.\n        If not provided, minimum value will not be checked.\n    max_val:\n        The maximum value of the number.\n        If not provided, maximum value will not be checked.\n\nReturns:\n    (Literal[True]): If `value` is in between the given conditions.\n    (ValidationError): If `value` is not in between the given conditions.\n\nRaises:\n    (ValueError): If `min_val` is greater than `max_val`.\n    (TypeError): If there's a type mismatch during comparison.\n\nNote:\n    - `PossibleValueTypes` = `TypeVar(\"PossibleValueTypes\", int, float, str, datetime)`\n    - If neither `min_val` nor `max_val` is provided, result will always be `True`."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "card_number",
+      "signature": "(value: str, /)",
+      "span": [
+        11,
+        40
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 57 words",
+      "intent": "Return whether or not given value is a valid generic card number.",
+      "doc": "Return whether or not given value is a valid generic card number.\n\nThis validator is based on [Luhn's algorithm][1].\n\n[1]: https://github.com/mmcloughlin/luhn\n\nExamples:\n    >>> card_number('4242424242424242')\n    True\n    >>> card_number('4242424242424241')\n    ValidationError(func=card_number, args={'value': '4242424242424241'})\n\nArgs:\n    value:\n        Generic card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid generic card number.\n    (ValidationError): If `value` is an invalid generic card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "visa",
+      "signature": "(value: str, /)",
+      "span": [
+        44,
+        62
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Return whether or not given value is a valid Visa card number.",
+      "doc": "Return whether or not given value is a valid Visa card number.\n\nExamples:\n    >>> visa('4242424242424242')\n    True\n    >>> visa('2223003122003222')\n    ValidationError(func=visa, args={'value': '2223003122003222'})\n\nArgs:\n    value:\n        Visa card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid Visa card number.\n    (ValidationError): If `value` is an invalid Visa card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "mastercard",
+      "signature": "(value: str, /)",
+      "span": [
+        66,
+        84
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Return whether or not given value is a valid Mastercard card number.",
+      "doc": "Return whether or not given value is a valid Mastercard card number.\n\nExamples:\n    >>> mastercard('5555555555554444')\n    True\n    >>> mastercard('4242424242424242')\n    ValidationError(func=mastercard, args={'value': '4242424242424242'})\n\nArgs:\n    value:\n        Mastercard card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid Mastercard card number.\n    (ValidationError): If `value` is an invalid Mastercard card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "amex",
+      "signature": "(value: str, /)",
+      "span": [
+        88,
+        106
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Return whether or not given value is a valid American Express card number.",
+      "doc": "Return whether or not given value is a valid American Express card number.\n\nExamples:\n    >>> amex('378282246310005')\n    True\n    >>> amex('4242424242424242')\n    ValidationError(func=amex, args={'value': '4242424242424242'})\n\nArgs:\n    value:\n        American Express card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid American Express card number.\n    (ValidationError): If `value` is an invalid American Express card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "unionpay",
+      "signature": "(value: str, /)",
+      "span": [
+        110,
+        128
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Return whether or not given value is a valid UnionPay card number.",
+      "doc": "Return whether or not given value is a valid UnionPay card number.\n\nExamples:\n    >>> unionpay('6200000000000005')\n    True\n    >>> unionpay('4242424242424242')\n    ValidationError(func=unionpay, args={'value': '4242424242424242'})\n\nArgs:\n    value:\n        UnionPay card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid UnionPay card number.\n    (ValidationError): If `value` is an invalid UnionPay card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "diners",
+      "signature": "(value: str, /)",
+      "span": [
+        132,
+        150
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Return whether or not given value is a valid Diners Club card number.",
+      "doc": "Return whether or not given value is a valid Diners Club card number.\n\nExamples:\n    >>> diners('3056930009020004')\n    True\n    >>> diners('4242424242424242')\n    ValidationError(func=diners, args={'value': '4242424242424242'})\n\nArgs:\n    value:\n        Diners Club card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid Diners Club card number.\n    (ValidationError): If `value` is an invalid Diners Club card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "jcb",
+      "signature": "(value: str, /)",
+      "span": [
+        154,
+        172
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Return whether or not given value is a valid JCB card number.",
+      "doc": "Return whether or not given value is a valid JCB card number.\n\nExamples:\n    >>> jcb('3566002020360505')\n    True\n    >>> jcb('4242424242424242')\n    ValidationError(func=jcb, args={'value': '4242424242424242'})\n\nArgs:\n    value:\n        JCB card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid JCB card number.\n    (ValidationError): If `value` is an invalid JCB card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "discover",
+      "signature": "(value: str, /)",
+      "span": [
+        176,
+        194
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Return whether or not given value is a valid Discover card number.",
+      "doc": "Return whether or not given value is a valid Discover card number.\n\nExamples:\n    >>> discover('6011111111111117')\n    True\n    >>> discover('4242424242424242')\n    ValidationError(func=discover, args={'value': '4242424242424242'})\n\nArgs:\n    value:\n        Discover card number string to validate\n\nReturns:\n    (Literal[True]): If `value` is a valid Discover card number.\n    (ValidationError): If `value` is an invalid Discover card number."
+    },
+    {
+      "module": "src/validators/card.py",
+      "qualname": "mir",
+      "signature": "(value: str, /)",
+      "span": [
+        198,
+        216
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Return whether or not given value is a valid Mir card number.",
+      "doc": "Return whether or not given value is a valid Mir card number.\n\nExamples:\n    >>> mir('2200123456789019')\n    True\n    >>> mir('4242424242424242')\n    ValidationError(func=mir, args={'value': '4242424242424242'})\n\nArgs:\n    value:\n        Mir card number string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid Mir card number.\n    (ValidationError): If `value` is an invalid Mir card number."
+    },
+    {
+      "module": "src/validators/country.py",
+      "qualname": "calling_code",
+      "signature": "(value: str, /)",
+      "span": [
+        241,
+        263
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 44 words",
+      "intent": "Validates given calling code.",
+      "doc": "Validates given calling code.\n\nThis performs country's calling code validation.\n\nExamples:\n    >>> calling_code('+91')\n    True\n    >>> calling_code('-31')\n    ValidationError(func=calling_code, args={'value': '-31'})\n\nArgs:\n    value:\n        Country's calling code string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid calling code.\n    (ValidationError): If `value` is an invalid calling code."
+    },
+    {
+      "module": "src/validators/country.py",
+      "qualname": "country_code",
+      "signature": "(value: str, /, *, iso_format: str='auto', ignore_case: bool=False)",
+      "span": [
+        267,
+        317
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 85 words",
+      "intent": "Validates given country code.",
+      "doc": "Validates given country code.\n\nThis performs a case-sensitive [ISO 3166][1] country code validation.\n\n[1]: https://www.iso.org/iso-3166-country-codes.html\n\nExamples:\n    >>> country_code('GB', iso_format='alpha3')\n    ValidationError(func=country_code, args={'value': 'GB', 'iso_format': 'alpha3'})\n    >>> country_code('USA')\n    True\n    >>> country_code('840', iso_format='numeric')\n    True\n    >>> country_code('iN', iso_format='alpha2')\n    ValidationError(func=country_code, args={'value': 'iN', 'iso_format': 'alpha2'})\n    >>> country_code('ZWE', iso_format='alpha3')\n    True\n\nArgs:\n    value:\n        Country code string to validate.\n    iso_format:\n        ISO format to be used. Available options are:\n        `auto`, `alpha2`, `alpha3` and `numeric`.\n    ignore_case:\n        Enable/Disable case-sensitive matching.\n\nReturns:\n    (Literal[True]): If `value` is a valid country code.\n    (ValidationError): If `value` is an invalid country code."
+    },
+    {
+      "module": "src/validators/country.py",
+      "qualname": "currency",
+      "signature": "(value: str, /, *, skip_symbols: bool=True, ignore_case: bool=False)",
+      "span": [
+        321,
+        355
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 55 words",
+      "intent": "Validates given currency code.",
+      "doc": "Validates given currency code.\n\nThis performs [ISO 4217][1] currency code/symbol validation.\n\n[1]: https://www.iso.org/iso-4217-currency-codes.html\n\nExamples:\n    >>> currency('USD')\n    True\n    >>> currency('ZWX')\n    ValidationError(func=currency, args={'value': 'ZWX'})\n\nArgs:\n    value:\n        Currency code/symbol string to validate.\n    skip_symbols:\n        Skip currency symbol validation.\n    ignore_case:\n        Enable/Disable case-sensitive matching.\n\nReturns:\n    (Literal[True]): If `value` is a valid currency code.\n    (ValidationError): If `value` is an invalid currency code."
+    },
+    {
+      "module": "src/validators/cron.py",
+      "qualname": "cron",
+      "signature": "(value: str, /)",
+      "span": [
+        42,
+        78
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 55 words",
+      "intent": "Return whether or not given value is a valid cron string.",
+      "doc": "Return whether or not given value is a valid cron string.\n\nExamples:\n    >>> cron('*/5 * * * *')\n    True\n    >>> cron('30-20 * * * *')\n    ValidationError(func=cron, args={'value': '30-20 * * * *'})\n\nArgs:\n    value:\n        Cron string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid cron string.\n    (ValidationError): If `value` is an invalid cron string."
+    },
+    {
+      "module": "src/validators/crypto_addresses/bsc_address.py",
+      "qualname": "bsc_address",
+      "signature": "(value: str, /)",
+      "span": [
+        11,
+        36
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "Return whether or not given value is a valid binance smart chain address.",
+      "doc": "Return whether or not given value is a valid binance smart chain address.\n\nFull validation is implemented for BSC addresses.\n\nExamples:\n    >>> bsc_address('0x4e5acf9684652BEa56F2f01b7101a225Ee33d23f')\n    True\n    >>> bsc_address('0x4g5acf9684652BEa56F2f01b7101a225Eh33d23z')\n    ValidationError(func=bsc_address, args={'value': '0x4g5acf9684652BEa56F2f01b7101a225Eh33d23z'})\n\nArgs:\n    value:\n        BSC address string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid bsc address.\n    (ValidationError): If `value` is an invalid bsc address."
+    },
+    {
+      "module": "src/validators/crypto_addresses/btc_address.py",
+      "qualname": "btc_address",
+      "signature": "(value: str, /)",
+      "span": [
+        27,
+        56
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 71 words",
+      "intent": "Return whether or not given value is a valid bitcoin address.",
+      "doc": "Return whether or not given value is a valid bitcoin address.\n\nFull validation is implemented for P2PKH and P2SH addresses.\nFor segwit addresses a regexp is used to provide a reasonable\nestimate on whether the address is valid.\n\nExamples:\n    >>> btc_address('3Cwgr2g7vsi1bXDUkpEnVoRLA9w4FZfC69')\n    True\n    >>> btc_address('1BvBMsEYstWetqTFn5Au4m4GFg7xJaNVN2')\n    ValidationError(func=btc_address, args={'value': '1BvBMsEYstWetqTFn5Au4m4GFg7xJaNVN2'})\n\nArgs:\n    value:\n        Bitcoin address string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid bitcoin address.\n    (ValidationError): If `value` is an invalid bitcoin address."
+    },
+    {
+      "module": "src/validators/crypto_addresses/eth_address.py",
+      "qualname": "eth_address",
+      "signature": "(value: str, /)",
+      "span": [
+        34,
+        63
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 51 words",
+      "intent": "Return whether or not given value is a valid ethereum address.",
+      "doc": "Return whether or not given value is a valid ethereum address.\n\nFull validation is implemented for ERC20 addresses.\n\nExamples:\n    >>> eth_address('0x9cc14ba4f9f68ca159ea4ebf2c292a808aaeb598')\n    True\n    >>> eth_address('0x8Ba1f109551bD432803012645Ac136ddd64DBa72')\n    ValidationError(func=eth_address, args={'value': '0x8Ba1f109551bD432803012645Ac136ddd64DBa72'})\n\nArgs:\n    value:\n        Ethereum address string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid ethereum address.\n    (ValidationError): If `value` is an invalid ethereum address."
+    },
+    {
+      "module": "src/validators/crypto_addresses/trx_address.py",
+      "qualname": "trx_address",
+      "signature": "(value: str, /)",
+      "span": [
+        38,
+        62
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Return whether or not given value is a valid tron address.",
+      "doc": "Return whether or not given value is a valid tron address.\n\nFull validation is implemented for TRC20 tron addresses.\n\nExamples:\n    >>> trx_address('TLjfbTbpZYDQ4EoA4N5CLNgGjfbF8ZWz38')\n    True\n    >>> trx_address('TR2G7Rm4vFqF8EpY4U5xdLdQ7XgJ2U8Vd')\n    ValidationError(func=trx_address, args={'value': 'TR2G7Rm4vFqF8EpY4U5xdLdQ7XgJ2U8Vd'})\n\nArgs:\n    value:\n        Tron address string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid tron address.\n    (ValidationError): If `value` is an invalid tron address."
+    },
+    {
+      "module": "src/validators/domain.py",
+      "qualname": "domain",
+      "signature": "(value: str, /, *, consider_tld: bool=False, rfc_1034: bool=False, rfc_2782: bool=False)",
+      "span": [
+        41,
+        101
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 103 words",
+      "intent": "Return whether or not given value is a valid domain.",
+      "doc": "Return whether or not given value is a valid domain.\n\nExamples:\n    >>> domain('example.com')\n    True\n    >>> domain('example.com/')\n    ValidationError(func=domain, args={'value': 'example.com/'})\n    >>> # Supports IDN domains as well::\n    >>> domain('xn----gtbspbbmkef.xn--p1ai')\n    True\n\nArgs:\n    value:\n        Domain string to validate.\n    consider_tld:\n        Restrict domain to TLDs allowed by IANA.\n    rfc_1034:\n        Allows optional trailing dot in the domain name.\n        Ref: [RFC 1034](https://www.rfc-editor.org/rfc/rfc1034).\n    rfc_2782:\n        Domain name is of type service record.\n        Allows optional underscores in the domain name.\n        Ref: [RFC 2782](https://www.rfc-editor.org/rfc/rfc2782).\n\n\nReturns:\n    (Literal[True]): If `value` is a valid domain name.\n    (ValidationError): If `value` is an invalid domain name.\n\nRaises:\n    (UnicodeError): If `value` cannot be encoded into `idna` or decoded into `utf-8`."
+    },
+    {
+      "module": "src/validators/email.py",
+      "qualname": "email",
+      "signature": "(value: str, /, *, ipv6_address: bool=False, ipv4_address: bool=False, simple_host: bool=False, rfc_1034: bool=False, rfc_2782: bool=False)",
+      "span": [
+        12,
+        101
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 106 words",
+      "intent": "Validate an email address.",
+      "doc": "Validate an email address.\n\nThis was inspired from [Django's email validator][1].\nAlso ref: [RFC 1034][2], [RFC 5321][3] and [RFC 5322][4].\n\n[1]: https://github.com/django/django/blob/main/django/core/validators.py#L174\n[2]: https://www.rfc-editor.org/rfc/rfc1034\n[3]: https://www.rfc-editor.org/rfc/rfc5321\n[4]: https://www.rfc-editor.org/rfc/rfc5322\n\nExamples:\n    >>> email('someone@example.com')\n    True\n    >>> email('bogus@@')\n    ValidationError(func=email, args={'value': 'bogus@@'})\n\nArgs:\n    value:\n        eMail string to validate.\n    ipv6_address:\n        When the domain part is an IPv6 address.\n    ipv4_address:\n        When the domain part is an IPv4 address.\n    simple_host:\n        When the domain part is a simple hostname.\n    rfc_1034:\n        Allow trailing dot in domain name.\n        Ref: [RFC 1034](https://www.rfc-editor.org/rfc/rfc1034).\n    rfc_2782:\n        Domain name is of type service record.\n        Ref: [RFC 2782](https://www.rfc-editor.org/rfc/rfc2782).\n\nReturns:\n    (Literal[True]): If `value` is a valid eMail.\n    (ValidationError): If `value` is an invalid eMail."
+    },
+    {
+      "module": "src/validators/encoding.py",
+      "qualname": "base16",
+      "signature": "(value: str, /)",
+      "span": [
+        11,
+        28
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return whether or not given value is a valid base16 encoding.",
+      "doc": "Return whether or not given value is a valid base16 encoding.\n\nExamples:\n    >>> base16('a3f4b2')\n    True\n    >>> base16('a3f4Z1')\n    ValidationError(func=base16, args={'value': 'a3f4Z1'})\n\nArgs:\n    value:\n        base16 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid base16 encoding.\n    (ValidationError): If `value` is an invalid base16 encoding."
+    },
+    {
+      "module": "src/validators/encoding.py",
+      "qualname": "base32",
+      "signature": "(value: str, /)",
+      "span": [
+        32,
+        49
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return whether or not given value is a valid base32 encoding.",
+      "doc": "Return whether or not given value is a valid base32 encoding.\n\nExamples:\n    >>> base32('MFZWIZLTOQ======')\n    True\n    >>> base32('MfZW3zLT9Q======')\n    ValidationError(func=base32, args={'value': 'MfZW3zLT9Q======'})\n\nArgs:\n    value:\n        base32 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid base32 encoding.\n    (ValidationError): If `value` is an invalid base32 encoding."
+    },
+    {
+      "module": "src/validators/encoding.py",
+      "qualname": "base58",
+      "signature": "(value: str, /)",
+      "span": [
+        53,
+        70
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Return whether or not given value is a valid base58 encoding.",
+      "doc": "Return whether or not given value is a valid base58 encoding.\n\nExamples:\n    >>> base58('14pq6y9H2DLGahPsM4s7ugsNSD2uxpHsJx')\n    True\n    >>> base58('cUSECm5YzcXJwP')\n    True\n\nArgs:\n    value:\n        base58 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid base58 encoding.\n    (ValidationError): If `value` is an invalid base58 encoding."
+    },
+    {
+      "module": "src/validators/encoding.py",
+      "qualname": "base64",
+      "signature": "(value: str, /)",
+      "span": [
+        74,
+        95
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return whether or not given value is a valid base64 encoding.",
+      "doc": "Return whether or not given value is a valid base64 encoding.\n\nExamples:\n    >>> base64('Y2hhcmFjdGVyIHNldA==')\n    True\n    >>> base64('cUSECm5YzcXJwP')\n    ValidationError(func=base64, args={'value': 'cUSECm5YzcXJwP'})\n\nArgs:\n    value:\n        base64 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid base64 encoding.\n    (ValidationError): If `value` is an invalid base64 encoding."
+    },
+    {
+      "module": "src/validators/finance.py",
+      "qualname": "cusip",
+      "signature": "(value: str)",
+      "span": [
+        55,
+        74
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Return whether or not given value is a valid CUSIP.",
+      "doc": "Return whether or not given value is a valid CUSIP.\n\nChecks if the value is a valid [CUSIP][1].\n[1]: https://en.wikipedia.org/wiki/CUSIP\n\nExamples:\n    >>> cusip('037833DP2')\n    True\n    >>> cusip('037833DP3')\n    ValidationError(func=cusip, args={'value': '037833DP3'})\n\nArgs:\n    value: CUSIP string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid CUSIP string.\n    (ValidationError): If `value` is an invalid CUSIP string."
+    },
+    {
+      "module": "src/validators/finance.py",
+      "qualname": "isin",
+      "signature": "(value: str)",
+      "span": [
+        78,
+        97
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 54 words",
+      "intent": "Return whether or not given value is a valid ISIN.",
+      "doc": "Return whether or not given value is a valid ISIN.\n\nChecks if the value is a valid [ISIN][1].\n[1]: https://en.wikipedia.org/wiki/International_Securities_Identification_Number\n\nExamples:\n    >>> isin('037833DP2')\n    ValidationError(func=isin, args={'value': '037833DP2'})\n    >>> isin('037833DP3')\n    ValidationError(func=isin, args={'value': '037833DP3'})\n\nArgs:\n    value: ISIN string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid ISIN string.\n    (ValidationError): If `value` is an invalid ISIN string."
+    },
+    {
+      "module": "src/validators/finance.py",
+      "qualname": "sedol",
+      "signature": "(value: str)",
+      "span": [
+        101,
+        139
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Return whether or not given value is a valid SEDOL.",
+      "doc": "Return whether or not given value is a valid SEDOL.\n\nChecks if the value is a valid [SEDOL][1].\n[1]: https://en.wikipedia.org/wiki/SEDOL\n\nExamples:\n    >>> sedol('2936921')\n    True\n    >>> sedol('29A6922')\n    ValidationError(func=sedol, args={'value': '29A6922'})\n\nArgs:\n    value: SEDOL string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid SEDOL string.\n    (ValidationError): If `value` is an invalid SEDOL string."
+    },
+    {
+      "module": "src/validators/hashes.py",
+      "qualname": "md5",
+      "signature": "(value: str, /)",
+      "span": [
+        11,
+        28
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return whether or not given value is a valid MD5 hash.",
+      "doc": "Return whether or not given value is a valid MD5 hash.\n\nExamples:\n    >>> md5('d41d8cd98f00b204e9800998ecf8427e')\n    True\n    >>> md5('900zz11')\n    ValidationError(func=md5, args={'value': '900zz11'})\n\nArgs:\n    value:\n        MD5 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid MD5 hash.\n    (ValidationError): If `value` is an invalid MD5 hash."
+    },
+    {
+      "module": "src/validators/hashes.py",
+      "qualname": "sha1",
+      "signature": "(value: str, /)",
+      "span": [
+        32,
+        49
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return whether or not given value is a valid SHA1 hash.",
+      "doc": "Return whether or not given value is a valid SHA1 hash.\n\nExamples:\n    >>> sha1('da39a3ee5e6b4b0d3255bfef95601890afd80709')\n    True\n    >>> sha1('900zz11')\n    ValidationError(func=sha1, args={'value': '900zz11'})\n\nArgs:\n    value:\n        SHA1 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid SHA1 hash.\n    (ValidationError): If `value` is an invalid SHA1 hash."
+    },
+    {
+      "module": "src/validators/hashes.py",
+      "qualname": "sha224",
+      "signature": "(value: str, /)",
+      "span": [
+        53,
+        70
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return whether or not given value is a valid SHA224 hash.",
+      "doc": "Return whether or not given value is a valid SHA224 hash.\n\nExamples:\n    >>> sha224('d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f')\n    True\n    >>> sha224('900zz11')\n    ValidationError(func=sha224, args={'value': '900zz11'})\n\nArgs:\n    value:\n        SHA224 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid SHA224 hash.\n    (ValidationError): If `value` is an invalid SHA224 hash."
+    },
+    {
+      "module": "src/validators/hashes.py",
+      "qualname": "sha256",
+      "signature": "(value: str, /)",
+      "span": [
+        74,
+        94
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Return whether or not given value is a valid SHA256 hash.",
+      "doc": "Return whether or not given value is a valid SHA256 hash.\n\nExamples:\n    >>> sha256(\n    ...     'e3b0c44298fc1c149afbf4c8996fb924'\n    ...     '27ae41e4649b934ca495991b7852b855'\n    ... )\n    True\n    >>> sha256('900zz11')\n    ValidationError(func=sha256, args={'value': '900zz11'})\n\nArgs:\n    value:\n        SHA256 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid SHA256 hash.\n    (ValidationError): If `value` is an invalid SHA256 hash."
+    },
+    {
+      "module": "src/validators/hashes.py",
+      "qualname": "sha384",
+      "signature": "(value: str, /)",
+      "span": [
+        98,
+        118
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Return whether or not given value is a valid SHA384 hash.",
+      "doc": "Return whether or not given value is a valid SHA384 hash.\n\nExamples:\n    >>> sha384(\n    ...     'cb00753f45a35e8bb5a03d699ac65007272c32ab0eded163'\n    ...     '1a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7'\n    ... )\n    True\n    >>> sha384('900zz11')\n    ValidationError(func=sha384, args={'value': '900zz11'})\n\nArgs:\n    value:\n        SHA384 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid SHA384 hash.\n    (ValidationError): If `value` is an invalid SHA384 hash."
+    },
+    {
+      "module": "src/validators/hashes.py",
+      "qualname": "sha512",
+      "signature": "(value: str, /)",
+      "span": [
+        122,
+        143
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 51 words",
+      "intent": "Return whether or not given value is a valid SHA512 hash.",
+      "doc": "Return whether or not given value is a valid SHA512 hash.\n\nExamples:\n    >>> sha512(\n    ...     'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce'\n    ...     '9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af9'\n    ...     '27da3e'\n    ... )\n    True\n    >>> sha512('900zz11')\n    ValidationError(func=sha512, args={'value': '900zz11'})\n\nArgs:\n    value:\n        SHA512 string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid SHA512 hash.\n    (ValidationError): If `value` is an invalid SHA512 hash."
+    },
+    {
+      "module": "src/validators/hostname.py",
+      "qualname": "hostname",
+      "signature": "(value: str, /, *, skip_ipv6_addr: bool=False, skip_ipv4_addr: bool=False, may_have_port: bool=True, maybe_simple: bool=True, consider_tld: bool=False, private: Optional[bool]=None, rfc_1034: bool=False, rfc_2782: bool=False)",
+      "span": [
+        50,
+        129
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 141 words",
+      "intent": "Return whether or not given value is a valid hostname.",
+      "doc": "Return whether or not given value is a valid hostname.\n\nExamples:\n    >>> hostname(\"ubuntu-pc:443\")\n    True\n    >>> hostname(\"this-pc\")\n    True\n    >>> hostname(\"xn----gtbspbbmkef.xn--p1ai:65535\")\n    True\n    >>> hostname(\"_example.com\")\n    ValidationError(func=hostname, args={'value': '_example.com'})\n    >>> hostname(\"123.5.77.88:31000\")\n    True\n    >>> hostname(\"12.12.12.12\")\n    True\n    >>> hostname(\"[::1]:22\")\n    True\n    >>> hostname(\"dead:beef:0:0:0:0000:42:1\")\n    True\n    >>> hostname(\"[0:0:0:0:0:ffff:1.2.3.4]:-65538\")\n    ValidationError(func=hostname, args={'value': '[0:0:0:0:0:ffff:1.2.3.4]:-65538'})\n    >>> hostname(\"[0:&:b:c:@:e:f::]:9999\")\n    ValidationError(func=hostname, args={'value': '[0:&:b:c:@:e:f::]:9999'})\n\nArgs:\n    value:\n        Hostname string to validate.\n    skip_ipv6_addr:\n        When hostname string cannot be an IPv6 address.\n    skip_ipv4_addr:\n        When hostname string cannot be an IPv4 address.\n    may_have_port:\n        Hostname string may contain port number.\n    maybe_simple:\n        Hostname string maybe only hyphens and alpha-numerals.\n    consider_tld:\n        Restrict domain to TLDs allowed by IANA.\n    private:\n        Embedded IP address is public if `False`, private/local if `True`.\n    rfc_1034:\n        Allow trailing dot in domain/host name.\n        Ref: [RFC 1034](https://www.rfc-editor.org/rfc/rfc1034).\n    rfc_2782:\n        Domain/Host name is of type service record.\n        Ref: [RFC 2782](https://www.rfc-editor.org/rfc/rfc2782).\n\nReturns:\n    (Literal[True]): If `value` is a valid hostname.\n    (ValidationError): If `value` is an invalid hostname."
+    },
+    {
+      "module": "src/validators/i18n/es.py",
+      "qualname": "es_cif",
+      "signature": "(value: str, /)",
+      "span": [
+        24,
+        77
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 118 words",
+      "intent": "Validate a Spanish CIF.",
+      "doc": "Validate a Spanish CIF.\n\nEach company in Spain prior to 2008 had a distinct CIF and has been\ndiscontinued. For more information see [wikipedia.org/cif][1].\n\nThe new replacement is to use NIF for absolutely everything. The issue is\nthat there are \"types\" of NIFs now: company, person [citizen or resident]\nall distinguished by the first character of the DOI. For this reason we\nwill continue to call CIFs NIFs, that are used for companies.\n\nThis validator is based on [generadordni.es][2].\n\n[1]: https://es.wikipedia.org/wiki/C%C3%B3digo_de_identificaci%C3%B3n_fiscal\n[2]: https://generadordni.es/\n\nExamples:\n    >>> es_cif('B25162520')\n    True\n    >>> es_cif('B25162529')\n    ValidationError(func=es_cif, args={'value': 'B25162529'})\n\nArgs:\n    value:\n        DOI string which is to be validated.\n\nReturns:\n    (Literal[True]): If `value` is a valid DOI string.\n    (ValidationError): If `value` is an invalid DOI string."
+    },
+    {
+      "module": "src/validators/i18n/es.py",
+      "qualname": "es_nif",
+      "signature": "(value: str, /)",
+      "span": [
+        81,
+        107
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 82 words",
+      "intent": "Validate a Spanish NIF.",
+      "doc": "Validate a Spanish NIF.\n\nEach entity, be it person or company in Spain has a distinct NIF. Since\nwe've designated CIF to be a company NIF, this NIF is only for person.\nFor more information see [wikipedia.org/nif][1]. This validator\nis based on [generadordni.es][2].\n\n[1]: https://es.wikipedia.org/wiki/N%C3%BAmero_de_identificaci%C3%B3n_fiscal\n[2]: https://generadordni.es/\n\nExamples:\n    >>> es_nif('26643189N')\n    True\n    >>> es_nif('26643189X')\n    ValidationError(func=es_nif, args={'value': '26643189X'})\n\nArgs:\n    value:\n        DOI string which is to be validated.\n\nReturns:\n    (Literal[True]): If `value` is a valid DOI string.\n    (ValidationError): If `value` is an invalid DOI string."
+    },
+    {
+      "module": "src/validators/i18n/es.py",
+      "qualname": "es_nie",
+      "signature": "(value: str, /)",
+      "span": [
+        111,
+        140
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 78 words",
+      "intent": "Validate a Spanish NIE.",
+      "doc": "Validate a Spanish NIE.\n\nThe NIE is a tax identification number in Spain, known in Spanish\nas the NIE, or more formally the N\u00famero de identidad de extranjero.\nFor more information see [wikipedia.org/nie][1]. This validator\nis based on [generadordni.es][2].\n\n[1]: https://es.wikipedia.org/wiki/N%C3%BAmero_de_identidad_de_extranjero\n[2]: https://generadordni.es/\n\nExamples:\n    >>> es_nie('X0095892M')\n    True\n    >>> es_nie('X0095892X')\n    ValidationError(func=es_nie, args={'value': 'X0095892X'})\n\nArgs:\n    value:\n        DOI string which is to be validated.\n\nReturns:\n    (Literal[True]): If `value` is a valid DOI string.\n    (ValidationError): If `value` is an invalid DOI string."
+    },
+    {
+      "module": "src/validators/i18n/es.py",
+      "qualname": "es_doi",
+      "signature": "(value: str, /)",
+      "span": [
+        144,
+        168
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 71 words",
+      "intent": "Validate a Spanish DOI.",
+      "doc": "Validate a Spanish DOI.\n\nA DOI in spain is all NIF / CIF / NIE / DNI -- a digital ID.\nFor more information see [wikipedia.org/doi][1]. This validator\nis based on [generadordni.es][2].\n\n[1]: https://es.wikipedia.org/wiki/Identificador_de_objeto_digital\n[2]: https://generadordni.es/\n\nExamples:\n    >>> es_doi('X0095892M')\n    True\n    >>> es_doi('X0095892X')\n    ValidationError(func=es_doi, args={'value': 'X0095892X'})\n\nArgs:\n    value:\n        DOI string which is to be validated.\n\nReturns:\n    (Literal[True]): If `value` is a valid DOI string.\n    (ValidationError): If `value` is an invalid DOI string."
+    },
+    {
+      "module": "src/validators/i18n/fi.py",
+      "qualname": "fi_business_id",
+      "signature": "(value: str, /)",
+      "span": [
+        33,
+        63
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 66 words",
+      "intent": "Validate a Finnish Business ID.",
+      "doc": "Validate a Finnish Business ID.\n\nEach company in Finland has a distinct business id. For more\ninformation see [Finnish Trade Register][1]\n\n[1]: http://en.wikipedia.org/wiki/Finnish_Trade_Register\n\nExamples:\n    >>> fi_business_id('0112038-9')  # Fast Monkeys Ltd\n    True\n    >>> fi_business_id('1234567-8')  # Bogus ID\n    ValidationError(func=fi_business_id, args={'value': '1234567-8'})\n\nArgs:\n    value:\n        Business ID string to be validated.\n\nReturns:\n    (Literal[True]): If `value` is a valid finnish business id.\n    (ValidationError): If `value` is an invalid finnish business id."
+    },
+    {
+      "module": "src/validators/i18n/fi.py",
+      "qualname": "fi_ssn",
+      "signature": "(value: str, /, *, allow_temporal_ssn: bool=True)",
+      "span": [
+        67,
+        103
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 76 words",
+      "intent": "Validate a Finnish Social Security Number.",
+      "doc": "Validate a Finnish Social Security Number.\n\nThis validator is based on [django-localflavor-fi][1].\n\n[1]: https://github.com/django/django-localflavor-fi/\n\nExamples:\n    >>> fi_ssn('010101-0101')\n    True\n    >>> fi_ssn('101010-0102')\n    ValidationError(func=fi_ssn, args={'value': '101010-0102'})\n\nArgs:\n    value:\n        Social Security Number to be validated.\n    allow_temporal_ssn:\n        Whether to accept temporal SSN numbers. Temporal SSN numbers are the\n        ones where the serial is in the range [900-999]. By default temporal\n        SSN numbers are valid.\n\nReturns:\n    (Literal[True]): If `value` is a valid finnish SSN.\n    (ValidationError): If `value` is an invalid finnish SSN."
+    },
+    {
+      "module": "src/validators/i18n/fr.py",
+      "qualname": "fr_department",
+      "signature": "(value: typing.Union[str, int])",
+      "span": [
+        28,
+        64
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 70 words",
+      "intent": "Validate a french department number.",
+      "doc": "Validate a french department number.\n\nExamples:\n    >>> fr_department(20)  # can be an integer\n    ValidationError(func=fr_department, args={'value': 20})\n    >>> fr_department(\"20\")\n    ValidationError(func=fr_department, args={'value': '20'})\n    >>> fr_department(\"971\")  # Guadeloupe\n    True\n    >>> fr_department(\"00\")\n    ValidationError(func=fr_department, args={'value': '00'})\n    >>> fr_department('2A')  # Corsica\n    True\n    >>> fr_department('2B')\n    True\n    >>> fr_department('2C')\n    ValidationError(func=fr_department, args={'value': '2C'})\n\nArgs:\n    value:\n        French department number to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid french department number.\n    (ValidationError): If `value` is an invalid french department number."
+    },
+    {
+      "module": "src/validators/i18n/fr.py",
+      "qualname": "fr_ssn",
+      "signature": "(value: str)",
+      "span": [
+        68,
+        119
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 124 words",
+      "intent": "Validate a french Social Security Number.",
+      "doc": "Validate a french Social Security Number.\n\nEach french citizen has a distinct Social Security Number.\nFor more information see [French Social Security Number][1] (sadly unavailable in english).\n\n[1]: https://fr.wikipedia.org/wiki/Num%C3%A9ro_de_s%C3%A9curit%C3%A9_sociale_en_France\n\nExamples:\n    >>> fr_ssn('1 84 12 76 451 089 46')\n    True\n    >>> fr_ssn('1 84 12 76 451 089')  # control key is optional\n    True\n    >>> fr_ssn('3 84 12 76 451 089 46')  # wrong gender number\n    ValidationError(func=fr_ssn, args={'value': '3 84 12 76 451 089 46'})\n    >>> fr_ssn('1 84 12 76 451 089 47')  # wrong control key\n    ValidationError(func=fr_ssn, args={'value': '1 84 12 76 451 089 47'})\n\nArgs:\n    value:\n        French Social Security Number string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid french Social Security Number.\n    (ValidationError): If `value` is an invalid french Social Security Number."
+    },
+    {
+      "module": "src/validators/i18n/ind.py",
+      "qualname": "ind_aadhar",
+      "signature": "(value: str)",
+      "span": [
+        11,
+        27
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Validate an indian aadhar card number.",
+      "doc": "Validate an indian aadhar card number.\n\nExamples:\n    >>> ind_aadhar('3675 9834 6015')\n    True\n    >>> ind_aadhar('3675 ABVC 2133')\n    ValidationError(func=ind_aadhar, args={'value': '3675 ABVC 2133'})\n\nArgs:\n    value: Aadhar card number string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid aadhar card number.\n    (ValidationError): If `value` is an invalid aadhar card number."
+    },
+    {
+      "module": "src/validators/i18n/ind.py",
+      "qualname": "ind_pan",
+      "signature": "(value: str)",
+      "span": [
+        31,
+        47
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Validate a pan card number.",
+      "doc": "Validate a pan card number.\n\nExamples:\n    >>> ind_pan('ABCDE9999K')\n    True\n    >>> ind_pan('ABC5d7896B')\n    ValidationError(func=ind_pan, args={'value': 'ABC5d7896B'})\n\nArgs:\n    value: PAN card number string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid PAN card number.\n    (ValidationError): If `value` is an invalid PAN card number."
+    },
+    {
+      "module": "src/validators/i18n/ru.py",
+      "qualname": "ru_inn",
+      "signature": "(value: str)",
+      "span": [
+        7,
+        63
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 113 words",
+      "intent": "Validate a Russian INN (Taxpayer Identification Number).",
+      "doc": "Validate a Russian INN (Taxpayer Identification Number).\n\nThe INN can be either 10 digits (for companies) or 12 digits (for individuals).\nThe function checks both the length and the control digits according to Russian tax rules.\n\nExamples:\n    >>> ru_inn('500100732259')  # Valid 12-digit INN\n    True\n    >>> ru_inn('7830002293')    # Valid 10-digit INN\n    True\n    >>> ru_inn('1234567890')    # Invalid INN\n    ValidationError(func=ru_inn, args={'value': '1234567890'})\n\nArgs:\n    value: Russian INN string to validate. Can contain only digits.\n\nReturns:\n    (Literal[True]): If `value` is a valid Russian INN.\n    (ValidationError): If `value` is an invalid Russian INN.\n\nNote:\n    The validation follows the official algorithm:\n    - For 10-digit INN: checks 10th control digit\n    - For 12-digit INN: checks both 11th and 12th control digits"
+    },
+    {
+      "module": "src/validators/iban.py",
+      "qualname": "iban",
+      "signature": "(value: str, /)",
+      "span": [
+        23,
+        44
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return whether or not given value is a valid IBAN code.",
+      "doc": "Return whether or not given value is a valid IBAN code.\n\nExamples:\n    >>> iban('DE29100500001061045672')\n    True\n    >>> iban('123456')\n    ValidationError(func=iban, args={'value': '123456'})\n\nArgs:\n    value:\n        IBAN string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid IBAN code.\n    (ValidationError): If `value` is an invalid IBAN code."
+    },
+    {
+      "module": "src/validators/ip_address.py",
+      "qualname": "ipv4",
+      "signature": "(value: str, /, *, cidr: bool=True, strict: bool=False, private: Optional[bool]=None, host_bit: bool=True)",
+      "span": [
+        42,
+        94
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 129 words",
+      "intent": "Returns whether a given value is a valid IPv4 address.",
+      "doc": "Returns whether a given value is a valid IPv4 address.\n\nFrom Python version 3.9.5 leading zeros are no longer tolerated\nand are treated as an error. The initial version of ipv4 validator\nwas inspired from [WTForms IPAddress validator][1].\n\n[1]: https://github.com/wtforms/wtforms/blob/master/src/wtforms/validators.py\n\nExamples:\n    >>> ipv4('123.0.0.7')\n    True\n    >>> ipv4('1.1.1.1/8')\n    True\n    >>> ipv4('900.80.70.11')\n    ValidationError(func=ipv4, args={'value': '900.80.70.11'})\n\nArgs:\n    value:\n        IP address string to validate.\n    cidr:\n        IP address string may contain CIDR notation.\n    strict:\n        IP address string is strictly in CIDR notation.\n    private:\n        IP address is public if `False`, private/local/loopback/broadcast if `True`.\n    host_bit:\n        If `False` and host bits (along with network bits) _are_ set in the supplied\n        address, this function raises a validation error. ref [IPv4Network][2].\n        [2]: https://docs.python.org/3/library/ipaddress.html#ipaddress.IPv4Network\n\nReturns:\n    (Literal[True]): If `value` is a valid IPv4 address.\n    (ValidationError): If `value` is an invalid IPv4 address."
+    },
+    {
+      "module": "src/validators/ip_address.py",
+      "qualname": "ipv6",
+      "signature": "(value: str, /, *, cidr: bool=True, strict: bool=False, host_bit: bool=True)",
+      "span": [
+        98,
+        139
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 107 words",
+      "intent": "Returns if a given value is a valid IPv6 address.",
+      "doc": "Returns if a given value is a valid IPv6 address.\n\nIncluding IPv4-mapped IPv6 addresses. The initial version of ipv6 validator\nwas inspired from [WTForms IPAddress validator][1].\n\n[1]: https://github.com/wtforms/wtforms/blob/master/src/wtforms/validators.py\n\nExamples:\n    >>> ipv6('::ffff:192.0.2.128')\n    True\n    >>> ipv6('::1/128')\n    True\n    >>> ipv6('abc.0.0.1')\n    ValidationError(func=ipv6, args={'value': 'abc.0.0.1'})\n\nArgs:\n    value:\n        IP address string to validate.\n    cidr:\n        IP address string may contain CIDR annotation.\n    strict:\n        IP address string is strictly in CIDR notation.\n    host_bit:\n        If `False` and host bits (along with network bits) _are_ set in the supplied\n        address, this function raises a validation error. ref [IPv6Network][2].\n        [2]: https://docs.python.org/3/library/ipaddress.html#ipaddress.IPv6Network\n\nReturns:\n    (Literal[True]): If `value` is a valid IPv6 address.\n    (ValidationError): If `value` is an invalid IPv6 address."
+    },
+    {
+      "module": "src/validators/length.py",
+      "qualname": "length",
+      "signature": "(value: str, /, *, min_val: Union[int, None]=None, max_val: Union[int, None]=None)",
+      "span": [
+        12,
+        45
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 100 words",
+      "intent": "Return whether or not the length of given string is within a specified range.",
+      "doc": "Return whether or not the length of given string is within a specified range.\n\nExamples:\n    >>> length('something', min_val=2)\n    True\n    >>> length('something', min_val=9, max_val=9)\n    True\n    >>> length('something', max_val=5)\n    ValidationError(func=length, args={'value': 'something', 'max_val': 5})\n\nArgs:\n    value:\n        The string to validate.\n    min_val:\n        The minimum required length of the string. If not provided,\n        minimum length will not be checked.\n    max_val:\n        The maximum length of the string. If not provided,\n        maximum length will not be checked.\n\nReturns:\n    (Literal[True]): If `len(value)` is in between the given conditions.\n    (ValidationError): If `len(value)` is not in between the given conditions.\n\nRaises:\n    (ValueError): If either `min_val` or `max_val` is negative."
+    },
+    {
+      "module": "src/validators/mac_address.py",
+      "qualname": "mac_address",
+      "signature": "(value: str, /)",
+      "span": [
+        11,
+        36
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 54 words",
+      "intent": "Return whether or not given value is a valid MAC address.",
+      "doc": "Return whether or not given value is a valid MAC address.\n\nThis validator is based on [WTForms MacAddress validator][1].\n\n[1]: https://github.com/wtforms/wtforms/blob/master/src/wtforms/validators.py#L482\n\nExamples:\n    >>> mac_address('01:23:45:67:ab:CD')\n    True\n    >>> mac_address('00:00:00:00:00')\n    ValidationError(func=mac_address, args={'value': '00:00:00:00:00'})\n\nArgs:\n    value:\n        MAC address string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid MAC address.\n    (ValidationError): If `value` is an invalid MAC address."
+    },
+    {
+      "module": "src/validators/slug.py",
+      "qualname": "slug",
+      "signature": "(value: str, /)",
+      "span": [
+        11,
+        30
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 58 words",
+      "intent": "Validate whether or not given value is valid slug.",
+      "doc": "Validate whether or not given value is valid slug.\n\nValid slug can contain only lowercase alphanumeric characters and hyphens.\nIt starts and ends with these lowercase alphanumeric characters.\n\nExamples:\n    >>> slug('my-slug-2134')\n    True\n    >>> slug('my.slug')\n    ValidationError(func=slug, args={'value': 'my.slug'})\n\nArgs:\n    value: Slug string to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid slug.\n    (ValidationError): If `value` is an invalid slug."
+    },
+    {
+      "module": "src/validators/uri.py",
+      "qualname": "uri",
+      "signature": "(value: str, /)",
+      "span": [
+        25,
+        101
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Return whether or not given value is a valid URI.",
+      "doc": "Return whether or not given value is a valid URI.\n\nExamples:\n    >>> uri('mailto:example@domain.com')\n    True\n    >>> uri('file:path.txt')\n    ValidationError(func=uri, args={'value': 'file:path.txt'})\n\nArgs:\n    value:\n        URI to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid URI.\n    (ValidationError): If `value` is an invalid URI."
+    },
+    {
+      "module": "src/validators/url.py",
+      "qualname": "url",
+      "signature": "(value: str, /, *, skip_ipv6_addr: bool=False, skip_ipv4_addr: bool=False, may_have_port: bool=True, simple_host: bool=False, strict_query: bool=True, consider_tld: bool=False, private: Optional[bool]=None, rfc_1034: bool=False, rfc_2782: bool=False, validate_scheme: Callable[[str], bool]=_validate_scheme)",
+      "span": [
+        164,
+        257
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 177 words",
+      "intent": "Return whether or not given value is a valid URL.",
+      "doc": "Return whether or not given value is a valid URL.\n\nThis validator was originally inspired from [URL validator of dperini][1].\nThe following diagram is from [urlly][2]::\n\n\n        foo://admin:hunter1@example.com:8042/over/there?name=ferret#nose\n        \\_/   \\___/ \\_____/ \\_________/ \\__/\\_________/ \\_________/ \\__/\n         |      |       |       |        |       |          |         |\n      scheme username password hostname port    path      query    fragment\n\n[1]: https://gist.github.com/dperini/729294\n[2]: https://github.com/treeform/urlly\n\nExamples:\n    >>> url('http://duck.com')\n    True\n    >>> url('ftp://foobar.dk')\n    True\n    >>> url('http://10.0.0.1')\n    True\n    >>> url('http://example.com/\">user@example.com')\n    ValidationError(func=url, args={'value': 'http://example.com/\">user@example.com'})\n\nArgs:\n    value:\n        URL string to validate.\n    skip_ipv6_addr:\n        When URL string cannot contain an IPv6 address.\n    skip_ipv4_addr:\n        When URL string cannot contain an IPv4 address.\n    may_have_port:\n        URL string may contain port number.\n    simple_host:\n        URL string maybe only hyphens and alpha-numerals.\n    strict_query:\n        Fail validation on query string parsing error.\n    consider_tld:\n        Restrict domain to TLDs allowed by IANA.\n    private:\n        Embedded IP address is public if `False`, private/local if `True`.\n    rfc_1034:\n        Allow trailing dot in domain/host name.\n        Ref: [RFC 1034](https://www.rfc-editor.org/rfc/rfc1034).\n    rfc_2782:\n        Domain/Host name is of type service record.\n        Ref: [RFC 2782](https://www.rfc-editor.org/rfc/rfc2782).\n    validate_scheme:\n        Function that validates URL scheme.\n\nReturns:\n    (Literal[True]): If `value` is a valid url.\n    (ValidationError): If `value` is an invalid url."
+    },
+    {
+      "module": "src/validators/utils.py",
+      "qualname": "validator",
+      "signature": "(func: Callable[..., Any])",
+      "span": [
+        45,
+        102
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: kwargs[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 67 words",
+      "intent": "A decorator that makes given function validator.",
+      "doc": "A decorator that makes given function validator.\n\nWhenever the given `func` returns `False` this\ndecorator returns `ValidationError` object.\n\nExamples:\n    >>> @validator\n    ... def even(value):\n    ...     return not (value % 2)\n    >>> even(4)\n    True\n    >>> even(5)\n    ValidationError(func=even, args={'value': 5})\n\nArgs:\n    func:\n        Function which is to be decorated.\n\nReturns:\n    (Callable[..., ValidationError | Literal[True]]):\n        A decorator which returns either `ValidationError`\n        or `Literal[True]`.\n\nRaises:\n    (ValidationError): If `r_ve` or `RAISE_VALIDATION_ERROR` is `True`"
+    },
+    {
+      "module": "src/validators/uuid.py",
+      "qualname": "uuid",
+      "signature": "(value: Union[str, UUID], /)",
+      "span": [
+        13,
+        43
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to uuid.UUID"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 55 words",
+      "intent": "Return whether or not given value is a valid UUID-v4 string.",
+      "doc": "Return whether or not given value is a valid UUID-v4 string.\n\nThis validator is based on [WTForms UUID validator][1].\n\n[1]: https://github.com/wtforms/wtforms/blob/master/src/wtforms/validators.py#L539\n\nExamples:\n    >>> uuid('2bc1c94f-0deb-43e9-92a1-4775189ec9f8')\n    True\n    >>> uuid('2bc1c94f 0deb-43e9-92a1-4775189ec9f8')\n    ValidationError(func=uuid, args={'value': '2bc1c94f 0deb-43e9-92a1-4775189ec9f8'})\n\nArgs:\n    value:\n        UUID string or object to validate.\n\nReturns:\n    (Literal[True]): If `value` is a valid UUID.\n    (ValidationError): If `value` is an invalid UUID."
+    }
+  ],
+  "summary": {
+    "total_public_functions": 55,
+    "auditability": {
+      "spec": 55,
+      "invariant": 0,
+      "none": 0
+    },
+    "deterministic": 53,
+    "auditable": 53
+  }
+}
