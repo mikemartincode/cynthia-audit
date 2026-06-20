@@ -71,11 +71,27 @@ asserting guarantees the docs never make:
 | `packaging.canonicalize_version` | strips pre/post/dev/local | PEP 440 keeps them: `1.0.0a1`→`1a1` |
 | `packaging.is_normalized_name` | returns `True` for all inputs | it is a validating predicate |
 
-Critically, **faithfulness + teeth + consensus all fail to catch these.** The hallucinated rule is not
-exercised by the doctest inputs (so faithfulness passes), the property still kills mutants on doctest
-inputs (so teeth pass), and **consensus fails because the bias is shared** — independent samples
-hallucinate the *same* rule, so majority voting confirms the false positive. The error is systematic,
-not idiosyncratic; voting only suppresses idiosyncratic error.
+Critically, **faithfulness + teeth + same-model consensus all fail to catch these.** The hallucinated
+rule is not exercised by the doctest inputs (so faithfulness passes), the property still kills mutants
+on doctest inputs (so teeth pass), and **same-model consensus fails because the bias is shared** —
+K samples from one model hallucinate the *same* rule, so majority voting confirms the false positive.
+
+The fix follows from the structure of the failure. Two kinds of shared bias, two mechanisms:
+
+- **Idiosyncratic-across-models** (different families read an ambiguous spec differently): broken by
+  **diverse-model consensus** — author one property per distinct family and require a cross-family
+  majority. Measured: `canonicalize_name` and `canonicalize_version` flip from false-positive VIOLATION
+  to CONFORMANT, because MiniMax-M3's hallucination is outvoted by DeepSeek and Gemini.
+- **Model-universal** (every family makes the same intuitive misreading — the clear case is a bool
+  predicate, where all models assume "should return True"): voting cannot break it. Handled by a
+  structural **predicate guard** — a bool-returning function is refused (it needs its documented
+  *condition*, the boolean-template's job, not a free-form property). Measured: `is_normalized_name`
+  moves from VIOLATION to a refusal.
+
+Together these take the five packaging functions the same-model gate false-positived on (3 of 5) down
+to **0 false positives**. The general lesson stands: free-form LLM-authored oracles need both a
+cross-family vote and structural refusal of the cases where the misreading is universal — and even
+then, the high-precision path remains the classifier-over-trusted-templates design below.
 
 ### 3. The trustworthy designs keep the LLM out of the oracle seat
 

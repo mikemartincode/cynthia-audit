@@ -220,38 +220,55 @@ def validate(prop, real_fn, doctest_in: list, *, mutant_cap: int = 20) -> dict:
 # ---------------------------------------------------------------- hunt one function
 
 
-def hunt_function(entry: dict, manifest: dict, model: str, *, consensus_k: int = 3) -> dict:
-    """Author K INDEPENDENT properties; gate each (faithful+teeth); a violation is reported only when a
-    MAJORITY of the TRUSTED properties agree on the same input. Consensus suppresses the OOD-overfit
-    false positive (one lazy property that assumes a constant) — the robust signal: a real bug is caught
-    by independent properties; an overfit property is idiosyncratic and gets outvoted. Need >=2 trusted
-    properties to form a consensus; with <2 we refuse to claim (LOW_CONFIDENCE)."""
+def hunt_function(entry: dict, manifest: dict, models: list[str]) -> dict:
+    """Author ONE property per DISTINCT MODEL FAMILY; gate each (faithful+teeth); a violation is reported
+    only when a MAJORITY of the TRUSTED properties — from DIFFERENT models — agree on the same input.
+
+    The fix to the broken same-model consensus: same-model K samples share the model's bias, so they
+    hallucinate the SAME wrong contract and consensus confirms the false positive (measured: M3 ×3 all
+    invented `canonicalize_name strips whitespace`). DIVERSE-model consensus breaks the shared bias — a
+    spec hallucination idiosyncratic to one model is outvoted by the others; only a property MULTIPLE
+    independent model families agree is violated survives. Need >=2 trusted properties from >=2 models,
+    else LOW_CONFIDENCE (refuse to claim)."""
     q = entry["qualname"]
     rec = {"repo": manifest.get("target"), "qualname": q}
     real = resolve_callable(q, entry, manifest)
     if real is None:
         return {**rec, "status": "UNRESOLVABLE"}
     dt = doctest_inputs(entry)
-    trusted = []  # (prop_callable, prop_src)
-    val_reasons = []
-    for _ in range(consensus_k):
+    # PREDICATE GUARD (no LLM): a bool-returning function's correctness needs its documented CONDITION
+    # ("True iff X"). Free-form authored properties universally hallucinate "should be True" — a bias
+    # shared ACROSS model families, so diverse consensus can't break it (measured: is_normalized_name).
+    # Refuse predicates here; they belong to the boolean_iff trusted template, not free-form authoring.
+    bool_outs = []
+    for x in dt[:6]:
         try:
-            psrc = author_property(entry, model)
+            bool_outs.append(type(real(x)) is bool)
+        except Exception:  # noqa: BLE001
+            pass
+    if bool_outs and all(bool_outs):
+        return {**rec, "status": "LOW_CONFIDENCE", "reason": "bool predicate — refused (needs documented condition, not free-form)"}
+    trusted = []  # (prop_callable, prop_src, model)
+    val_reasons = []
+    for m in models:  # ONE property per distinct model family
+        try:
+            psrc = author_property(entry, m)
             p = compile_prop(psrc)
         except Exception:  # noqa: BLE001
             continue
         if p is None:
             continue
         v = validate(p, real, dt)
-        val_reasons.append(v["reason"])
+        val_reasons.append(f"{m}: {v['reason']}")
         if v["trusted"]:
-            trusted.append((p, psrc))
+            trusted.append((p, psrc, m))
     rec["trusted_props"] = len(trusted)
-    rec["validation"] = val_reasons[:consensus_k]
-    if len(trusted) < 2:
-        return {**rec, "status": "LOW_CONFIDENCE"}  # can't form consensus -> refuse to claim
-    # HUNT — wide input set, majority of trusted properties must agree on a violation
-    adv = author_adversarial_inputs(entry, model)
+    rec["trusted_models"] = sorted({t[2] for t in trusted})
+    rec["validation"] = val_reasons
+    if len({t[2] for t in trusted}) < 2:  # need >=2 DISTINCT model families
+        return {**rec, "status": "LOW_CONFIDENCE"}
+    # HUNT — wide input set, majority of trusted (cross-model) properties must agree on a violation
+    adv = author_adversarial_inputs(entry, models[0])
     str_fuzz = fuzz_corpus([x for x in dt if isinstance(x, str)]) if any(isinstance(x, str) for x in dt) else []
     inputs, seen = [], set()
     for x in list(dt) + list(adv) + list(str_fuzz):
@@ -261,19 +278,19 @@ def hunt_function(entry: dict, manifest: dict, model: str, *, consensus_k: int =
             continue
         if k not in seen:
             seen.add(k); inputs.append(x)
-    need = len(trusted) // 2 + 1  # strict majority of trusted properties
+    need = len(trusted) // 2 + 1  # strict majority of trusted (cross-model) properties
     violations = []
     for x in inputs:
-        results = [_run_prop(p, real, x) for p, _ in trusted]  # one eval per property per input
+        results = [_run_prop(p, real, x) for p, _, _ in trusted]  # one eval per property per input
         flags = [r for r in results if r[0] is False]
         if len(flags) >= need:
             violations.append({"input": repr(x)[:80], "why": flags[0][1][:120],
-                               "consensus": f"{len(flags)}/{len(trusted)}"})
+                               "consensus": f"{len(flags)}/{len(trusted)} models"})
     rec["n_inputs"] = len(inputs)
     rec["status"] = "VIOLATION" if violations else "CONFORMANT"
     if violations:
         rec["violations"] = violations[:8]
-        rec["prop_src"] = trusted[0][1]
+        rec["prop_src"] = trusted[0][1]  # representative property (first trusted model)
     return rec
 
 
@@ -298,21 +315,23 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="slam dunk — does shipped code obey its own docstring?")
     ap.add_argument("--targets", default="targets")
     ap.add_argument("--repos", default="packaging,dateutil,idna,more-itertools,markdown-it-py")
-    ap.add_argument("--model", default="minimax-m3")
+    ap.add_argument("--models", default="minimax-m3,deepseek-v4-pro,gemini-flash",
+                    help="DISTINCT model families for diverse-consensus (breaks shared-bias hallucination)")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--out", default="results/slam_dunk")
     args = ap.parse_args()
+    models = [m.strip() for m in args.models.split(",") if m.strip()]
     repos = set(args.repos.split(",")) if args.repos else None
     cands = candidates(sorted(Path(args.targets).glob("*/manifest.json")), repos)
     if args.limit:
         cands = cands[: args.limit]
     outdir = Path(args.out); outdir.mkdir(parents=True, exist_ok=True)
-    print(f"[slam] {len(cands)} deterministic+doctested functions | model={args.model}", flush=True)
+    print(f"[slam] {len(cands)} deterministic+doctested functions | diverse-consensus models={models}", flush=True)
     records, findings = [], []
     counts: dict = {}
     for i, (entry, man) in enumerate(cands, 1):
         try:
-            rec = hunt_function(entry, man, args.model)
+            rec = hunt_function(entry, man, models)
         except Exception as e:  # noqa: BLE001
             rec = {"repo": man.get("target"), "qualname": entry["qualname"], "status": "ERROR",
                    "detail": f"{type(e).__name__}: {e}"[:140], "tb": traceback.format_exc()[-400:]}
