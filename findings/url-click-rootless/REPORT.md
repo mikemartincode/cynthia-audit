@@ -95,7 +95,7 @@ No PR or issue has been filed. AI-assisted bug reports are easy to get wrong and
 fired blindly at maintainers. Options, to decide deliberately:
 1. OSS issue to `python-hyper/hyperlink` with this repro + RFC citation (no PR, let maintainers fix).
 2. OSS issue **and** a small PR implementing the §5.2.1 scheme-present case.
-3. Portfolio/demo only — cite as a found-and-verified correctness bug without contacting upstream.
+3. Local verification only — record as a verified spec-conformance finding without filing upstream.
 
 Recommend (1): a clean, RFC-cited issue with a standalone repro is genuinely useful and low-risk;
 a PR touching reference-resolution semantics deserves more care than an unsolicited drive-by.

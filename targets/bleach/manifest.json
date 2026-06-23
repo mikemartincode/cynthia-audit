@@ -1,0 +1,4864 @@
+{
+  "target": "bleach",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/bleach/repo",
+  "commit": "f0355a7af00500482c5292c6c83290c6a178068d",
+  "package_dir": "bleach",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "bleach/__init__.py",
+      "qualname": "clean",
+      "signature": "(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, protocols=ALLOWED_PROTOCOLS, strip=False, strip_comments=True, css_sanitizer=None)",
+      "span": [
+        22,
+        82
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 174 words",
+      "intent": "Clean an HTML fragment of malicious content and return it",
+      "doc": "Clean an HTML fragment of malicious content and return it\n\nThis function is a security-focused function whose sole purpose is to\nremove malicious content from a string such that it can be displayed as\ncontent in a web page.\n\nThis function is not designed to use to transform content to be used in\nnon-web-page contexts.\n\nExample::\n\n    import bleach\n\n    better_text = bleach.clean(yucky_text)\n\n\n.. Note::\n\n   If you're cleaning a lot of text and passing the same argument values or\n   you want more configurability, consider using a\n   :py:class:`bleach.sanitizer.Cleaner` instance.\n\n:arg str text: the text to clean\n\n:arg set tags: set of allowed tags; defaults to\n    ``bleach.sanitizer.ALLOWED_TAGS``\n\n:arg dict attributes: allowed attributes; can be a callable, list or dict;\n    defaults to ``bleach.sanitizer.ALLOWED_ATTRIBUTES``\n\n:arg set protocols: set of allowed protocols for links; defaults\n    to ``bleach.sanitizer.ALLOWED_PROTOCOLS``\n\n:arg bool strip: whether or not to strip disallowed elements\n\n:arg bool strip_comments: whether or not to strip HTML comments\n\n:arg CSSSanitizer css_sanitizer: instance with a \"sanitize_css\" method for\n    sanitizing style attribute values and style text; defaults to None\n\n:returns: cleaned text as unicode"
+    },
+    {
+      "module": "bleach/__init__.py",
+      "qualname": "linkify",
+      "signature": "(text, callbacks=DEFAULT_CALLBACKS, skip_tags=None, parse_email=False)",
+      "span": [
+        85,
+        125
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 189 words",
+      "intent": "Convert URL-like strings in an HTML fragment to links",
+      "doc": "Convert URL-like strings in an HTML fragment to links\n\nThis function converts strings that look like URLs, domain names and email\naddresses in text that may be an HTML fragment to links, while preserving:\n\n1. links already in the string\n2. urls found in attributes\n3. email addresses\n\nlinkify does a best-effort approach and tries to recover from bad\nsituations due to crazy text.\n\n.. Note::\n\n   If you're linking a lot of text and passing the same argument values or\n   you want more configurability, consider using a\n   :py:class:`bleach.linkifier.Linker` instance.\n\n.. Note::\n\n   If you have text that you want to clean and then linkify, consider using\n   the :py:class:`bleach.linkifier.LinkifyFilter` as a filter in the clean\n   pass. That way you're not parsing the HTML twice.\n\n:arg str text: the text to linkify\n\n:arg list callbacks: list of callbacks to run when adjusting tag attributes;\n    defaults to ``bleach.linkifier.DEFAULT_CALLBACKS``\n\n:arg list skip_tags: list of tags that you don't want to linkify the\n    contents of; for example, you could set this to ``['pre']`` to skip\n    linkifying contents of ``pre`` tags\n\n:arg bool parse_email: whether or not to linkify email addresses\n\n:returns: linkified text as unicode"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "charStringToList",
+      "signature": "(chars)",
+      "span": [
+        103,
+        121
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "charStringToList (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "normaliseCharList",
+      "signature": "(charList)",
+      "span": [
+        124,
+        137
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "normaliseCharList (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "missingRanges",
+      "signature": "(charList)",
+      "span": [
+        144,
+        152
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "missingRanges (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "listToRegexpStr",
+      "signature": "(charList)",
+      "span": [
+        155,
+        163
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "listToRegexpStr (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "hexToInt",
+      "signature": "(hex_str)",
+      "span": [
+        166,
+        167
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "hexToInt (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "escapeRegexp",
+      "signature": "(string)",
+      "span": [
+        170,
+        176
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "escapeRegexp (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.coerceAttribute",
+      "signature": "(self, name, namespace=None)",
+      "span": [
+        210,
+        219
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "coerceAttribute (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.coerceElement",
+      "signature": "(self, name)",
+      "span": [
+        221,
+        222
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "coerceElement (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.coerceComment",
+      "signature": "(self, data)",
+      "span": [
+        224,
+        232
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "coerceComment (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.coerceCharacters",
+      "signature": "(self, data)",
+      "span": [
+        234,
+        240
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "coerceCharacters (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.coercePubid",
+      "signature": "(self, data)",
+      "span": [
+        242,
+        251
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "coercePubid (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.toXmlName",
+      "signature": "(self, name)",
+      "span": [
+        253,
+        269
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "toXmlName (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.getReplacementCharacter",
+      "signature": "(self, char)",
+      "span": [
+        271,
+        276
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getReplacementCharacter (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.fromXmlName",
+      "signature": "(self, name)",
+      "span": [
+        278,
+        281
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "fromXmlName (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.escapeChar",
+      "signature": "(self, char)",
+      "span": [
+        283,
+        286
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with unescapechar",
+      "intent": "escapeChar (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_ihatexml.py",
+      "qualname": "InfosetFilter.unescapeChar",
+      "signature": "(self, charcode)",
+      "span": [
+        288,
+        289
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with escapechar",
+      "intent": "unescapeChar (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "BufferedStream.tell",
+      "signature": "(self)",
+      "span": [
+        63,
+        68
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tell (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "BufferedStream.seek",
+      "signature": "(self, pos)",
+      "span": [
+        70,
+        77
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "seek (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "BufferedStream.read",
+      "signature": "(self, bytes)",
+      "span": [
+        79,
+        86
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "read (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLInputStream",
+      "signature": "(source, **kwargs)",
+      "span": [
+        125,
+        145
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "HTMLInputStream (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.reset",
+      "signature": "(self)",
+      "span": [
+        190,
+        202
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.openStream",
+      "signature": "(self, source)",
+      "span": [
+        204,
+        216
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 18 words",
+      "intent": "Produces a file object from source.",
+      "doc": "Produces a file object from source.\n\nsource can be either a file object, local filename or a string."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.position",
+      "signature": "(self)",
+      "span": [
+        229,
+        232
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Returns (line, col) of the current position in the stream.",
+      "doc": "Returns (line, col) of the current position in the stream."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.char",
+      "signature": "(self)",
+      "span": [
+        234,
+        247
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "Read one character from the stream or queue if available. Return",
+      "doc": "Read one character from the stream or queue if available. Return\nEOF when EOF is reached."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.readChunk",
+      "signature": "(self, chunkSize=None)",
+      "span": [
+        249,
+        285
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "readChunk (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.characterErrorsUCS4",
+      "signature": "(self, data)",
+      "span": [
+        287,
+        289
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "characterErrorsUCS4 (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.characterErrorsUCS2",
+      "signature": "(self, data)",
+      "span": [
+        291,
+        312
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "characterErrorsUCS2 (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.charsUntil",
+      "signature": "(self, characters, opposite=False)",
+      "span": [
+        314,
+        359
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: charsUntilRegEx[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Returns a string of characters from the stream up to but not",
+      "doc": "Returns a string of characters from the stream up to but not\nincluding any character in 'characters' or EOF. 'characters' must be\na container that supports the 'in' method and iteration over its\ncharacters."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLUnicodeInputStream.unget",
+      "signature": "(self, char)",
+      "span": [
+        361,
+        375
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "unget (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLBinaryInputStream.reset",
+      "signature": "(self)",
+      "span": [
+        428,
+        430
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLBinaryInputStream.openStream",
+      "signature": "(self, source)",
+      "span": [
+        432,
+        449
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 18 words",
+      "intent": "Produces a file object from source.",
+      "doc": "Produces a file object from source.\n\nsource can be either a file object, local filename or a string."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLBinaryInputStream.determineEncoding",
+      "signature": "(self, chardet=True)",
+      "span": [
+        451,
+        511
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "determineEncoding (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLBinaryInputStream.changeEncoding",
+      "signature": "(self, newEncoding)",
+      "span": [
+        513,
+        527
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "changeEncoding (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLBinaryInputStream.detectBOM",
+      "signature": "(self)",
+      "span": [
+        529,
+        561
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Attempts to detect at BOM at the start of the stream. If",
+      "doc": "Attempts to detect at BOM at the start of the stream. If\nan encoding can be determined from the BOM return the name of the\nencoding otherwise return None"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "HTMLBinaryInputStream.detectEncodingMeta",
+      "signature": "(self)",
+      "span": [
+        563,
+        575
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Report the encoding declared by the meta element",
+      "doc": "Report the encoding declared by the meta element\n        "
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.next",
+      "signature": "(self)",
+      "span": [
+        601,
+        603
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "next (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.previous",
+      "signature": "(self)",
+      "span": [
+        605,
+        612
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "previous (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.setPosition",
+      "signature": "(self, position)",
+      "span": [
+        614,
+        617
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "setPosition (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.getPosition",
+      "signature": "(self)",
+      "span": [
+        619,
+        625
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getPosition (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.getCurrentByte",
+      "signature": "(self)",
+      "span": [
+        629,
+        630
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getCurrentByte (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.skip",
+      "signature": "(self, chars=spaceCharactersBytes)",
+      "span": [
+        634,
+        644
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip past a list of characters",
+      "doc": "Skip past a list of characters"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.skipUntil",
+      "signature": "(self, chars)",
+      "span": [
+        646,
+        655
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "skipUntil (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.matchBytes",
+      "signature": "(self, bytes)",
+      "span": [
+        657,
+        664
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 37 words",
+      "intent": "Look for a sequence of bytes at the start of a string. If the bytes",
+      "doc": "Look for a sequence of bytes at the start of a string. If the bytes\nare found return True and advance the position to the byte after the\nmatch. Otherwise return False and leave the position alone"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingBytes.jumpTo",
+      "signature": "(self, bytes)",
+      "span": [
+        666,
+        673
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 26 words",
+      "intent": "Look for the next sequence of bytes matching a given sequence. If",
+      "doc": "Look for the next sequence of bytes matching a given sequence. If\na match is found advance the position to the last byte of the match"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.getEncoding",
+      "signature": "(self)",
+      "span": [
+        684,
+        712
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getEncoding (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.handleComment",
+      "signature": "(self)",
+      "span": [
+        714,
+        716
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip over comments",
+      "doc": "Skip over comments"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.handleMeta",
+      "signature": "(self)",
+      "span": [
+        718,
+        752
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "handleMeta (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.handlePossibleStartTag",
+      "signature": "(self)",
+      "span": [
+        754,
+        755
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "handlePossibleStartTag (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.handlePossibleEndTag",
+      "signature": "(self)",
+      "span": [
+        757,
+        759
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "handlePossibleEndTag (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.handlePossibleTag",
+      "signature": "(self, endTag)",
+      "span": [
+        761,
+        782
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "handlePossibleTag (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.handleOther",
+      "signature": "(self)",
+      "span": [
+        784,
+        785
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "handleOther (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "EncodingParser.getAttribute",
+      "signature": "(self)",
+      "span": [
+        787,
+        861
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Return a name,value pair for the next attribute in the stream,",
+      "doc": "Return a name,value pair for the next attribute in the stream,\nif one is found, or None"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "ContentAttrParser.parse",
+      "signature": "(self)",
+      "span": [
+        869,
+        900
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parse (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_inputstream.py",
+      "qualname": "lookupEncoding",
+      "signature": "(encoding)",
+      "span": [
+        903,
+        918
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 20 words",
+      "intent": "Return the python codec name corresponding to an encoding or None if the",
+      "doc": "Return the python codec name corresponding to an encoding or None if the\nstring doesn't correspond to a valid encoding."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.consumeNumberEntity",
+      "signature": "(self, isHex)",
+      "span": [
+        71,
+        141
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "This function returns either U+FFFD or the character based on the",
+      "doc": "This function returns either U+FFFD or the character based on the\ndecimal or hexadecimal representation. It also discards \";\" if present.\nIf not present self.tokenQueue.append({\"type\": tokenTypes[\"ParseError\"]}) is invoked."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.consumeEntity",
+      "signature": "(self, allowedChar=None, fromAttribute=False)",
+      "span": [
+        143,
+        221
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "consumeEntity (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.processEntityInAttribute",
+      "signature": "(self, allowedChar)",
+      "span": [
+        223,
+        226
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "This method replaces the need for \"entityInAttributeValueState\".",
+      "doc": "This method replaces the need for \"entityInAttributeValueState\".\n        "
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.emitCurrentToken",
+      "signature": "(self)",
+      "span": [
+        228,
+        253
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "This method is a generic handler for emitting the tags. It also sets",
+      "doc": "This method is a generic handler for emitting the tags. It also sets\nthe state to \"data\" because that's what's needed after a token has been\nemitted."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.dataState",
+      "signature": "(self)",
+      "span": [
+        256,
+        283
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "dataState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.entityDataState",
+      "signature": "(self)",
+      "span": [
+        285,
+        288
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "entityDataState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rcdataState",
+      "signature": "(self)",
+      "span": [
+        290,
+        317
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rcdataState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.characterReferenceInRcdata",
+      "signature": "(self)",
+      "span": [
+        319,
+        322
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "characterReferenceInRcdata (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rawtextState",
+      "signature": "(self)",
+      "span": [
+        324,
+        340
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rawtextState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataState",
+      "signature": "(self)",
+      "span": [
+        342,
+        358
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.plaintextState",
+      "signature": "(self)",
+      "span": [
+        360,
+        373
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "plaintextState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.tagOpenState",
+      "signature": "(self)",
+      "span": [
+        375,
+        408
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tagOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.closeTagOpenState",
+      "signature": "(self)",
+      "span": [
+        410,
+        432
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "closeTagOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.tagNameState",
+      "signature": "(self)",
+      "span": [
+        434,
+        454
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tagNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rcdataLessThanSignState",
+      "signature": "(self)",
+      "span": [
+        456,
+        465
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rcdataLessThanSignState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rcdataEndTagOpenState",
+      "signature": "(self)",
+      "span": [
+        467,
+        476
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rcdataEndTagOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rcdataEndTagNameState",
+      "signature": "(self)",
+      "span": [
+        478,
+        504
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rcdataEndTagNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rawtextLessThanSignState",
+      "signature": "(self)",
+      "span": [
+        506,
+        515
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rawtextLessThanSignState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rawtextEndTagOpenState",
+      "signature": "(self)",
+      "span": [
+        517,
+        526
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rawtextEndTagOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.rawtextEndTagNameState",
+      "signature": "(self)",
+      "span": [
+        528,
+        554
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "rawtextEndTagNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataLessThanSignState",
+      "signature": "(self)",
+      "span": [
+        556,
+        568
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataLessThanSignState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEndTagOpenState",
+      "signature": "(self)",
+      "span": [
+        570,
+        579
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEndTagOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEndTagNameState",
+      "signature": "(self)",
+      "span": [
+        581,
+        607
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEndTagNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapeStartState",
+      "signature": "(self)",
+      "span": [
+        609,
+        617
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapeStartState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapeStartDashState",
+      "signature": "(self)",
+      "span": [
+        619,
+        627
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapeStartDashState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapedState",
+      "signature": "(self)",
+      "span": [
+        629,
+        647
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapedDashState",
+      "signature": "(self)",
+      "span": [
+        649,
+        667
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapedDashState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapedDashDashState",
+      "signature": "(self)",
+      "span": [
+        669,
+        689
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapedDashDashState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapedLessThanSignState",
+      "signature": "(self)",
+      "span": [
+        691,
+        704
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapedLessThanSignState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapedEndTagOpenState",
+      "signature": "(self)",
+      "span": [
+        706,
+        715
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapedEndTagOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataEscapedEndTagNameState",
+      "signature": "(self)",
+      "span": [
+        717,
+        743
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataEscapedEndTagNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataDoubleEscapeStartState",
+      "signature": "(self)",
+      "span": [
+        745,
+        759
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataDoubleEscapeStartState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataDoubleEscapedState",
+      "signature": "(self)",
+      "span": [
+        761,
+        780
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataDoubleEscapedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataDoubleEscapedDashState",
+      "signature": "(self)",
+      "span": [
+        782,
+        803
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataDoubleEscapedDashState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataDoubleEscapedDashDashState",
+      "signature": "(self)",
+      "span": [
+        805,
+        828
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataDoubleEscapedDashDashState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataDoubleEscapedLessThanSignState",
+      "signature": "(self)",
+      "span": [
+        830,
+        839
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataDoubleEscapedLessThanSignState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.scriptDataDoubleEscapeEndState",
+      "signature": "(self)",
+      "span": [
+        841,
+        855
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "scriptDataDoubleEscapeEndState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.beforeAttributeNameState",
+      "signature": "(self)",
+      "span": [
+        857,
+        885
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "beforeAttributeNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.attributeNameState",
+      "signature": "(self)",
+      "span": [
+        887,
+        939
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "attributeNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.afterAttributeNameState",
+      "signature": "(self)",
+      "span": [
+        941,
+        971
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "afterAttributeNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.beforeAttributeValueState",
+      "signature": "(self)",
+      "span": [
+        973,
+        1005
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "beforeAttributeValueState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.attributeValueDoubleQuotedState",
+      "signature": "(self)",
+      "span": [
+        1007,
+        1024
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "attributeValueDoubleQuotedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.attributeValueSingleQuotedState",
+      "signature": "(self)",
+      "span": [
+        1026,
+        1043
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "attributeValueSingleQuotedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.attributeValueUnQuotedState",
+      "signature": "(self)",
+      "span": [
+        1045,
+        1068
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "attributeValueUnQuotedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.afterAttributeValueState",
+      "signature": "(self)",
+      "span": [
+        1070,
+        1088
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "afterAttributeValueState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.selfClosingStartTagState",
+      "signature": "(self)",
+      "span": [
+        1090,
+        1106
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "selfClosingStartTagState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.bogusCommentState",
+      "signature": "(self)",
+      "span": [
+        1108,
+        1121
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "bogusCommentState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.markupDeclarationOpenState",
+      "signature": "(self)",
+      "span": [
+        1123,
+        1166
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "markupDeclarationOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.commentStartState",
+      "signature": "(self)",
+      "span": [
+        1168,
+        1189
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "commentStartState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.commentStartDashState",
+      "signature": "(self)",
+      "span": [
+        1191,
+        1212
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "commentStartDashState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.commentState",
+      "signature": "(self)",
+      "span": [
+        1214,
+        1230
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "commentState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.commentEndDashState",
+      "signature": "(self)",
+      "span": [
+        1232,
+        1249
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "commentEndDashState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.commentEndState",
+      "signature": "(self)",
+      "span": [
+        1251,
+        1280
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "commentEndState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.commentEndBangState",
+      "signature": "(self)",
+      "span": [
+        1282,
+        1303
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "commentEndBangState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.doctypeState",
+      "signature": "(self)",
+      "span": [
+        1305,
+        1320
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "doctypeState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.beforeDoctypeNameState",
+      "signature": "(self)",
+      "span": [
+        1322,
+        1346
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "beforeDoctypeNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.doctypeNameState",
+      "signature": "(self)",
+      "span": [
+        1348,
+        1371
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "doctypeNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.afterDoctypeNameState",
+      "signature": "(self)",
+      "span": [
+        1373,
+        1422
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "afterDoctypeNameState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.afterDoctypePublicKeywordState",
+      "signature": "(self)",
+      "span": [
+        1424,
+        1442
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "afterDoctypePublicKeywordState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.beforeDoctypePublicIdentifierState",
+      "signature": "(self)",
+      "span": [
+        1444,
+        1471
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "beforeDoctypePublicIdentifierState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.doctypePublicIdentifierDoubleQuotedState",
+      "signature": "(self)",
+      "span": [
+        1473,
+        1495
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "doctypePublicIdentifierDoubleQuotedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.doctypePublicIdentifierSingleQuotedState",
+      "signature": "(self)",
+      "span": [
+        1497,
+        1519
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "doctypePublicIdentifierSingleQuotedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.afterDoctypePublicIdentifierState",
+      "signature": "(self)",
+      "span": [
+        1521,
+        1549
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "afterDoctypePublicIdentifierState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.betweenDoctypePublicAndSystemIdentifiersState",
+      "signature": "(self)",
+      "span": [
+        1551,
+        1575
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "betweenDoctypePublicAndSystemIdentifiersState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.afterDoctypeSystemKeywordState",
+      "signature": "(self)",
+      "span": [
+        1577,
+        1595
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "afterDoctypeSystemKeywordState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.beforeDoctypeSystemIdentifierState",
+      "signature": "(self)",
+      "span": [
+        1597,
+        1624
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "beforeDoctypeSystemIdentifierState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.doctypeSystemIdentifierDoubleQuotedState",
+      "signature": "(self)",
+      "span": [
+        1626,
+        1648
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "doctypeSystemIdentifierDoubleQuotedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.doctypeSystemIdentifierSingleQuotedState",
+      "signature": "(self)",
+      "span": [
+        1650,
+        1672
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "doctypeSystemIdentifierSingleQuotedState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.afterDoctypeSystemIdentifierState",
+      "signature": "(self)",
+      "span": [
+        1674,
+        1691
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "afterDoctypeSystemIdentifierState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.bogusDoctypeState",
+      "signature": "(self)",
+      "span": [
+        1693,
+        1705
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "bogusDoctypeState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_tokenizer.py",
+      "qualname": "HTMLTokenizer.cdataSectionState",
+      "signature": "(self)",
+      "span": [
+        1707,
+        1735
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "cdataSectionState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_trie/_base.py",
+      "qualname": "Trie.keys",
+      "signature": "(self, prefix=None)",
+      "span": [
+        12,
+        19
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "keys (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_trie/_base.py",
+      "qualname": "Trie.has_keys_with_prefix",
+      "signature": "(self, prefix)",
+      "span": [
+        21,
+        26
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "has keys with prefix (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_trie/_base.py",
+      "qualname": "Trie.longest_prefix",
+      "signature": "(self, prefix)",
+      "span": [
+        28,
+        36
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "longest prefix (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_trie/_base.py",
+      "qualname": "Trie.longest_prefix_item",
+      "signature": "(self, prefix)",
+      "span": [
+        38,
+        40
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "longest prefix item (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_trie/py.py",
+      "qualname": "Trie.keys",
+      "signature": "(self, prefix=None)",
+      "span": [
+        31,
+        52
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "keys (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_trie/py.py",
+      "qualname": "Trie.has_keys_with_prefix",
+      "signature": "(self, prefix)",
+      "span": [
+        54,
+        67
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "has keys with prefix (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_utils.py",
+      "qualname": "BoundMethodDispatcher.get",
+      "signature": "(self, key, default)",
+      "span": [
+        87,
+        91
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "get (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_utils.py",
+      "qualname": "isSurrogatePair",
+      "signature": "(data)",
+      "span": [
+        106,
+        109
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "isSurrogatePair (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_utils.py",
+      "qualname": "surrogatePairToCodepoint",
+      "signature": "(data)",
+      "span": [
+        112,
+        115
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "surrogatePairToCodepoint (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_utils.py",
+      "qualname": "moduleFactoryFactory",
+      "signature": "(factory)",
+      "span": [
+        121,
+        147
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "moduleFactoryFactory (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/_utils.py",
+      "qualname": "memoize",
+      "signature": "(func)",
+      "span": [
+        150,
+        159
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "memoize (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/optionaltags.py",
+      "qualname": "Filter.slider",
+      "signature": "(self)",
+      "span": [
+        8,
+        16
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "slider (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/optionaltags.py",
+      "qualname": "Filter.is_optional_start",
+      "signature": "(self, tagname, previous, next)",
+      "span": [
+        31,
+        86
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "is optional start (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/optionaltags.py",
+      "qualname": "Filter.is_optional_end",
+      "signature": "(self, tagname, next)",
+      "span": [
+        88,
+        207
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "is optional end (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/sanitizer.py",
+      "qualname": "Filter.sanitize_token",
+      "signature": "(self, token)",
+      "span": [
+        803,
+        819
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "sanitize token (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/sanitizer.py",
+      "qualname": "Filter.allowed_token",
+      "signature": "(self, token)",
+      "span": [
+        821,
+        869
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "allowed token (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/sanitizer.py",
+      "qualname": "Filter.disallowed_token",
+      "signature": "(self, token)",
+      "span": [
+        871,
+        889
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "disallowed token (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/sanitizer.py",
+      "qualname": "Filter.sanitize_css",
+      "signature": "(self, style)",
+      "span": [
+        891,
+        918
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "sanitize css (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/filters/whitespace.py",
+      "qualname": "collapse_spaces",
+      "signature": "(text)",
+      "span": [
+        37,
+        38
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "collapse spaces (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "parse",
+      "signature": "(doc, treebuilder='etree', namespaceHTMLElements=True, **kwargs)",
+      "span": [
+        26,
+        46
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 60 words",
+      "intent": "Parse an HTML document as a string or file-like object into a tree",
+      "doc": "Parse an HTML document as a string or file-like object into a tree\n\n:arg doc: the document to parse as a string or file-like object\n\n:arg treebuilder: the treebuilder to use when parsing\n\n:arg namespaceHTMLElements: whether or not to namespace HTML elements\n\n:returns: parsed tree\n\nExample:\n\n>>> from html5lib.html5parser import parse\n>>> parse('<html><body><p>This is a doc</p></body></html>')\n<Element u'{http://www.w3.org/1999/xhtml}html' at 0x7feac4909db0>"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "parseFragment",
+      "signature": "(doc, container='div', treebuilder='etree', namespaceHTMLElements=True, **kwargs)",
+      "span": [
+        49,
+        71
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 70 words",
+      "intent": "Parse an HTML fragment as a string or file-like object into a tree",
+      "doc": "Parse an HTML fragment as a string or file-like object into a tree\n\n:arg doc: the fragment to parse as a string or file-like object\n\n:arg container: the container context to parse the fragment in\n\n:arg treebuilder: the treebuilder to use when parsing\n\n:arg namespaceHTMLElements: whether or not to namespace HTML elements\n\n:returns: parsed tree\n\nExample:\n\n>>> from html5lib.html5libparser import parseFragment\n>>> parseFragment('<b>this is a fragment</b>')\n<Element u'DOCUMENT_FRAGMENT' at 0x7feac484b090>"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "method_decorator_metaclass",
+      "signature": "(function)",
+      "span": [
+        74,
+        83
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: classDict[...]"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "method decorator metaclass (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.reset",
+      "signature": "(self)",
+      "span": [
+        138,
+        170
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.documentEncoding",
+      "signature": "(self)",
+      "span": [
+        173,
+        180
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "Name of the character encoding that was used to decode the input stream, or",
+      "doc": "Name of the character encoding that was used to decode the input stream, or\n:obj:`None` if that is not determined yet"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.isHTMLIntegrationPoint",
+      "signature": "(self, element)",
+      "span": [
+        182,
+        190
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "isHTMLIntegrationPoint (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.isMathMLTextIntegrationPoint",
+      "signature": "(self, element)",
+      "span": [
+        192,
+        193
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "isMathMLTextIntegrationPoint (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.mainLoop",
+      "signature": "(self)",
+      "span": [
+        195,
+        260
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "mainLoop (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.parse",
+      "signature": "(self, stream, *args, **kwargs)",
+      "span": [
+        262,
+        285
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 86 words",
+      "intent": "Parse a HTML document into a well-formed tree",
+      "doc": "Parse a HTML document into a well-formed tree\n\n:arg stream: a file-like object or string containing the HTML to be parsed\n\n    The optional encoding parameter must be a string that indicates\n    the encoding.  If specified, that encoding will be used,\n    regardless of any BOM or later declaration (such as in a meta\n    element).\n\n:arg scripting: treat noscript elements as if JavaScript was turned on\n\n:returns: parsed tree\n\nExample:\n\n>>> from html5lib.html5parser import HTMLParser\n>>> parser = HTMLParser()\n>>> parser.parse('<html><body><p>This is a doc</p></body></html>')\n<Element u'{http://www.w3.org/1999/xhtml}html' at 0x7feac4909db0>"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.parseFragment",
+      "signature": "(self, stream, *args, **kwargs)",
+      "span": [
+        287,
+        313
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 105 words",
+      "intent": "Parse a HTML fragment into a well-formed tree fragment",
+      "doc": "Parse a HTML fragment into a well-formed tree fragment\n\n:arg container: name of the element we're setting the innerHTML\n    property if set to None, default to 'div'\n\n:arg stream: a file-like object or string containing the HTML to be parsed\n\n    The optional encoding parameter must be a string that indicates\n    the encoding.  If specified, that encoding will be used,\n    regardless of any BOM or later declaration (such as in a meta\n    element)\n\n:arg scripting: treat noscript elements as if JavaScript was turned on\n\n:returns: parsed tree\n\nExample:\n\n>>> from html5lib.html5libparser import HTMLParser\n>>> parser = HTMLParser()\n>>> parser.parseFragment('<b>this is a fragment</b>')\n<Element u'DOCUMENT_FRAGMENT' at 0x7feac484b090>"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.parseError",
+      "signature": "(self, errorcode='XXX-undefined-error', datavars=None)",
+      "span": [
+        315,
+        321
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parseError (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.adjustMathMLAttributes",
+      "signature": "(self, token)",
+      "span": [
+        323,
+        324
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "adjustMathMLAttributes (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.adjustSVGAttributes",
+      "signature": "(self, token)",
+      "span": [
+        326,
+        327
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "adjustSVGAttributes (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.adjustForeignAttributes",
+      "signature": "(self, token)",
+      "span": [
+        329,
+        330
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "adjustForeignAttributes (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.reparseTokenNormal",
+      "signature": "(self, token)",
+      "span": [
+        332,
+        334
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reparseTokenNormal (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.resetInsertionMode",
+      "signature": "(self)",
+      "span": [
+        336,
+        378
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "resetInsertionMode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "HTMLParser.parseRCDataRawtext",
+      "signature": "(self, token, contentType)",
+      "span": [
+        380,
+        393
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parseRCDataRawtext (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "getPhases",
+      "signature": "(debug)",
+      "span": [
+        397,
+        2775
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via method_decorator_metaclass"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getPhases (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "adjust_attributes",
+      "signature": "(token, replacements)",
+      "span": [
+        2778,
+        2782
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "adjust attributes (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/html5parser.py",
+      "qualname": "impliedTagToken",
+      "signature": "(name, type='EndTag', attributes=None, selfClosing=False)",
+      "span": [
+        2785,
+        2790
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "impliedTagToken (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/serializer.py",
+      "qualname": "htmlentityreplace_errors",
+      "signature": "(exc)",
+      "span": [
+        42,
+        69
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "htmlentityreplace errors (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/serializer.py",
+      "qualname": "serialize",
+      "signature": "(input, tree='etree', encoding=None, **serializer_opts)",
+      "span": [
+        75,
+        101
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 66 words",
+      "intent": "Serializes the input token stream using the specified treewalker",
+      "doc": "Serializes the input token stream using the specified treewalker\n\n:arg input: the token stream to serialize\n\n:arg tree: the treewalker to use\n\n:arg encoding: the encoding to use\n\n:arg serializer_opts: any options to pass to the\n    :py:class:`html5lib.serializer.HTMLSerializer` that gets created\n\n:returns: the tree serialized as a string\n\nExample:\n\n>>> from html5lib.html5parser import parse\n>>> from html5lib.serializer import serialize\n>>> token_stream = parse('<html><body><p>Hi!</p></body></html>')\n>>> serialize(token_stream, omit_optional_tags=False)\n'<html><head></head><body><p>Hi!</p></body></html>'"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/serializer.py",
+      "qualname": "HTMLSerializer.encode",
+      "signature": "(self, string)",
+      "span": [
+        224,
+        229
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with decode",
+      "intent": "encode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/serializer.py",
+      "qualname": "HTMLSerializer.encodeStrict",
+      "signature": "(self, string)",
+      "span": [
+        231,
+        236
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "encodeStrict (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/serializer.py",
+      "qualname": "HTMLSerializer.serialize",
+      "signature": "(self, treewalker, encoding=None)",
+      "span": [
+        238,
+        373
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "serialize (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/serializer.py",
+      "qualname": "HTMLSerializer.render",
+      "signature": "(self, treewalker, encoding=None)",
+      "span": [
+        375,
+        398
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "Serializes the stream from the treewalker into a string",
+      "doc": "Serializes the stream from the treewalker into a string\n\n:arg treewalker: the treewalker to serialize\n\n:arg encoding: the string encoding to use\n\n:returns: the serialized tree\n\nExample:\n\n>>> from html5lib import parse, getTreeWalker\n>>> from html5lib.serializer import HTMLSerializer\n>>> token_stream = parse('<html><body>Hi!</body></html>')\n>>> walker = getTreeWalker('etree')\n>>> serializer = HTMLSerializer(omit_optional_tags=False)\n>>> serializer.render(walker(token_stream))\n'<html><head></head><body>Hi!</body></html>'"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/serializer.py",
+      "qualname": "HTMLSerializer.serializeError",
+      "signature": "(self, data='XXX ERROR MESSAGE NEEDED')",
+      "span": [
+        400,
+        404
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "serializeError (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treeadapters/genshi.py",
+      "qualname": "to_genshi",
+      "signature": "(walker)",
+      "span": [
+        7,
+        54
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Convert a tree to a genshi tree",
+      "doc": "Convert a tree to a genshi tree\n\n:arg walker: the treewalker to use to walk the tree to convert it\n\n:returns: generator of genshi nodes"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treeadapters/sax.py",
+      "qualname": "to_sax",
+      "signature": "(walker, handler)",
+      "span": [
+        13,
+        50
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "Call SAX-like content handler based on treewalker walker",
+      "doc": "Call SAX-like content handler based on treewalker walker\n\n:arg walker: the treewalker to use to walk the tree to convert it\n\n:arg handler: SAX handler to use"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/__init__.py",
+      "qualname": "getTreeBuilder",
+      "signature": "(treeType, implementation=None, **kwargs)",
+      "span": [
+        39,
+        88
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: treeBuilderCache[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 119 words",
+      "intent": "Get a TreeBuilder class for various types of trees with built-in support",
+      "doc": "Get a TreeBuilder class for various types of trees with built-in support\n\n:arg treeType: the name of the tree type required (case-insensitive). Supported\n    values are:\n\n    * \"dom\" - A generic builder for DOM implementations, defaulting to a\n      xml.dom.minidom based implementation.\n    * \"etree\" - A generic builder for tree implementations exposing an\n      ElementTree-like interface, defaulting to xml.etree.cElementTree if\n      available and xml.etree.ElementTree if not.\n    * \"lxml\" - A etree-based builder for lxml.etree, handling limitations\n      of lxml's implementation.\n\n:arg implementation: (Currently applies to the \"etree\" and \"dom\" tree\n    types). A module implementing the tree type e.g. xml.etree.ElementTree\n    or xml.etree.cElementTree.\n\n:arg kwargs: Any additional options to pass to the TreeBuilder when\n    creating it.\n\nExample:\n\n>>> from html5lib.treebuilders import getTreeBuilder\n>>> builder = getTreeBuilder('etree')"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "Node.appendChild",
+      "signature": "(self, node)",
+      "span": [
+        57,
+        63
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Insert node as a child of the current node",
+      "doc": "Insert node as a child of the current node\n\n:arg node: the node to insert"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "Node.insertText",
+      "signature": "(self, data, insertBefore=None)",
+      "span": [
+        65,
+        75
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "Insert data as text in the current node, positioned before the",
+      "doc": "Insert data as text in the current node, positioned before the\nstart of node insertBefore or to the end of the node's text.\n\n:arg data: the data to insert\n\n:arg insertBefore: True if you want to insert the text before the node\n    and False if you want to insert it after the node"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "Node.insertBefore",
+      "signature": "(self, node, refNode)",
+      "span": [
+        77,
+        87
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 45 words",
+      "intent": "Insert node as a child of the current node, before refNode in the",
+      "doc": "Insert node as a child of the current node, before refNode in the\nlist of child nodes. Raises ValueError if refNode is not a child of\nthe current node\n\n:arg node: the node to insert\n\n:arg refNode: the child node to insert the node before"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "Node.removeChild",
+      "signature": "(self, node)",
+      "span": [
+        89,
+        95
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "Remove node from the children of the current node",
+      "doc": "Remove node from the children of the current node\n\n:arg node: the child node to remove"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "Node.reparentChildren",
+      "signature": "(self, newParent)",
+      "span": [
+        97,
+        108
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 40 words",
+      "intent": "Move all the children of the current node to newParent.",
+      "doc": "Move all the children of the current node to newParent.\nThis is needed so that trees that don't store text as nodes move the\ntext in the correct way\n\n:arg newParent: the node to move all this node's children to"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "Node.cloneNode",
+      "signature": "(self)",
+      "span": [
+        110,
+        114
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 24 words",
+      "intent": "Return a shallow copy of the current node i.e. a node with the same",
+      "doc": "Return a shallow copy of the current node i.e. a node with the same\nname and attributes but with no parent or child nodes"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "Node.hasContent",
+      "signature": "(self)",
+      "span": [
+        116,
+        119
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return true if the node has children or text, false otherwise",
+      "doc": "Return true if the node has children or text, false otherwise\n        "
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "ActiveFormattingElements.append",
+      "signature": "(self, node)",
+      "span": [
+        123,
+        134
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: list.append()"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "append (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "ActiveFormattingElements.nodesEqual",
+      "signature": "(self, node1, node2)",
+      "span": [
+        136,
+        143
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "nodesEqual (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.reset",
+      "signature": "(self)",
+      "span": [
+        184,
+        194
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.elementInScope",
+      "signature": "(self, target, variant=None)",
+      "span": [
+        196,
+        216
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "elementInScope (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.reconstructActiveFormattingElements",
+      "signature": "(self)",
+      "span": [
+        218,
+        262
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reconstructActiveFormattingElements (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.clearActiveFormattingElements",
+      "signature": "(self)",
+      "span": [
+        264,
+        267
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "clearActiveFormattingElements (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.elementInActiveFormattingElements",
+      "signature": "(self, name)",
+      "span": [
+        269,
+        281
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Check if an element exists between the end of the active",
+      "doc": "Check if an element exists between the end of the active\nformatting elements and the last marker. If it does, return it, else\nreturn false"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.insertRoot",
+      "signature": "(self, token)",
+      "span": [
+        283,
+        286
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertRoot (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.insertDoctype",
+      "signature": "(self, token)",
+      "span": [
+        288,
+        294
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertDoctype (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.insertComment",
+      "signature": "(self, token, parent=None)",
+      "span": [
+        296,
+        299
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertComment (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.createElement",
+      "signature": "(self, token)",
+      "span": [
+        301,
+        307
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Create an element but don't insert it anywhere",
+      "doc": "Create an element but don't insert it anywhere"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.insertElementNormal",
+      "signature": "(self, token)",
+      "span": [
+        323,
+        331
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertElementNormal (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.insertElementTable",
+      "signature": "(self, token)",
+      "span": [
+        333,
+        347
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Create an element and insert it into the tree",
+      "doc": "Create an element and insert it into the tree"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.insertText",
+      "signature": "(self, data, parent=None)",
+      "span": [
+        349,
+        362
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Insert text data.",
+      "doc": "Insert text data."
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.getTableMisnestedNodePosition",
+      "signature": "(self)",
+      "span": [
+        364,
+        388
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 18 words",
+      "intent": "Get the foster parent element, and sibling to insert before",
+      "doc": "Get the foster parent element, and sibling to insert before\n(or None) when inserting a misnested table node"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.generateImpliedEndTags",
+      "signature": "(self, exclude=None)",
+      "span": [
+        390,
+        398
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "generateImpliedEndTags (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.getDocument",
+      "signature": "(self)",
+      "span": [
+        400,
+        402
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the final tree",
+      "doc": "Return the final tree"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.getFragment",
+      "signature": "(self)",
+      "span": [
+        404,
+        409
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the final fragment",
+      "doc": "Return the final fragment"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/base.py",
+      "qualname": "TreeBuilder.testSerializer",
+      "signature": "(self, node)",
+      "span": [
+        411,
+        417
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "Serialize the subtree of node in the format required by unit tests",
+      "doc": "Serialize the subtree of node in the format required by unit tests\n\n:arg node: the node from which to start serializing"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/dom.py",
+      "qualname": "getDomBuilder",
+      "signature": "(DomImplementation)",
+      "span": [
+        17,
+        235
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getDomBuilder (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree.py",
+      "qualname": "getETreeBuilder",
+      "signature": "(ElementTreeImplementation, fullTree=False)",
+      "span": [
+        19,
+        340
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getETreeBuilder (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "Document.appendChild",
+      "signature": "(self, element)",
+      "span": [
+        52,
+        57
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "appendChild (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "testSerializer",
+      "signature": "(element)",
+      "span": [
+        65,
+        141
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "testSerializer (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "tostring",
+      "signature": "(element)",
+      "span": [
+        144,
+        182
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Serialize an element and its child nodes to a string",
+      "doc": "Serialize an element and its child nodes to a string"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.reset",
+      "signature": "(self)",
+      "span": [
+        285,
+        289
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.testSerializer",
+      "signature": "(self, element)",
+      "span": [
+        291,
+        292
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "testSerializer (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.getDocument",
+      "signature": "(self)",
+      "span": [
+        294,
+        298
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getDocument (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.getFragment",
+      "signature": "(self)",
+      "span": [
+        300,
+        308
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getFragment (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.insertDoctype",
+      "signature": "(self, token)",
+      "span": [
+        310,
+        324
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertDoctype (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.insertCommentInitial",
+      "signature": "(self, data, parent=None)",
+      "span": [
+        326,
+        329
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertCommentInitial (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.insertCommentMain",
+      "signature": "(self, data, parent=None)",
+      "span": [
+        331,
+        335
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertCommentMain (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treebuilders/etree_lxml.py",
+      "qualname": "TreeBuilder.insertRoot",
+      "signature": "(self, token)",
+      "span": [
+        337,
+        392
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "insertRoot (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/__init__.py",
+      "qualname": "getTreeWalker",
+      "signature": "(treeType, implementation=None, **kwargs)",
+      "span": [
+        21,
+        62
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: treeWalkerCache[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 102 words",
+      "intent": "Get a TreeWalker class for various types of tree with built-in support",
+      "doc": "Get a TreeWalker class for various types of tree with built-in support\n\n:arg str treeType: the name of the tree type required (case-insensitive).\n    Supported values are:\n\n    * \"dom\": The xml.dom.minidom DOM implementation\n    * \"etree\": A generic walker for tree implementations exposing an\n      elementtree-like interface (known to work with ElementTree,\n      cElementTree and lxml.etree).\n    * \"lxml\": Optimized walker for lxml.etree\n    * \"genshi\": a Genshi stream\n\n:arg implementation: A module implementing the tree type e.g.\n    xml.etree.ElementTree or cElementTree (Currently applies to the \"etree\"\n    tree type only).\n\n:arg kwargs: keyword arguments passed to the etree walker--for other\n    walkers, this has no effect\n\n:returns: a TreeWalker class"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/__init__.py",
+      "qualname": "concatenateCharacterTokens",
+      "signature": "(tokens)",
+      "span": [
+        65,
+        77
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "concatenateCharacterTokens (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/__init__.py",
+      "qualname": "pprint",
+      "signature": "(walker)",
+      "span": [
+        80,
+        154
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 23 words",
+      "intent": "Pretty printer for tree walkers",
+      "doc": "Pretty printer for tree walkers\n\nTakes a TreeWalker instance and pretty prints the output of walking the tree.\n\n:arg walker: a TreeWalker instance"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.error",
+      "signature": "(self, msg)",
+      "span": [
+        38,
+        46
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "Generates an error token with the given message",
+      "doc": "Generates an error token with the given message\n\n:arg msg: the error message\n\n:returns: SerializeError token"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.emptyTag",
+      "signature": "(self, namespace, name, attrs, hasChildren=False)",
+      "span": [
+        48,
+        67
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Generates an EmptyTag token",
+      "doc": "Generates an EmptyTag token\n\n:arg namespace: the namespace of the token--can be ``None``\n\n:arg name: the name of the element\n\n:arg attrs: the attributes of the element as a dict\n\n:arg hasChildren: whether or not to yield a SerializationError because\n    this tag shouldn't have children\n\n:returns: EmptyTag token"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.startTag",
+      "signature": "(self, namespace, name, attrs)",
+      "span": [
+        69,
+        84
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Generates a StartTag token",
+      "doc": "Generates a StartTag token\n\n:arg namespace: the namespace of the token--can be ``None``\n\n:arg name: the name of the element\n\n:arg attrs: the attributes of the element as a dict\n\n:returns: StartTag token"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.endTag",
+      "signature": "(self, namespace, name)",
+      "span": [
+        86,
+        98
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 23 words",
+      "intent": "Generates an EndTag token",
+      "doc": "Generates an EndTag token\n\n:arg namespace: the namespace of the token--can be ``None``\n\n:arg name: the name of the element\n\n:returns: EndTag token"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.text",
+      "signature": "(self, data)",
+      "span": [
+        100,
+        136
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 87 words",
+      "intent": "Generates SpaceCharacters and Characters tokens",
+      "doc": "Generates SpaceCharacters and Characters tokens\n\nDepending on what's in the data, this generates one or more\n``SpaceCharacters`` and ``Characters`` tokens.\n\nFor example:\n\n    >>> from html5lib.treewalkers.base import TreeWalker\n    >>> # Give it an empty tree just so it instantiates\n    >>> walker = TreeWalker([])\n    >>> list(walker.text(''))\n    []\n    >>> list(walker.text('  '))\n    [{u'data': '  ', u'type': u'SpaceCharacters'}]\n    >>> list(walker.text(' abc '))  # doctest: +NORMALIZE_WHITESPACE\n    [{u'data': ' ', u'type': u'SpaceCharacters'},\n    {u'data': u'abc', u'type': u'Characters'},\n    {u'data': u' ', u'type': u'SpaceCharacters'}]\n\n:arg data: the text data\n\n:returns: one or more ``SpaceCharacters`` and ``Characters`` tokens"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.comment",
+      "signature": "(self, data)",
+      "span": [
+        138,
+        146
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Generates a Comment token",
+      "doc": "Generates a Comment token\n\n:arg data: the comment\n\n:returns: Comment token"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.doctype",
+      "signature": "(self, name, publicId=None, systemId=None)",
+      "span": [
+        148,
+        163
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Generates a Doctype token",
+      "doc": "Generates a Doctype token\n\n:arg name:\n\n:arg publicId:\n\n:arg systemId:\n\n:returns: the Doctype token"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.entity",
+      "signature": "(self, name)",
+      "span": [
+        165,
+        173
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Generates an Entity token",
+      "doc": "Generates an Entity token\n\n:arg name: the entity name\n\n:returns: an Entity token"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "TreeWalker.unknown",
+      "signature": "(self, nodeType)",
+      "span": [
+        175,
+        177
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Handles unknown node types",
+      "doc": "Handles unknown node types"
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "NonRecursiveTreeWalker.getNodeDetails",
+      "signature": "(self, node)",
+      "span": [
+        181,
+        182
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getNodeDetails (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "NonRecursiveTreeWalker.getFirstChild",
+      "signature": "(self, node)",
+      "span": [
+        184,
+        185
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getFirstChild (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "NonRecursiveTreeWalker.getNextSibling",
+      "signature": "(self, node)",
+      "span": [
+        187,
+        188
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getNextSibling (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/base.py",
+      "qualname": "NonRecursiveTreeWalker.getParentNode",
+      "signature": "(self, node)",
+      "span": [
+        190,
+        191
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getParentNode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/dom.py",
+      "qualname": "TreeWalker.getNodeDetails",
+      "signature": "(self, node)",
+      "span": [
+        9,
+        34
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getNodeDetails (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/dom.py",
+      "qualname": "TreeWalker.getFirstChild",
+      "signature": "(self, node)",
+      "span": [
+        36,
+        37
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getFirstChild (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/dom.py",
+      "qualname": "TreeWalker.getNextSibling",
+      "signature": "(self, node)",
+      "span": [
+        39,
+        40
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getNextSibling (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/dom.py",
+      "qualname": "TreeWalker.getParentNode",
+      "signature": "(self, node)",
+      "span": [
+        42,
+        43
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getParentNode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree.py",
+      "qualname": "getETreeBuilder",
+      "signature": "(ElementTreeImplementation)",
+      "span": [
+        14,
+        128
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getETreeBuilder (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "ensure_str",
+      "signature": "(s)",
+      "span": [
+        14,
+        20
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "ensure str (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "Root.getnext",
+      "signature": "(self)",
+      "span": [
+        54,
+        55
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getnext (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "Doctype.getnext",
+      "signature": "(self)",
+      "span": [
+        71,
+        72
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getnext (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "FragmentRoot.getnext",
+      "signature": "(self)",
+      "span": [
+        80,
+        81
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getnext (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "FragmentWrapper.getnext",
+      "signature": "(self)",
+      "span": [
+        100,
+        106
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getnext (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "FragmentWrapper.getparent",
+      "signature": "(self)",
+      "span": [
+        114,
+        115
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getparent (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "TreeWalker.getNodeDetails",
+      "signature": "(self, node)",
+      "span": [
+        139,
+        178
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getNodeDetails (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "TreeWalker.getFirstChild",
+      "signature": "(self, node)",
+      "span": [
+        180,
+        187
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getFirstChild (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "TreeWalker.getNextSibling",
+      "signature": "(self, node)",
+      "span": [
+        189,
+        203
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getNextSibling (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/etree_lxml.py",
+      "qualname": "TreeWalker.getParentNode",
+      "signature": "(self, node)",
+      "span": [
+        205,
+        215
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getParentNode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/html5lib/treewalkers/genshi.py",
+      "qualname": "TreeWalker.tokens",
+      "signature": "(self, event, next)",
+      "span": [
+        27,
+        69
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tokens (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "clear_cache",
+      "signature": "()",
+      "span": [
+        86,
+        89
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: _parse_cache.clear()",
+        "mutation of enclosing-scope name: _safe_quoters.clear()"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Clear the parse cache and the quoters cache.",
+      "doc": "Clear the parse cache and the quoters cache."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "DefragResult.geturl",
+      "signature": "(self)",
+      "span": [
+        315,
+        319
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "geturl (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "SplitResult.geturl",
+      "signature": "(self)",
+      "span": [
+        323,
+        324
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "geturl (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "ParseResult.geturl",
+      "signature": "(self)",
+      "span": [
+        328,
+        329
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "geturl (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "DefragResultBytes.geturl",
+      "signature": "(self)",
+      "span": [
+        334,
+        338
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "geturl (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "SplitResultBytes.geturl",
+      "signature": "(self)",
+      "span": [
+        342,
+        343
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "geturl (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "ParseResultBytes.geturl",
+      "signature": "(self)",
+      "span": [
+        347,
+        348
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "geturl (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "urlparse",
+      "signature": "(url, scheme='', allow_fragments=True)",
+      "span": [
+        364,
+        378
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via urlsplit"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Parse a URL into 6 components:",
+      "doc": "Parse a URL into 6 components:\n<scheme>://<netloc>/<path>;<params>?<query>#<fragment>\nReturn a 6-tuple: (scheme, netloc, path, params, query, fragment).\nNote that we don't break the components up in smaller bits\n(e.g. netloc is a single string) and we don't expand % escapes."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "urlsplit",
+      "signature": "(url, scheme='', allow_fragments=True)",
+      "span": [
+        420,
+        478
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: _parse_cache[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 38 words",
+      "intent": "Parse a URL into 5 components:",
+      "doc": "Parse a URL into 5 components:\n<scheme>://<netloc>/<path>?<query>#<fragment>\nReturn a 5-tuple: (scheme, netloc, path, query, fragment).\nNote that we don't break the components up in smaller bits\n(e.g. netloc is a single string) and we don't expand % escapes."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "urlunparse",
+      "signature": "(components)",
+      "span": [
+        480,
+        489
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Put a parsed URL back together again.  This may result in a",
+      "doc": "Put a parsed URL back together again.  This may result in a\nslightly different, but equivalent URL, if the URL that was parsed\noriginally had redundant delimiters, e.g. a ? with an empty query\n(the draft states that these are equivalent)."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "urlunsplit",
+      "signature": "(components)",
+      "span": [
+        491,
+        508
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 60 words",
+      "intent": "Combine the elements of a tuple as returned by urlsplit() into a",
+      "doc": "Combine the elements of a tuple as returned by urlsplit() into a\ncomplete URL as a string. The data argument can be any five-item iterable.\nThis may result in a slightly different, but equivalent URL, if the URL that\nwas parsed originally had unnecessary delimiters (for example, a ? with an\nempty query; the RFC states that these are equivalent)."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "urljoin",
+      "signature": "(base, url, allow_fragments=True)",
+      "span": [
+        510,
+        576
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via urlparse"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Join a base URL and a possibly relative URL to form an absolute",
+      "doc": "Join a base URL and a possibly relative URL to form an absolute\ninterpretation of the latter."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "urldefrag",
+      "signature": "(url)",
+      "span": [
+        579,
+        593
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via urlparse"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Removes any existing fragment from URL.",
+      "doc": "Removes any existing fragment from URL.\n\nReturns a tuple of the defragmented URL and the fragment.  If\nthe URL contained no fragments, the second element is the\nempty string."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "unquote_to_bytes",
+      "signature": "(string)",
+      "span": [
+        598,
+        626
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "global statement: _hextobyte"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "unquote_to_bytes('abc%20def') -> b'abc def'.",
+      "doc": "unquote_to_bytes('abc%20def') -> b'abc def'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "unquote",
+      "signature": "(string, encoding='utf-8', errors='replace')",
+      "span": [
+        630,
+        653
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via unquote_to_bytes"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Replace %xx escapes by their single-character equivalent. The optional",
+      "doc": "Replace %xx escapes by their single-character equivalent. The optional\nencoding and errors parameters specify how to decode percent-encoded\nsequences into Unicode characters, as accepted by the bytes.decode()\nmethod.\nBy default, percent-encoded sequences are decoded with UTF-8, and invalid\nsequences are replaced by a placeholder character.\n\nunquote('abc%20def') -> 'abc def'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "parse_qs",
+      "signature": "(qs, keep_blank_values=False, strict_parsing=False, encoding='utf-8', errors='replace', max_num_fields=None, separator='&')",
+      "span": [
+        656,
+        695
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via parse_qsl"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 140 words",
+      "intent": "Parse a query given as a string argument.",
+      "doc": "Parse a query given as a string argument.\n\nArguments:\n\nqs: percent-encoded query string to be parsed\n\nkeep_blank_values: flag indicating whether blank values in\n    percent-encoded queries should be treated as blank strings.\n    A true value indicates that blanks should be retained as\n    blank strings.  The default false value indicates that\n    blank values are to be ignored and treated as if they were\n    not included.\n\nstrict_parsing: flag indicating what to do with parsing errors.\n    If false (the default), errors are silently ignored.\n    If true, errors raise a ValueError exception.\n\nencoding and errors: specify how to decode percent-encoded sequences\n    into Unicode characters, as accepted by the bytes.decode() method.\n\nmax_num_fields: int. If set, then throws a ValueError if there\n    are more than n fields read by parse_qsl().\n\nseparator: str. The symbol to use for separating the query arguments.\n    Defaults to &.\n\nReturns a dictionary."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "parse_qsl",
+      "signature": "(qs, keep_blank_values=False, strict_parsing=False, encoding='utf-8', errors='replace', max_num_fields=None, separator='&')",
+      "span": [
+        698,
+        762
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via unquote"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 143 words",
+      "intent": "Parse a query given as a string argument.",
+      "doc": "Parse a query given as a string argument.\n\nArguments:\n\nqs: percent-encoded query string to be parsed\n\nkeep_blank_values: flag indicating whether blank values in\n    percent-encoded queries should be treated as blank strings.\n    A true value indicates that blanks should be retained as blank\n    strings.  The default false value indicates that blank values\n    are to be ignored and treated as if they were  not included.\n\nstrict_parsing: flag indicating what to do with parsing errors. If\n    false (the default), errors are silently ignored. If true,\n    errors raise a ValueError exception.\n\nencoding and errors: specify how to decode percent-encoded sequences\n    into Unicode characters, as accepted by the bytes.decode() method.\n\nmax_num_fields: int. If set, then throws a ValueError\n    if there are more than n fields read by parse_qsl().\n\nseparator: str. The symbol to use for separating the query arguments.\n    Defaults to &.\n\nReturns a list, as G-d intended."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "unquote_plus",
+      "signature": "(string, encoding='utf-8', errors='replace')",
+      "span": [
+        764,
+        771
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via unquote"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 20 words",
+      "intent": "Like unquote(), but also replace plus signs by spaces, as required for",
+      "doc": "Like unquote(), but also replace plus signs by spaces, as required for\nunquoting HTML form values.\n\nunquote_plus('%7e/abc+def') -> '~/abc def'"
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "quote",
+      "signature": "(string, safe='/', encoding=None, errors=None)",
+      "span": [
+        802,
+        844
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via quote_from_bytes"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 185 words",
+      "intent": "quote('abc def') -> 'abc%20def'",
+      "doc": "quote('abc def') -> 'abc%20def'\n\nEach part of a URL, e.g. the path info, the query, etc., has a\ndifferent set of reserved characters that must be quoted.\n\nRFC 2396 Uniform Resource Identifiers (URI): Generic Syntax lists\nthe following reserved characters.\n\nreserved    = \";\" | \"/\" | \"?\" | \":\" | \"@\" | \"&\" | \"=\" | \"+\" |\n              \"$\" | \",\"\n\nEach of these characters is reserved in some component of a URL,\nbut not necessarily in all of them.\n\nBy default, the quote function is intended for quoting the path\nsection of a URL.  Thus, it will not encode '/'.  This character\nis reserved, but in typical usage the quote function is being\ncalled on a path where the existing slash characters are used as\nreserved characters.\n\nstring and safe may be either str or bytes objects. encoding and errors\nmust not be specified if string is a bytes object.\n\nThe optional encoding and errors parameters specify how to deal with\nnon-ASCII characters, as accepted by the str.encode method.\nBy default, encoding='utf-8' (characters are encoded with UTF-8), and\nerrors='strict' (unsupported characters raise a UnicodeEncodeError)."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "quote_plus",
+      "signature": "(string, safe='', encoding=None, errors=None)",
+      "span": [
+        846,
+        861
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via quote"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Like quote(), but also replace ' ' with '+', as required for quoting",
+      "doc": "Like quote(), but also replace ' ' with '+', as required for quoting\nHTML form values. Plus signs in the original string are escaped unless\nthey are included in safe. It also does not have safe default to '/'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "quote_from_bytes",
+      "signature": "(bs, safe='/')",
+      "span": [
+        863,
+        883
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: _safe_quoters[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "Like quote(), but accepts a bytes object rather than a str, and does",
+      "doc": "Like quote(), but accepts a bytes object rather than a str, and does\nnot perform string-to-bytes encoding.  It always returns an ASCII string.\nquote_from_bytes(b'abc def?') -> 'abc%20def%3f'"
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "urlencode",
+      "signature": "(query, doseq=False, safe='', encoding=None, errors=None, quote_via=quote_plus)",
+      "span": [
+        885,
+        963
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 103 words",
+      "intent": "Encode a dict or sequence of two-element tuples into a URL query string.",
+      "doc": "Encode a dict or sequence of two-element tuples into a URL query string.\n\nIf any values in the query arg are sequences and doseq is true, each\nsequence element is converted to a separate parameter.\n\nIf the query arg is a sequence of two-element tuples, the order of the\nparameters in the output will match the order of parameters in the\ninput.\n\nThe components of a query arg may each be either a string or a bytes type.\n\nThe safe, encoding, and errors parameters are passed down to the function\nspecified by quote_via (encoding and errors only if a component is a str)."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "to_bytes",
+      "signature": "(url)",
+      "span": [
+        965,
+        976
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "to_bytes(u\"URL\") --> 'URL'.",
+      "doc": "to_bytes(u\"URL\") --> 'URL'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "unwrap",
+      "signature": "(url)",
+      "span": [
+        978,
+        984
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "unwrap('<URL:type://host/path>') --> 'type://host/path'.",
+      "doc": "unwrap('<URL:type://host/path>') --> 'type://host/path'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splittype",
+      "signature": "(url)",
+      "span": [
+        987,
+        997
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "global statement: _typeprog"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splittype('type:opaquestring') --> 'type', 'opaquestring'.",
+      "doc": "splittype('type:opaquestring') --> 'type', 'opaquestring'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splithost",
+      "signature": "(url)",
+      "span": [
+        1000,
+        1012
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "global statement: _hostprog"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splithost('//host[:port]/path') --> 'host[:port]', '/path'.",
+      "doc": "splithost('//host[:port]/path') --> 'host[:port]', '/path'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splituser",
+      "signature": "(host)",
+      "span": [
+        1014,
+        1017
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splituser('user[:passwd]@host[:port]') --> 'user[:passwd]', 'host[:port]'.",
+      "doc": "splituser('user[:passwd]@host[:port]') --> 'user[:passwd]', 'host[:port]'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splitpasswd",
+      "signature": "(user)",
+      "span": [
+        1019,
+        1022
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splitpasswd('user:passwd') -> 'user', 'passwd'.",
+      "doc": "splitpasswd('user:passwd') -> 'user', 'passwd'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splitport",
+      "signature": "(host)",
+      "span": [
+        1026,
+        1037
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "global statement: _portprog"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splitport('host:port') --> 'host', 'port'.",
+      "doc": "splitport('host:port') --> 'host', 'port'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splitnport",
+      "signature": "(host, defport=-1)",
+      "span": [
+        1039,
+        1053
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 38 words",
+      "intent": "Split host and port, returning numeric port.",
+      "doc": "Split host and port, returning numeric port.\nReturn given default port if no ':' found; defaults to -1.\nReturn numerical port if a valid number are found after ':'.\nReturn None if ':' but not a valid number."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splitquery",
+      "signature": "(url)",
+      "span": [
+        1055,
+        1060
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splitquery('/path?query') --> '/path', 'query'.",
+      "doc": "splitquery('/path?query') --> '/path', 'query'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splittag",
+      "signature": "(url)",
+      "span": [
+        1062,
+        1067
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splittag('/path#tag') --> '/path', 'tag'.",
+      "doc": "splittag('/path#tag') --> '/path', 'tag'."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splitattr",
+      "signature": "(url)",
+      "span": [
+        1069,
+        1073
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splitattr('/path;attr1=value1;attr2=value2;...') ->",
+      "doc": "splitattr('/path;attr1=value1;attr2=value2;...') ->\n'/path', ['attr1=value1', 'attr2=value2', ...]."
+    },
+    {
+      "module": "bleach/_vendor/parse.py",
+      "qualname": "splitvalue",
+      "signature": "(attr)",
+      "span": [
+        1075,
+        1078
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "splitvalue('attr=value') --> 'attr', 'value'.",
+      "doc": "splitvalue('attr=value') --> 'attr', 'value'."
+    },
+    {
+      "module": "bleach/callbacks.py",
+      "qualname": "nofollow",
+      "signature": "(attrs, new=False)",
+      "span": [
+        4,
+        19
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "nofollow (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/callbacks.py",
+      "qualname": "target_blank",
+      "signature": "(attrs, new=False)",
+      "span": [
+        22,
+        32
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "target blank (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/css_sanitizer.py",
+      "qualname": "CSSSanitizer.sanitize_css",
+      "signature": "(self, style)",
+      "span": [
+        79,
+        104
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Sanitizes css in style tags",
+      "doc": "Sanitizes css in style tags"
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.errors",
+      "signature": "(self)",
+      "span": [
+        259,
+        260
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "errors (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.charEncoding",
+      "signature": "(self)",
+      "span": [
+        263,
+        264
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "charEncoding (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.changeEncoding",
+      "signature": "(self)",
+      "span": [
+        267,
+        268
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "changeEncoding (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.char",
+      "signature": "(self)",
+      "span": [
+        270,
+        275
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "char (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.charsUntil",
+      "signature": "(self, characters, opposite=False)",
+      "span": [
+        277,
+        280
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "charsUntil (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.unget",
+      "signature": "(self, char)",
+      "span": [
+        282,
+        285
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "unget (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.get_tag",
+      "signature": "(self)",
+      "span": [
+        287,
+        295
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 40 words",
+      "intent": "Returns the stream history since last '<'",
+      "doc": "Returns the stream history since last '<'\n\nSince the buffer starts at the last '<' as as seen by tagOpenState(),\nwe know that everything from that point to when this method is called\nis the \"tag\" that is being tokenized."
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "InputStreamWithMemory.start_tag",
+      "signature": "(self)",
+      "span": [
+        297,
+        304
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Resets stream history to just '<'",
+      "doc": "Resets stream history to just '<'\n\nThis gets called by tagOpenState() which marks a '<' that denotes an\nopen tag. Any time we see that, we reset the buffer."
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "BleachHTMLTokenizer.consumeEntity",
+      "signature": "(self, allowedChar=None, fromAttribute=False)",
+      "span": [
+        452,
+        468
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "consumeEntity (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "BleachHTMLTokenizer.tagOpenState",
+      "signature": "(self)",
+      "span": [
+        470,
+        476
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tagOpenState (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "BleachHTMLTokenizer.emitCurrentToken",
+      "signature": "(self)",
+      "span": [
+        478,
+        520
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "emitCurrentToken (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "convert_entity",
+      "signature": "(value)",
+      "span": [
+        567,
+        598
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Convert an entity (minus the & and ; part) into what it represents",
+      "doc": "Convert an entity (minus the & and ; part) into what it represents\n\nThis handles numeric, hex, and text entities.\n\n:arg value: the string (minus the ``&`` and ``;`` part) to convert\n\n:returns: unicode character or None if it's an ambiguous ampersand that\n    doesn't match a character entity"
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "convert_entities",
+      "signature": "(text)",
+      "span": [
+        601,
+        633
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "Converts all found entities in the text",
+      "doc": "Converts all found entities in the text\n\n:arg text: the text to convert entities in\n\n:returns: unicode text with converted entities"
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "match_entity",
+      "signature": "(stream)",
+      "span": [
+        636,
+        693
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 59 words",
+      "intent": "Returns first entity in stream or None if no entity exists",
+      "doc": "Returns first entity in stream or None if no entity exists\n\nNote: For Bleach purposes, entities must start with a \"&\" and end with a\n\";\". This ignores ambiguous character entities that have no \";\" at the end.\n\n:arg stream: the character stream\n\n:returns: the entity string without \"&\" or \";\" if it's a valid character\n    entity; ``None`` otherwise"
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "next_possible_entity",
+      "signature": "(text)",
+      "span": [
+        699,
+        712
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Takes a text and generates a list of possible entities",
+      "doc": "Takes a text and generates a list of possible entities\n\n:arg text: the text to look at\n\n:returns: generator where each part (except the first) starts with an\n    \"&\""
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "BleachHTMLSerializer.escape_base_amp",
+      "signature": "(self, stoken)",
+      "span": [
+        728,
+        757
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Escapes just bare & in HTML attribute values",
+      "doc": "Escapes just bare & in HTML attribute values"
+    },
+    {
+      "module": "bleach/html5lib_shim.py",
+      "qualname": "BleachHTMLSerializer.serialize",
+      "signature": "(self, treewalker, encoding=None)",
+      "span": [
+        759,
+        788
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 31 words",
+      "intent": "Wrap HTMLSerializer.serialize and conver & to &amp; in attribute values",
+      "doc": "Wrap HTMLSerializer.serialize and conver & to &amp; in attribute values\n\nNote that this converts & to &amp; in attribute values where the & isn't\nalready part of an unambiguous character entity."
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "build_url_re",
+      "signature": "(tlds=TLDS, protocols=html5lib_shim.allowed_protocols)",
+      "span": [
+        31,
+        53
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 38 words",
+      "intent": "Builds the url regex used by linkifier",
+      "doc": "Builds the url regex used by linkifier\n\nIf you want a different set of tlds or allowed protocols, pass those in\nand stomp on the existing ``url_re``::\n\n    from bleach import linkifier\n\n    my_url_re = linkifier.build_url_re(my_tlds_list, my_protocols)\n\n    linker = LinkifyFilter(url_re=my_url_re)"
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "build_email_re",
+      "signature": "(tlds=TLDS)",
+      "span": [
+        62,
+        84
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Builds the email regex used by linkifier",
+      "doc": "Builds the email regex used by linkifier\n\nIf you want a different set of tlds, pass those in and stomp on the existing ``email_re``::\n\n    from bleach import linkifier\n\n    my_email_re = linkifier.build_email_re(my_tlds_list)\n\n    linker = LinkifyFilter(email_re=my_url_re)"
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "Linker.linkify",
+      "signature": "(self, text)",
+      "span": [
+        163,
+        188
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 26 words",
+      "intent": "Linkify specified text",
+      "doc": "Linkify specified text\n\n:arg str text: the text to add links to\n\n:returns: linkified text as unicode\n\n:raises TypeError: if ``text`` is not a text type"
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "LinkifyFilter.apply_callbacks",
+      "signature": "(self, attrs, is_new)",
+      "span": [
+        241,
+        259
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 65 words",
+      "intent": "Given an attrs dict and an is_new bool, runs through callbacks",
+      "doc": "Given an attrs dict and an is_new bool, runs through callbacks\n\nCallbacks can return an adjusted attrs dict or ``None``. In the case of\n``None``, we stop going through callbacks and return that and the link\ngets dropped.\n\n:arg dict attrs: map of ``(namespace, name)`` -> ``value``\n\n:arg bool is_new: whether or not this link was added by linkify\n\n:returns: adjusted attrs dict or ``None``"
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "LinkifyFilter.extract_character_data",
+      "signature": "(self, token_list)",
+      "span": [
+        261,
+        286
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Extracts and squashes character sequences in a token stream",
+      "doc": "Extracts and squashes character sequences in a token stream"
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "LinkifyFilter.handle_email_addresses",
+      "signature": "(self, src_iter)",
+      "span": [
+        288,
+        344
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Handle email addresses in character tokens",
+      "doc": "Handle email addresses in character tokens"
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "LinkifyFilter.strip_non_url_bits",
+      "signature": "(self, fragment)",
+      "span": [
+        346,
+        392
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Strips non-url bits from the url",
+      "doc": "Strips non-url bits from the url\n\nThis accounts for over-eager matching by the regex."
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "LinkifyFilter.handle_links",
+      "signature": "(self, src_iter)",
+      "span": [
+        394,
+        469
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Handle links in character tokens",
+      "doc": "Handle links in character tokens"
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "LinkifyFilter.handle_a_tag",
+      "signature": "(self, token_buffer)",
+      "span": [
+        471,
+        511
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 26 words",
+      "intent": "Handle the \"a\" tag",
+      "doc": "Handle the \"a\" tag\n\nThis could adjust the link or drop it altogether depending on what the\ncallbacks return.\n\nThis yields the new set of tokens."
+    },
+    {
+      "module": "bleach/linkifier.py",
+      "qualname": "LinkifyFilter.extract_entities",
+      "signature": "(self, token)",
+      "span": [
+        513,
+        567
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 62 words",
+      "intent": "Handles Characters tokens with entities",
+      "doc": "Handles Characters tokens with entities\n\nOur overridden tokenizer doesn't do anything with entities. However,\nthat means that the serializer will convert all ``&`` in Characters\ntokens to ``&amp;``.\n\nSince we don't want that, we extract entities here and convert them to\nEntity tokens so the serializer will let them be.\n\n:arg token: the Characters token to work on\n\n:returns: generator of tokens"
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "Cleaner.clean",
+      "signature": "(self, text)",
+      "span": [
+        171,
+        206
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 29 words",
+      "intent": "Cleans text and returns sanitized result as unicode",
+      "doc": "Cleans text and returns sanitized result as unicode\n\n:arg str text: text to be cleaned\n\n:returns: sanitized text as unicode\n\n:raises TypeError: if ``text`` is not a text type"
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "attribute_filter_factory",
+      "signature": "(attributes)",
+      "span": [
+        209,
+        249
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Generates attribute filter function for the given attributes value",
+      "doc": "Generates attribute filter function for the given attributes value\n\nThe attributes value can take one of several shapes. This returns a filter\nfunction appropriate to the attributes value. One nice thing about this is\nthat there's less if/then shenanigans in the ``allow_token`` method."
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "BleachSanitizerFilter.sanitize_stream",
+      "signature": "(self, token_iterator)",
+      "span": [
+        321,
+        331
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "sanitize stream (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "BleachSanitizerFilter.merge_characters",
+      "signature": "(self, token_iterator)",
+      "span": [
+        333,
+        364
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Merge consecutive Characters tokens in a stream",
+      "doc": "Merge consecutive Characters tokens in a stream"
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "BleachSanitizerFilter.sanitize_token",
+      "signature": "(self, token)",
+      "span": [
+        371,
+        412
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 62 words",
+      "intent": "Sanitize a token either by HTML-encoding or dropping.",
+      "doc": "Sanitize a token either by HTML-encoding or dropping.\n\nUnlike sanitizer.Filter, allowed_attributes can be a dict of {'tag':\n['attribute', 'pairs'], 'tag': callable}.\n\nHere callable is a function with two arguments of attribute name and\nvalue. It should return true of false.\n\nAlso gives the option to strip tags instead of encoding.\n\n:arg dict token: token to sanitize\n\n:returns: token or list of tokens"
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "BleachSanitizerFilter.sanitize_characters",
+      "signature": "(self, token)",
+      "span": [
+        414,
+        473
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 61 words",
+      "intent": "Handles Characters tokens",
+      "doc": "Handles Characters tokens\n\nOur overridden tokenizer doesn't do anything with entities. However,\nthat means that the serializer will convert all ``&`` in Characters\ntokens to ``&amp;``.\n\nSince we don't want that, we extract entities here and convert them to\nEntity tokens so the serializer will let them be.\n\n:arg token: the Characters token to work on\n\n:returns: a list of tokens"
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "BleachSanitizerFilter.sanitize_uri_value",
+      "signature": "(self, value, allowed_protocols)",
+      "span": [
+        475,
+        532
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "Checks a uri value to see if it's allowed",
+      "doc": "Checks a uri value to see if it's allowed\n\n:arg value: the uri value to sanitize\n:arg allowed_protocols: set of allowed protocols\n\n:returns: allowed value or None"
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "BleachSanitizerFilter.allow_token",
+      "signature": "(self, token)",
+      "span": [
+        534,
+        601
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Handles the case where we're allowing the tag",
+      "doc": "Handles the case where we're allowing the tag"
+    },
+    {
+      "module": "bleach/sanitizer.py",
+      "qualname": "BleachSanitizerFilter.disallowed_token",
+      "signature": "(self, token)",
+      "span": [
+        603,
+        639
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "disallowed token (no docstring)",
+      "doc": ""
+    }
+  ],
+  "summary": {
+    "total_public_functions": 320,
+    "auditability": {
+      "spec": 72,
+      "invariant": 3,
+      "none": 245
+    },
+    "deterministic": 298,
+    "auditable": 61
+  }
+}

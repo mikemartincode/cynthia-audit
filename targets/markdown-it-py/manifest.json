@@ -1,0 +1,3143 @@
+{
+  "target": "markdown_it",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/markdown-it-py/repo",
+  "commit": "2c3f71ec46c4259ca375fb40c9cd47385c6c304e",
+  "package_dir": "markdown_it",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "markdown_it/_punycode.py",
+      "qualname": "encode",
+      "signature": "(uni: str) -> str",
+      "span": [
+        31,
+        32
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with decode",
+      "intent": "encode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/_punycode.py",
+      "qualname": "decode",
+      "signature": "(ascii: str) -> str",
+      "span": [
+        35,
+        36
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "inverse pair with encode",
+      "intent": "decode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/_punycode.py",
+      "qualname": "map_domain",
+      "signature": "(string: str, fn: Callable[[str], str]) -> str",
+      "span": [
+        39,
+        49
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "map domain (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/_punycode.py",
+      "qualname": "to_unicode",
+      "signature": "(obj: str) -> str",
+      "span": [
+        52,
+        58
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "to unicode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/_punycode.py",
+      "qualname": "to_ascii",
+      "signature": "(obj: str) -> str",
+      "span": [
+        61,
+        67
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "to ascii (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/cli/parse.py",
+      "qualname": "main",
+      "signature": "(args: Sequence[str] | None=None) -> int",
+      "span": [
+        20,
+        28
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via interactive"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "main (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/cli/parse.py",
+      "qualname": "convert",
+      "signature": "(filenames: Iterable[str]) -> None",
+      "span": [
+        31,
+        33
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via convert_file"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "convert (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/cli/parse.py",
+      "qualname": "convert_stdin",
+      "signature": "() -> None",
+      "span": [
+        36,
+        45
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to print()",
+        "read of sys.stderr",
+        "read of sys.stdin"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Parse a Markdown file and dump the output to stdout.",
+      "doc": "Parse a Markdown file and dump the output to stdout."
+    },
+    {
+      "module": "markdown_it/cli/parse.py",
+      "qualname": "convert_file",
+      "signature": "(filename: str) -> None",
+      "span": [
+        48,
+        58
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to open()",
+        "call to print()",
+        "read of sys.stderr"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Parse a Markdown file and dump the output to stdout.",
+      "doc": "Parse a Markdown file and dump the output to stdout."
+    },
+    {
+      "module": "markdown_it/cli/parse.py",
+      "qualname": "interactive",
+      "signature": "() -> None",
+      "span": [
+        61,
+        79
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to input()",
+        "call to print()"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Parse user input, dump to stdout, rinse and repeat.",
+      "doc": "Parse user input, dump to stdout, rinse and repeat.\nPython REPL style."
+    },
+    {
+      "module": "markdown_it/cli/parse.py",
+      "qualname": "parse_args",
+      "signature": "(args: Sequence[str] | None) -> argparse.Namespace",
+      "span": [
+        82,
+        117
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Parse input CLI arguments.",
+      "doc": "Parse input CLI arguments."
+    },
+    {
+      "module": "markdown_it/cli/parse.py",
+      "qualname": "print_heading",
+      "signature": "() -> None",
+      "span": [
+        120,
+        122
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to print()"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "print heading (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/common/normalize_url.py",
+      "qualname": "normalizeLink",
+      "signature": "(url: str) -> str",
+      "span": [
+        15,
+        37
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "idempotent-by-name transform",
+      "intent": "Normalize destination URLs in links",
+      "doc": "Normalize destination URLs in links\n\n::\n\n    [label]:   destination   'title'\n            ^^^^^^^^^^^"
+    },
+    {
+      "module": "markdown_it/common/normalize_url.py",
+      "qualname": "normalizeLinkText",
+      "signature": "(url: str) -> str",
+      "span": [
+        40,
+        63
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "idempotent-by-name transform",
+      "intent": "Normalize autolink content",
+      "doc": "Normalize autolink content\n\n::\n\n    <destination>\n     ~~~~~~~~~~~"
+    },
+    {
+      "module": "markdown_it/common/normalize_url.py",
+      "qualname": "validateLink",
+      "signature": "(url: str, validator: Callable[[str], bool] | None=None) -> bool",
+      "span": [
+        70,
+        81
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Validate URL link is allowed in output.",
+      "doc": "Validate URL link is allowed in output.\n\nThis validator can prohibit more than really needed to prevent XSS.\nIt's a tradeoff to keep code simple and to be secure by default.\n\nNote: url should be normalized at this point, and existing entities decoded."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "charCodeAt",
+      "signature": "(src: str, pos: int) -> int | None",
+      "span": [
+        13,
+        25
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 40 words",
+      "intent": "Returns the Unicode value of the character at the specified location.",
+      "doc": "Returns the Unicode value of the character at the specified location.\n\n@param - index The zero-based index of the desired character.\nIf there is no character at the specified index, NaN is returned.\n\nThis was added for compatibility with python"
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "charStrAt",
+      "signature": "(src: str, pos: int) -> str | None",
+      "span": [
+        28,
+        40
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 40 words",
+      "intent": "Returns the Unicode value of the character at the specified location.",
+      "doc": "Returns the Unicode value of the character at the specified location.\n\n@param - index The zero-based index of the desired character.\nIf there is no character at the specified index, NaN is returned.\n\nThis was added for compatibility with python"
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "arrayReplaceAt",
+      "signature": "(src: list[_ItemTV], pos: int, newElements: list[_ItemTV]) -> list[_ItemTV]",
+      "span": [
+        46,
+        53
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Remove element from array and put another array at those position.",
+      "doc": "Remove element from array and put another array at those position.\nUseful for some operations with tokens"
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isValidEntityCode",
+      "signature": "(c: int) -> bool",
+      "span": [
+        56,
+        75
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "isValidEntityCode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "fromCodePoint",
+      "signature": "(c: int) -> str",
+      "span": [
+        78,
+        85
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 30 words",
+      "intent": "Convert ordinal to unicode.",
+      "doc": "Convert ordinal to unicode.\n\nNote, in the original Javascript two string characters were required,\nfor codepoints larger than `0xFFFF`.\nBut Python 3 can represent any unicode codepoint in one character."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "replaceEntityPattern",
+      "signature": "(match: str, name: str) -> str",
+      "span": [
+        98,
+        114
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Convert HTML entity patterns,",
+      "doc": "Convert HTML entity patterns,\nsee https://spec.commonmark.org/0.30/#entity-references"
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "unescapeAll",
+      "signature": "(string: str) -> str",
+      "span": [
+        117,
+        127
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "unescapeAll (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "stripEscape",
+      "signature": "(string: str) -> str",
+      "span": [
+        134,
+        136
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Strip escape \\ characters",
+      "doc": "Strip escape \\ characters"
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "escapeHtml",
+      "signature": "(raw: str) -> str",
+      "span": [
+        139,
+        146
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Replace special characters \"&\", \"<\", \">\" and '\"' to HTML-safe sequences.",
+      "doc": "Replace special characters \"&\", \"<\", \">\" and '\"' to HTML-safe sequences."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "escapeRE",
+      "signature": "(string: str) -> str",
+      "span": [
+        154,
+        156
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "escapeRE (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isSpace",
+      "signature": "(code: int | None) -> bool",
+      "span": [
+        162,
+        164
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Check if character code is a whitespace.",
+      "doc": "Check if character code is a whitespace."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isStrSpace",
+      "signature": "(ch: str | None) -> bool",
+      "span": [
+        167,
+        169
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Check if character is a whitespace.",
+      "doc": "Check if character is a whitespace."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isWhiteSpace",
+      "signature": "(code: int) -> bool",
+      "span": [
+        187,
+        191
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Zs (unicode class) || [\\t\\f\\v\\r\\n]",
+      "doc": "Zs (unicode class) || [\\t\\f\\v\\r\\n]"
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isPunctChar",
+      "signature": "(ch: str) -> bool",
+      "span": [
+        197,
+        199
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Check if character is a punctuation character.",
+      "doc": "Check if character is a punctuation character."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isMdAsciiPunct",
+      "signature": "(ch: int) -> bool",
+      "span": [
+        238,
+        250
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "Markdown ASCII punctuation characters.",
+      "doc": "Markdown ASCII punctuation characters.\n\n::\n\n    !, \", #, $, %, &, ', (, ), *, +, ,, -, ., /, :, ;, <, =, >, ?, @, [, \\, ], ^, _, `, {, |, }, or ~\n\nSee http://spec.commonmark.org/0.15/#ascii-punctuation-character\n\nDon't confuse with unicode punctuation !!! It lacks some chars in ascii range."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "normalizeReference",
+      "signature": "(string: str) -> str",
+      "span": [
+        253,
+        301
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "idempotent-by-name transform",
+      "intent": "Helper to unify [reference labels].",
+      "doc": "Helper to unify [reference labels]."
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isLinkOpen",
+      "signature": "(string: str) -> bool",
+      "span": [
+        308,
+        309
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "isLinkOpen (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/common/utils.py",
+      "qualname": "isLinkClose",
+      "signature": "(string: str) -> bool",
+      "span": [
+        312,
+        313
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "isLinkClose (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/helpers/parse_link_destination.py",
+      "qualname": "parseLinkDestination",
+      "signature": "(string: str, pos: int, maximum: int) -> _Result",
+      "span": [
+        17,
+        83
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parseLinkDestination (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/helpers/parse_link_label.py",
+      "qualname": "parseLinkLabel",
+      "signature": "(state: StateInline, start: int, disableNested: bool=False) -> int",
+      "span": [
+        12,
+        44
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parseLinkLabel (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/helpers/parse_link_title.py",
+      "qualname": "parseLinkTitle",
+      "signature": "(string: str, start: int, maximum: int, prev_state: _State | None=None) -> _State",
+      "span": [
+        25,
+        75
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 23 words",
+      "intent": "Parse link title within `str` in [start, max] range,",
+      "doc": "Parse link title within `str` in [start, max] range,\nor continue previous parsing if `prev_state` is defined (equal to result of last execution)."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.set",
+      "signature": "(self, options: OptionsType) -> None",
+      "span": [
+        94,
+        102
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 57 words",
+      "intent": "Set parser options (in the same format as in constructor).",
+      "doc": "Set parser options (in the same format as in constructor).\nProbably, you will never need it, but you can change options after constructor call.\n\n__Note:__ To achieve the best possible performance, don't modify a\n`markdown-it` instance options on the fly. If you need multiple configurations\nit's best to create multiple instances and initialize each with separate config."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.configure",
+      "signature": "(self, presets: str | PresetType, options_update: Mapping[str, Any] | None=None) -> MarkdownIt",
+      "span": [
+        104,
+        140
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 51 words",
+      "intent": "Batch load of all options and component settings.",
+      "doc": "Batch load of all options and component settings.\nThis is an internal method, and you probably will not need it.\nBut if you will - see available presets and data structure\n[here](https://github.com/markdown-it/markdown-it/tree/master/lib/presets)\n\nWe strongly recommend to use presets instead of direct config loads.\nThat will give better compatibility with next versions."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.get_all_rules",
+      "signature": "(self) -> dict[str, list[str]]",
+      "span": [
+        142,
+        149
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the names of all active rules.",
+      "doc": "Return the names of all active rules."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.get_active_rules",
+      "signature": "(self) -> dict[str, list[str]]",
+      "span": [
+        151,
+        158
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the names of all active rules.",
+      "doc": "Return the names of all active rules."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.enable",
+      "signature": "(self, names: str | Iterable[str], ignoreInvalid: bool=False) -> MarkdownIt",
+      "span": [
+        160,
+        190
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 54 words",
+      "intent": "Enable list or rules. (chainable)",
+      "doc": "Enable list or rules. (chainable)\n\n:param names: rule name or list of rule names to enable.\n:param ignoreInvalid: set `true` to ignore errors when rule not found.\n\nIt will automatically find appropriate components,\ncontaining rules with given names. If rule not found, and `ignoreInvalid`\nnot set - throws exception.\n\nExample::\n\n    md = MarkdownIt().enable(['sub', 'sup']).disable('smartquotes')"
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.disable",
+      "signature": "(self, names: str | Iterable[str], ignoreInvalid: bool=False) -> MarkdownIt",
+      "span": [
+        192,
+        213
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "The same as [[MarkdownIt.enable]], but turn specified rules off. (chainable)",
+      "doc": "The same as [[MarkdownIt.enable]], but turn specified rules off. (chainable)\n\n:param names: rule name or list of rule names to disable.\n:param ignoreInvalid: set `true` to ignore errors when rule not found."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.reset_rules",
+      "signature": "(self) -> Generator[None, None, None]",
+      "span": [
+        216,
+        223
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "A context manager, that will reset the current enabled rules on exit.",
+      "doc": "A context manager, that will reset the current enabled rules on exit."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.add_render_rule",
+      "signature": "(self, name: str, function: Callable[..., Any], fmt: str='html') -> None",
+      "span": [
+        225,
+        233
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Add a rule for rendering a particular Token type.",
+      "doc": "Add a rule for rendering a particular Token type.\n\nOnly applied when ``renderer.__output__ == fmt``"
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.use",
+      "signature": "(self, plugin: Callable[..., None], *params: Any, **options: Any) -> MarkdownIt",
+      "span": [
+        235,
+        250
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 35 words",
+      "intent": "Load specified plugin with given params into current parser instance. (chainable)",
+      "doc": "Load specified plugin with given params into current parser instance. (chainable)\n\nIt's just a sugar to call `plugin(md, params)` with curring.\n\nExample::\n\n    def func(tokens, idx):\n        tokens[idx].content = tokens[idx].content.replace('foo', 'bar')\n    md = MarkdownIt().use(plugin, 'foo_replace', 'text', func)"
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.parse",
+      "signature": "(self, src: str, env: EnvType | None=None) -> list[Token]",
+      "span": [
+        252,
+        273
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 81 words",
+      "intent": "Parse the source string to a token stream",
+      "doc": "Parse the source string to a token stream\n\n:param src: source string\n:param env: environment sandbox\n\nParse input string and return list of block tokens (special token type\n\"inline\" will contain list of inline tokens).\n\n`env` is used to pass data between \"distributed\" rules and return additional\nmetadata like reference info, needed for the renderer. It also can be used to\ninject data in specific cases. Usually, you will be ok to pass `{}`,\nand then pass updated object to renderer."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.render",
+      "signature": "(self, src: str, env: EnvType | None=None) -> Any",
+      "span": [
+        275,
+        287
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Render markdown string into html. It does all magic for you :).",
+      "doc": "Render markdown string into html. It does all magic for you :).\n\n:param src: source string\n:param env: environment sandbox\n:returns: The output of the loaded renderer\n\n`env` can be used to inject additional metadata (`{}` by default).\nBut you will not need it with high probability. See also comment\nin [[MarkdownIt.parse]]."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.parseInline",
+      "signature": "(self, src: str, env: EnvType | None=None) -> list[Token]",
+      "span": [
+        289,
+        307
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "The same as [[MarkdownIt.parse]] but skip all block rules.",
+      "doc": "The same as [[MarkdownIt.parse]] but skip all block rules.\n\n:param src: source string\n:param env: environment sandbox\n\nIt returns the\nblock tokens list with the single `inline` element, containing parsed inline\ntokens in `children` property. Also updates `env` object."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.renderInline",
+      "signature": "(self, src: str, env: EnvType | None=None) -> Any",
+      "span": [
+        309,
+        319
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "Similar to [[MarkdownIt.render]] but for single paragraph content.",
+      "doc": "Similar to [[MarkdownIt.render]] but for single paragraph content.\n\n:param src: source string\n:param env: environment sandbox\n\nSimilar to [[MarkdownIt.render]] but for single paragraph content. Result\nwill NOT be wrapped into `<p>` tags."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.validateLink",
+      "signature": "(self, url: str) -> bool",
+      "span": [
+        323,
+        331
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 46 words",
+      "intent": "Validate if the URL link is allowed in output.",
+      "doc": "Validate if the URL link is allowed in output.\n\nThis validator can prohibit more than really needed to prevent XSS.\nIt's a tradeoff to keep code simple and to be secure by default.\n\nNote: the url should be normalized at this point, and existing entities decoded."
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.normalizeLink",
+      "signature": "(self, url: str) -> str",
+      "span": [
+        333,
+        341
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "idempotent-by-name transform",
+      "intent": "Normalize destination URLs in links",
+      "doc": "Normalize destination URLs in links\n\n::\n\n    [label]:   destination   'title'\n            ^^^^^^^^^^^"
+    },
+    {
+      "module": "markdown_it/main.py",
+      "qualname": "MarkdownIt.normalizeLinkText",
+      "signature": "(self, link: str) -> str",
+      "span": [
+        343,
+        351
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "idempotent-by-name transform",
+      "intent": "Normalize autolink content",
+      "doc": "Normalize autolink content\n\n::\n\n    <destination>\n    ~~~~~~~~~~~"
+    },
+    {
+      "module": "markdown_it/parser_block.py",
+      "qualname": "ParserBlock.tokenize",
+      "signature": "(self, state: StateBlock, startLine: int, endLine: int) -> None",
+      "span": [
+        60,
+        103
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Generate tokens for input range.",
+      "doc": "Generate tokens for input range."
+    },
+    {
+      "module": "markdown_it/parser_block.py",
+      "qualname": "ParserBlock.parse",
+      "signature": "(self, src: str, md: MarkdownIt, env: EnvType, outTokens: list[Token]) -> list[Token] | None",
+      "span": [
+        105,
+        113
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Process input string and push block tokens into `outTokens`.",
+      "doc": "Process input string and push block tokens into `outTokens`."
+    },
+    {
+      "module": "markdown_it/parser_core.py",
+      "qualname": "ParserCore.process",
+      "signature": "(self, state: StateCore) -> None",
+      "span": [
+        43,
+        46
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Executes core chain rules.",
+      "doc": "Executes core chain rules."
+    },
+    {
+      "module": "markdown_it/parser_inline.py",
+      "qualname": "ParserInline.add_terminator_char",
+      "signature": "(self, ch: str) -> None",
+      "span": [
+        114,
+        130
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 44 words",
+      "intent": "Register a character that stops the ``text`` rule, allowing inline rules to fire.",
+      "doc": "Register a character that stops the ``text`` rule, allowing inline rules to fire.\n\nThis lets plugins declare which characters their inline rules react to,\nmirroring the ``MARKER`` mechanism in the Rust markdown-it implementation.\n\n:param ch: A single character to add to the terminator set."
+    },
+    {
+      "module": "markdown_it/parser_inline.py",
+      "qualname": "ParserInline.skipToken",
+      "signature": "(self, state: StateInline) -> None",
+      "span": [
+        132,
+        172
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Skip single token by running all rules in validation mode;",
+      "doc": "Skip single token by running all rules in validation mode;\nreturns `True` if any rule reported success"
+    },
+    {
+      "module": "markdown_it/parser_inline.py",
+      "qualname": "ParserInline.tokenize",
+      "signature": "(self, state: StateInline) -> None",
+      "span": [
+        174,
+        204
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Generate tokens for input range.",
+      "doc": "Generate tokens for input range."
+    },
+    {
+      "module": "markdown_it/parser_inline.py",
+      "qualname": "ParserInline.parse",
+      "signature": "(self, src: str, md: MarkdownIt, env: EnvType, tokens: list[Token]) -> list[Token]",
+      "span": [
+        206,
+        215
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Process input string and push inline tokens into `tokens`",
+      "doc": "Process input string and push inline tokens into `tokens`"
+    },
+    {
+      "module": "markdown_it/presets/__init__.py",
+      "qualname": "gfm_like.make",
+      "signature": "() -> PresetType",
+      "span": [
+        20,
+        28
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "make (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/presets/__init__.py",
+      "qualname": "gfm_like2.make",
+      "signature": "() -> PresetType",
+      "span": [
+        42,
+        48
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "make (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/presets/commonmark.py",
+      "qualname": "make",
+      "signature": "() -> PresetType",
+      "span": [
+        13,
+        75
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "make (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/presets/default.py",
+      "qualname": "make",
+      "signature": "() -> PresetType",
+      "span": [
+        6,
+        36
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "make (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/presets/zero.py",
+      "qualname": "make",
+      "signature": "() -> PresetType",
+      "span": [
+        9,
+        44
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "make (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererProtocol.render",
+      "signature": "(self, tokens: Sequence[Token], options: OptionsDict, env: EnvType) -> Any",
+      "span": [
+        23,
+        25
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "render (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.render",
+      "signature": "(self, tokens: Sequence[Token], options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        67,
+        88
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 27 words",
+      "intent": "Takes token stream and generates HTML.",
+      "doc": "Takes token stream and generates HTML.\n\n:param tokens: list on block tokens to render\n:param options: params of parser instance\n:param env: additional data from parsed input"
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.renderInline",
+      "signature": "(self, tokens: Sequence[Token], options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        90,
+        107
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 35 words",
+      "intent": "The same as ``render``, but for single token of `inline` type.",
+      "doc": "The same as ``render``, but for single token of `inline` type.\n\n:param tokens: list on block tokens to render\n:param options: params of parser instance\n:param env: additional data from parsed input (references, for example)"
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.renderToken",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        109,
+        170
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 21 words",
+      "intent": "Default token renderer.",
+      "doc": "Default token renderer.\n\nCan be overridden by custom function\n\n:param idx: token index to render\n:param options: params of parser instance"
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.renderAttrs",
+      "signature": "(token: Token) -> str",
+      "span": [
+        173,
+        180
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Render token attributes to string.",
+      "doc": "Render token attributes to string."
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.renderInlineAsText",
+      "signature": "(self, tokens: Sequence[Token] | None, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        182,
+        208
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 49 words",
+      "intent": "Special kludge for image `alt` attributes to conform CommonMark spec.",
+      "doc": "Special kludge for image `alt` attributes to conform CommonMark spec.\n\nDon't try to use it! Spec requires to show `alt` content with stripped markup,\ninstead of simple escaping.\n\n:param tokens: list on block tokens to render\n:param options: params of parser instance\n:param env: additional data from parsed input"
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.list_item_open",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        212,
+        230
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "list item open (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.code_inline",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        232,
+        242
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "code inline (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.code_block",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        244,
+        259
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "code block (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.fence",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        261,
+        311
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "fence (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.image",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        313,
+        329
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "image (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.hardbreak",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        331,
+        334
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "hardbreak (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.softbreak",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        336,
+        341
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "softbreak (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.text",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        343,
+        346
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "text (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.html_block",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        348,
+        351
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "html block (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/renderer.py",
+      "qualname": "RendererHTML.html_inline",
+      "signature": "(self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType) -> str",
+      "span": [
+        353,
+        356
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "html inline (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "StateBase.src",
+      "signature": "(self) -> str",
+      "span": [
+        39,
+        40
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "src (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "StateBase.src",
+      "signature": "(self, value: str) -> None",
+      "span": [
+        43,
+        45
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "src (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "StateBase.srcCharCode",
+      "signature": "(self) -> tuple[int, ...]",
+      "span": [
+        48,
+        56
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "srcCharCode (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.at",
+      "signature": "(self, ruleName: str, fn: RuleFuncTv, options: RuleOptionsType | None=None) -> None",
+      "span": [
+        110,
+        126
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Replace rule by name with new function & options.",
+      "doc": "Replace rule by name with new function & options.\n\n:param ruleName: rule name to replace.\n:param fn: new rule function.\n:param options: new rule options (not mandatory).\n:raises: KeyError if name not found"
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.before",
+      "signature": "(self, beforeName: str, ruleName: str, fn: RuleFuncTv, options: RuleOptionsType | None=None) -> None",
+      "span": [
+        128,
+        150
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Add new rule to chain before one with given name.",
+      "doc": "Add new rule to chain before one with given name.\n\n:param beforeName: new rule will be added before this one.\n:param ruleName: new rule will be added before this one.\n:param fn: new rule function.\n:param options: new rule options (not mandatory).\n:raises: KeyError if name not found"
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.after",
+      "signature": "(self, afterName: str, ruleName: str, fn: RuleFuncTv, options: RuleOptionsType | None=None) -> None",
+      "span": [
+        152,
+        174
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 48 words",
+      "intent": "Add new rule to chain after one with given name.",
+      "doc": "Add new rule to chain after one with given name.\n\n:param afterName: new rule will be added after this one.\n:param ruleName: new rule will be added after this one.\n:param fn: new rule function.\n:param options: new rule options (not mandatory).\n:raises: KeyError if name not found"
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.push",
+      "signature": "(self, ruleName: str, fn: RuleFuncTv, options: RuleOptionsType | None=None) -> None",
+      "span": [
+        176,
+        189
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "Push new rule to the end of chain.",
+      "doc": "Push new rule to the end of chain.\n\n:param ruleName: new rule will be added to the end of chain.\n:param fn: new rule function.\n:param options: new rule options (not mandatory)."
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.enable",
+      "signature": "(self, names: str | Iterable[str], ignoreInvalid: bool=False) -> list[str]",
+      "span": [
+        191,
+        213
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 38 words",
+      "intent": "Enable rules with given names.",
+      "doc": "Enable rules with given names.\n\n:param names: name or list of rule names to enable.\n:param ignoreInvalid: ignore errors when rule not found\n:raises: KeyError if name not found and not ignoreInvalid\n:return: list of found rule names"
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.enableOnly",
+      "signature": "(self, names: str | Iterable[str], ignoreInvalid: bool=False) -> list[str]",
+      "span": [
+        215,
+        229
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 42 words",
+      "intent": "Enable rules with given names, and disable everything else.",
+      "doc": "Enable rules with given names, and disable everything else.\n\n:param names: name or list of rule names to enable.\n:param ignoreInvalid: ignore errors when rule not found\n:raises: KeyError if name not found and not ignoreInvalid\n:return: list of found rule names"
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.disable",
+      "signature": "(self, names: str | Iterable[str], ignoreInvalid: bool=False) -> list[str]",
+      "span": [
+        231,
+        253
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 38 words",
+      "intent": "Disable rules with given names.",
+      "doc": "Disable rules with given names.\n\n:param names: name or list of rule names to enable.\n:param ignoreInvalid: ignore errors when rule not found\n:raises: KeyError if name not found and not ignoreInvalid\n:return: list of found rule names"
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.getRules",
+      "signature": "(self, chainName: str='') -> list[RuleFuncTv]",
+      "span": [
+        255,
+        267
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Return array of active functions (rules) for given chain name.",
+      "doc": "Return array of active functions (rules) for given chain name.\nIt analyzes rules configuration, compiles caches if not exists and returns result.\n\nDefault chain name is `''` (empty string). It can't be skipped.\nThat's done intentionally, to keep signature monomorphic for high speed."
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.get_all_rules",
+      "signature": "(self) -> list[str]",
+      "span": [
+        269,
+        271
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return all available rule names.",
+      "doc": "Return all available rule names."
+    },
+    {
+      "module": "markdown_it/ruler.py",
+      "qualname": "Ruler.get_active_rules",
+      "signature": "(self) -> list[str]",
+      "span": [
+        273,
+        275
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the active rule names.",
+      "doc": "Return the active rule names."
+    },
+    {
+      "module": "markdown_it/rules_block/blockquote.py",
+      "qualname": "blockquote",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        12,
+        340
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "blockquote (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/code.py",
+      "qualname": "code",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        10,
+        36
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "code (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/fence.py",
+      "qualname": "make_fence_rule",
+      "signature": "(*, markers: tuple[str, ...]=('~', '`'), token_type: str='fence', exact_match: bool=False, disallow_marker_in_info: tuple[str, ...]=('`',), min_markers: int=3) -> Callable[[StateBlock, int, int, bool], bool]",
+      "span": [
+        12,
+        142
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 146 words",
+      "intent": "Create a fence parsing rule with configurable options.",
+      "doc": "Create a fence parsing rule with configurable options.\n\n:param markers: Tuple of single characters that can be used as fence markers.\n:param token_type: The token type name to emit (e.g. \"fence\", \"colon_fence\").\n:param exact_match: If True, the closing fence must have exactly the same\n    number of marker characters as the opening fence (not \"at least as many\").\n    This enables nesting of fences with different marker counts.\n:param disallow_marker_in_info: Tuple of marker characters that are not allowed\n    to appear in the info string. The check only applies when the actual opening\n    marker is in this tuple (e.g. a tilde fence is unaffected by ``\"`\"`` being\n    listed). Per CommonMark, backtick fences cannot have backticks in the info\n    string. Use ``()`` to disable this restriction.\n:param min_markers: Minimum number of marker characters to form a fence.\n:return: A block rule function with signature\n    ``(state, startLine, endLine, silent) -> bool``."
+    },
+    {
+      "module": "markdown_it/rules_block/heading.py",
+      "qualname": "heading",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        13,
+        69
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "heading (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/hr.py",
+      "qualname": "hr",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        14,
+        56
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "hr (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/html_block.py",
+      "qualname": "html_block",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        34,
+        90
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "html block (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/lheading.py",
+      "qualname": "lheading",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        9,
+        86
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "lheading (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/list.py",
+      "qualname": "skipBulletListMarker",
+      "signature": "(state: StateBlock, startLine: int) -> int",
+      "span": [
+        12,
+        32
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "skipBulletListMarker (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/list.py",
+      "qualname": "skipOrderedListMarker",
+      "signature": "(state: StateBlock, startLine: int) -> int",
+      "span": [
+        37,
+        85
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "skipOrderedListMarker (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/list.py",
+      "qualname": "markTightParagraphs",
+      "signature": "(state: StateBlock, idx: int) -> None",
+      "span": [
+        88,
+        98
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "markTightParagraphs (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/list.py",
+      "qualname": "list_block",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        101,
+        383
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "list block (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/paragraph.py",
+      "qualname": "paragraph",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        10,
+        66
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "paragraph (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/reference.py",
+      "qualname": "reference",
+      "signature": "(state: StateBlock, startLine: int, _endLine: int, silent: bool) -> bool",
+      "span": [
+        9,
+        192
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "reference (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/reference.py",
+      "qualname": "getNextLine",
+      "signature": "(state: StateBlock, nextLine: int) -> None | str",
+      "span": [
+        195,
+        235
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getNextLine (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.push",
+      "signature": "(self, ttype: str, tag: str, nesting: Literal[-1, 0, 1]) -> Token",
+      "span": [
+        119,
+        129
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Push new token to \"stream\".",
+      "doc": "Push new token to \"stream\"."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.isEmpty",
+      "signature": "(self, line: int) -> bool",
+      "span": [
+        131,
+        133
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": ".",
+      "doc": "."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.skipEmptyLines",
+      "signature": "(self, from_pos: int) -> int",
+      "span": [
+        135,
+        146
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": ".",
+      "doc": "."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.skipSpaces",
+      "signature": "(self, pos: int) -> int",
+      "span": [
+        148,
+        158
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip spaces from given position.",
+      "doc": "Skip spaces from given position."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.skipSpacesBack",
+      "signature": "(self, pos: int, minimum: int) -> int",
+      "span": [
+        160,
+        168
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip spaces from given position in reverse.",
+      "doc": "Skip spaces from given position in reverse."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.skipChars",
+      "signature": "(self, pos: int, code: int) -> int",
+      "span": [
+        170,
+        180
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip character code from given position.",
+      "doc": "Skip character code from given position."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.skipCharsStr",
+      "signature": "(self, pos: int, ch: str) -> int",
+      "span": [
+        182,
+        192
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip character string from given position.",
+      "doc": "Skip character string from given position."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.skipCharsBack",
+      "signature": "(self, pos: int, code: int, minimum: int) -> int",
+      "span": [
+        194,
+        202
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip character code reverse from given position - 1.",
+      "doc": "Skip character code reverse from given position - 1."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.skipCharsStrBack",
+      "signature": "(self, pos: int, ch: str, minimum: int) -> int",
+      "span": [
+        204,
+        212
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Skip character string reverse from given position - 1.",
+      "doc": "Skip character string reverse from given position - 1."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.getLines",
+      "signature": "(self, begin: int, end: int, indent: int, keepLastLF: bool) -> str",
+      "span": [
+        214,
+        255
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Cut lines range from source.",
+      "doc": "Cut lines range from source."
+    },
+    {
+      "module": "markdown_it/rules_block/state_block.py",
+      "qualname": "StateBlock.is_code_block",
+      "signature": "(self, line: int) -> bool",
+      "span": [
+        257,
+        261
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 23 words",
+      "intent": "Check if line is a code block,",
+      "doc": "Check if line is a code block,\ni.e. the code block rule is enabled and text is indented by more than 3 spaces."
+    },
+    {
+      "module": "markdown_it/rules_block/table.py",
+      "qualname": "getLine",
+      "signature": "(state: StateBlock, line: int) -> str",
+      "span": [
+        20,
+        25
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getLine (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/table.py",
+      "qualname": "escapedSplit",
+      "signature": "(string: str) -> list[str]",
+      "span": [
+        28,
+        56
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "escapedSplit (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_block/table.py",
+      "qualname": "table",
+      "signature": "(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool",
+      "span": [
+        59,
+        250
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "table (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/block.py",
+      "qualname": "block",
+      "signature": "(state: StateCore) -> None",
+      "span": [
+        5,
+        13
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "block (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/inline.py",
+      "qualname": "inline",
+      "signature": "(state: StateCore) -> None",
+      "span": [
+        4,
+        10
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Parse inlines",
+      "doc": "Parse inlines"
+    },
+    {
+      "module": "markdown_it/rules_core/linkify.py",
+      "qualname": "linkify",
+      "signature": "(state: StateCore) -> None",
+      "span": [
+        15,
+        141
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Rule for identifying plain-text links.",
+      "doc": "Rule for identifying plain-text links."
+    },
+    {
+      "module": "markdown_it/rules_core/normalize.py",
+      "qualname": "normalize",
+      "signature": "(state: StateCore) -> None",
+      "span": [
+        12,
+        19
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "invariant",
+      "auditability_why": "idempotent-by-name transform",
+      "intent": "normalize (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/replacements.py",
+      "qualname": "replaceFn",
+      "signature": "(match: re.Match[str]) -> str",
+      "span": [
+        59,
+        60
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "replaceFn (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/replacements.py",
+      "qualname": "replace_scoped",
+      "signature": "(inlineTokens: list[Token]) -> None",
+      "span": [
+        63,
+        74
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "replace scoped (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/replacements.py",
+      "qualname": "replace_rare",
+      "signature": "(inlineTokens: list[Token]) -> None",
+      "span": [
+        77,
+        110
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "replace rare (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/replacements.py",
+      "qualname": "replace",
+      "signature": "(state: StateCore) -> None",
+      "span": [
+        113,
+        127
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "replace (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/smartquotes.py",
+      "qualname": "replaceAt",
+      "signature": "(string: str, index: int, ch: str) -> str",
+      "span": [
+        17,
+        21
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "replaceAt (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/smartquotes.py",
+      "qualname": "process_inlines",
+      "signature": "(tokens: list[Token], state: StateCore) -> None",
+      "span": [
+        24,
+        191
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "process inlines (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/smartquotes.py",
+      "qualname": "smartquotes",
+      "signature": "(state: StateCore) -> None",
+      "span": [
+        194,
+        202
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "smartquotes (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_core/text_join.py",
+      "qualname": "text_join",
+      "signature": "(state: StateCore) -> None",
+      "span": [
+        15,
+        53
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Join raw text for escape sequences (`text_special`) tokens with the rest of the text",
+      "doc": "Join raw text for escape sequences (`text_special`) tokens with the rest of the text"
+    },
+    {
+      "module": "markdown_it/rules_inline/autolink.py",
+      "qualname": "autolink",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        12,
+        77
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "autolink (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/backticks.py",
+      "qualname": "backtick",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        9,
+        72
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "backtick (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/balance_pairs.py",
+      "qualname": "processDelimiters",
+      "signature": "(state: StateInline, delimiters: list[Delimiter]) -> None",
+      "span": [
+        8,
+        124
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "For each opening emphasis-like marker find a matching closing one.",
+      "doc": "For each opening emphasis-like marker find a matching closing one."
+    },
+    {
+      "module": "markdown_it/rules_inline/balance_pairs.py",
+      "qualname": "link_pairs",
+      "signature": "(state: StateInline) -> None",
+      "span": [
+        127,
+        138
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "link pairs (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/emphasis.py",
+      "qualname": "tokenize",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        8,
+        37
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Insert each marker as a separate text token, and add it to delimiter list",
+      "doc": "Insert each marker as a separate text token, and add it to delimiter list"
+    },
+    {
+      "module": "markdown_it/rules_inline/emphasis.py",
+      "qualname": "postProcess",
+      "signature": "(state: StateInline) -> None",
+      "span": [
+        96,
+        102
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Walk through delimiter list and replace text tokens with tags.",
+      "doc": "Walk through delimiter list and replace text tokens with tags."
+    },
+    {
+      "module": "markdown_it/rules_inline/entity.py",
+      "qualname": "entity",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        12,
+        53
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "entity (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/escape.py",
+      "qualname": "escape",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        9,
+        57
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Process escaped chars and hardbreaks.",
+      "doc": "Process escaped chars and hardbreaks."
+    },
+    {
+      "module": "markdown_it/rules_inline/fragments_join.py",
+      "qualname": "fragments_join",
+      "signature": "(state: StateInline) -> None",
+      "span": [
+        4,
+        54
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 63 words",
+      "intent": "Clean up tokens after emphasis and strikethrough postprocessing:",
+      "doc": "Clean up tokens after emphasis and strikethrough postprocessing:\nmerge adjacent text nodes into one and re-calculate all token levels\n\nThis is necessary because initially emphasis delimiter markers (``*, _, ~``)\nare treated as their own separate text tokens. Then emphasis rule either\nleaves them as text (needed to merge with adjacent text) or turns them\ninto opening/closing tags (which messes up levels inside)."
+    },
+    {
+      "module": "markdown_it/rules_inline/html_inline.py",
+      "qualname": "isLetter",
+      "signature": "(ch: int) -> bool",
+      "span": [
+        7,
+        10
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "isLetter (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/html_inline.py",
+      "qualname": "html_inline",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        13,
+        43
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "html inline (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/image.py",
+      "qualname": "image",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        9,
+        148
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "image (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/link.py",
+      "qualname": "link",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        7,
+        149
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "link (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/linkify.py",
+      "qualname": "linkify",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        11,
+        62
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Rule for identifying plain-text links.",
+      "doc": "Rule for identifying plain-text links."
+    },
+    {
+      "module": "markdown_it/rules_inline/newline.py",
+      "qualname": "newline",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        7,
+        44
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "newline (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/state_inline.py",
+      "qualname": "StateInline.pushPending",
+      "signature": "(self) -> Token",
+      "span": [
+        84,
+        90
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "pushPending (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/rules_inline/state_inline.py",
+      "qualname": "StateInline.push",
+      "signature": "(self, ttype: str, tag: str, nesting: Literal[-1, 0, 1]) -> Token",
+      "span": [
+        92,
+        119
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Push new token to \"stream\".",
+      "doc": "Push new token to \"stream\".\nIf pending text exists - flush it as text token"
+    },
+    {
+      "module": "markdown_it/rules_inline/state_inline.py",
+      "qualname": "StateInline.scanDelims",
+      "signature": "(self, start: int, canSplitWord: bool) -> Scanned",
+      "span": [
+        121,
+        167
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 47 words",
+      "intent": "Scan a sequence of emphasis-like markers, and determine whether",
+      "doc": "Scan a sequence of emphasis-like markers, and determine whether\nit can start an emphasis sequence or end an emphasis sequence.\n\n - start - position to scan from (it should point at a valid marker);\n - canSplitWord - determine if these markers can be found inside a word"
+    },
+    {
+      "module": "markdown_it/rules_inline/strikethrough.py",
+      "qualname": "tokenize",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        7,
+        82
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 43 words",
+      "intent": "Insert each marker as a separate text token, and add it to delimiter list.",
+      "doc": "Insert each marker as a separate text token, and add it to delimiter list.\n\nWhen the ``strikethrough_single_tilde`` option is enabled on the\n``MarkdownIt`` instance, single ``~`` delimiters are also accepted and\nruns of three or more tildes are rejected (matching GitHub's rendering behaviour)."
+    },
+    {
+      "module": "markdown_it/rules_inline/strikethrough.py",
+      "qualname": "postProcess",
+      "signature": "(state: StateInline) -> None",
+      "span": [
+        158,
+        173
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Walk through delimiter list and replace text tokens with tags.",
+      "doc": "Walk through delimiter list and replace text tokens with tags."
+    },
+    {
+      "module": "markdown_it/rules_inline/text.py",
+      "qualname": "text",
+      "signature": "(state: StateInline, silent: bool) -> bool",
+      "span": [
+        8,
+        23
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "text (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "convert_attrs",
+      "signature": "(value: Any) -> Any",
+      "span": [
+        9,
+        18
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 18 words",
+      "intent": "Convert Token.attrs set as ``None`` or ``[[key, value], ...]`` to a dict.",
+      "doc": "Convert Token.attrs set as ``None`` or ``[[key, value], ...]`` to a dict.\n\nThis improves compatibility with upstream markdown-it."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.attrIndex",
+      "signature": "(self, name: str) -> int",
+      "span": [
+        80,
+        87
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "attrIndex (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.attrItems",
+      "signature": "(self) -> list[tuple[str, str | int | float]]",
+      "span": [
+        89,
+        91
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Get (key, value) list of attrs.",
+      "doc": "Get (key, value) list of attrs."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.attrPush",
+      "signature": "(self, attrData: tuple[str, str | int | float]) -> None",
+      "span": [
+        93,
+        96
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Add `[ name, value ]` attribute to list. Init attrs if necessary.",
+      "doc": "Add `[ name, value ]` attribute to list. Init attrs if necessary."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.attrSet",
+      "signature": "(self, name: str, value: str | int | float) -> None",
+      "span": [
+        98,
+        100
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Set `name` attribute to `value`. Override old value if exists.",
+      "doc": "Set `name` attribute to `value`. Override old value if exists."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.attrGet",
+      "signature": "(self, name: str) -> None | str | int | float",
+      "span": [
+        102,
+        104
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Get the value of attribute `name`, or null if it does not exist.",
+      "doc": "Get the value of attribute `name`, or null if it does not exist."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.attrJoin",
+      "signature": "(self, name: str, value: str) -> None",
+      "span": [
+        106,
+        119
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 20 words",
+      "intent": "Join value to existing attribute via space.",
+      "doc": "Join value to existing attribute via space.\nOr create new attribute if not exists.\nUseful to operate with token classes."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.copy",
+      "signature": "(self, **changes: Any) -> Token",
+      "span": [
+        121,
+        123
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return a shallow copy of the instance.",
+      "doc": "Return a shallow copy of the instance."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.as_dict",
+      "signature": "(self, *, children: bool=True, as_upstream: bool=True, meta_serializer: Callable[[dict[Any, Any]], Any] | None=None, filter: Callable[[str, Any], bool] | None=None, dict_factory: Callable[..., MutableMapping[str, Any]]=dict) -> MutableMapping[str, Any]",
+      "span": [
+        125,
+        170
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 89 words",
+      "intent": "Return the token as a dictionary.",
+      "doc": "Return the token as a dictionary.\n\n:param children: Also convert children to dicts\n:param as_upstream: Ensure the output dictionary is equal to that created by markdown-it\n    For example, attrs are converted to null or lists\n:param meta_serializer: hook for serializing ``Token.meta``\n:param filter: A callable whose return code determines whether an\n    attribute or element is included (``True``) or dropped (``False``).\n    Is called with the (key, value) pair.\n:param dict_factory: A callable to produce dictionaries from.\n    For example, to produce ordered dictionaries instead of normal Python\n    dictionaries, pass in ``collections.OrderedDict``."
+    },
+    {
+      "module": "markdown_it/token.py",
+      "qualname": "Token.from_dict",
+      "signature": "(cls, dct: MutableMapping[str, Any]) -> Token",
+      "span": [
+        173,
+        178
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Convert a dict to a Token.",
+      "doc": "Convert a dict to a Token."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.to_tokens",
+      "signature": "(self: _NodeType) -> list[Token]",
+      "span": [
+        90,
+        108
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: token_list.append()"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Recover the linear token stream.",
+      "doc": "Recover the linear token stream."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.children",
+      "signature": "(self: _NodeType) -> list[_NodeType]",
+      "span": [
+        111,
+        112
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "children (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.children",
+      "signature": "(self: _NodeType, value: list[_NodeType]) -> None",
+      "span": [
+        115,
+        116
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "children (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.parent",
+      "signature": "(self: _NodeType) -> _NodeType | None",
+      "span": [
+        119,
+        120
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parent (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.parent",
+      "signature": "(self: _NodeType, value: _NodeType | None) -> None",
+      "span": [
+        123,
+        124
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "parent (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.is_root",
+      "signature": "(self) -> bool",
+      "span": [
+        127,
+        129
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Is the node a special root node?",
+      "doc": "Is the node a special root node?"
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.is_nested",
+      "signature": "(self) -> bool",
+      "span": [
+        132,
+        139
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 39 words",
+      "intent": "Is this node nested?.",
+      "doc": "Is this node nested?.\n\nReturns `True` if the node represents a `Token` pair and tokens in the\nsequence between them, where `Token.nesting` of the first `Token` in\nthe pair is 1 and nesting of the other `Token` is -1."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.siblings",
+      "signature": "(self: _NodeType) -> Sequence[_NodeType]",
+      "span": [
+        142,
+        149
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Get siblings of the node.",
+      "doc": "Get siblings of the node.\n\nGets the whole group of siblings, including self."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.type",
+      "signature": "(self) -> str",
+      "span": [
+        152,
+        165
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 40 words",
+      "intent": "Get a string type of the represented syntax.",
+      "doc": "Get a string type of the represented syntax.\n\n- \"root\" for root nodes\n- `Token.type` if the node represents an unnested token\n- `Token.type` of the opening token, with \"_open\" suffix stripped, if\n    the node represents a nester token pair"
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.next_sibling",
+      "signature": "(self: _NodeType) -> _NodeType | None",
+      "span": [
+        168,
+        176
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Get the next node in the sequence of siblings.",
+      "doc": "Get the next node in the sequence of siblings.\n\nReturns `None` if this is the last sibling."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.previous_sibling",
+      "signature": "(self: _NodeType) -> _NodeType | None",
+      "span": [
+        179,
+        187
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 17 words",
+      "intent": "Get the previous node in the sequence of siblings.",
+      "doc": "Get the previous node in the sequence of siblings.\n\nReturns `None` if this is the first sibling."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.pretty",
+      "signature": "(self, *, indent: int=2, show_text: bool=False, _current: int=0) -> str",
+      "span": [
+        222,
+        242
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Create an XML style string of the tree.",
+      "doc": "Create an XML style string of the tree."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.walk",
+      "signature": "(self: _NodeType, *, include_self: bool=True) -> Generator[_NodeType, None, None]",
+      "span": [
+        244,
+        255
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Recursively yield all descendant nodes in the tree starting at self.",
+      "doc": "Recursively yield all descendant nodes in the tree starting at self.\n\nThe order mimics the order of the underlying linear token\nstream (i.e. depth first)."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.tag",
+      "signature": "(self) -> str",
+      "span": [
+        276,
+        278
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "html tag name, e.g. \"p\"",
+      "doc": "html tag name, e.g. \"p\""
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.attrs",
+      "signature": "(self) -> dict[str, str | int | float]",
+      "span": [
+        281,
+        283
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Html attributes.",
+      "doc": "Html attributes."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.attrGet",
+      "signature": "(self, name: str) -> None | str | int | float",
+      "span": [
+        285,
+        287
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Get the value of attribute `name`, or null if it does not exist.",
+      "doc": "Get the value of attribute `name`, or null if it does not exist."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.map",
+      "signature": "(self) -> tuple[int, int] | None",
+      "span": [
+        290,
+        296
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Source map info. Format: `tuple[ line_begin, line_end ]`",
+      "doc": "Source map info. Format: `tuple[ line_begin, line_end ]`"
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.level",
+      "signature": "(self) -> int",
+      "span": [
+        299,
+        301
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "nesting level, the same as `state.level`",
+      "doc": "nesting level, the same as `state.level`"
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.content",
+      "signature": "(self) -> str",
+      "span": [
+        304,
+        307
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 16 words",
+      "intent": "In a case of self-closing tag (code, html, fence, etc.), it",
+      "doc": "In a case of self-closing tag (code, html, fence, etc.), it\nhas contents of this tag."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.markup",
+      "signature": "(self) -> str",
+      "span": [
+        310,
+        312
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "'*' or '_' for emphasis, fence string for fence, etc.",
+      "doc": "'*' or '_' for emphasis, fence string for fence, etc."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.info",
+      "signature": "(self) -> str",
+      "span": [
+        315,
+        317
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "fence infostring",
+      "doc": "fence infostring"
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.meta",
+      "signature": "(self) -> dict[Any, Any]",
+      "span": [
+        320,
+        322
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "A place for plugins to store an arbitrary data.",
+      "doc": "A place for plugins to store an arbitrary data."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.block",
+      "signature": "(self) -> bool",
+      "span": [
+        325,
+        327
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "True for block-level tokens, false for inline tokens.",
+      "doc": "True for block-level tokens, false for inline tokens."
+    },
+    {
+      "module": "markdown_it/tree.py",
+      "qualname": "SyntaxTreeNode.hidden",
+      "signature": "(self) -> bool",
+      "span": [
+        330,
+        333
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "If it's true, ignore this element when rendering.",
+      "doc": "If it's true, ignore this element when rendering.\nUsed for tight lists to hide paragraphs."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.maxNesting",
+      "signature": "(self) -> int",
+      "span": [
+        94,
+        96
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Internal protection, recursion limit.",
+      "doc": "Internal protection, recursion limit."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.maxNesting",
+      "signature": "(self, value: int) -> None",
+      "span": [
+        99,
+        100
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "maxNesting (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.html",
+      "signature": "(self) -> bool",
+      "span": [
+        103,
+        105
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Enable HTML tags in source.",
+      "doc": "Enable HTML tags in source."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.html",
+      "signature": "(self, value: bool) -> None",
+      "span": [
+        108,
+        109
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "html (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.linkify",
+      "signature": "(self) -> bool",
+      "span": [
+        112,
+        114
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Enable autoconversion of URL-like texts to links.",
+      "doc": "Enable autoconversion of URL-like texts to links."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.linkify",
+      "signature": "(self, value: bool) -> None",
+      "span": [
+        117,
+        118
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "linkify (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.typographer",
+      "signature": "(self) -> bool",
+      "span": [
+        121,
+        123
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Enable smartquotes and replacements.",
+      "doc": "Enable smartquotes and replacements."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.typographer",
+      "signature": "(self, value: bool) -> None",
+      "span": [
+        126,
+        127
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "typographer (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.quotes",
+      "signature": "(self) -> str",
+      "span": [
+        130,
+        132
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Quote characters.",
+      "doc": "Quote characters."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.quotes",
+      "signature": "(self, value: str) -> None",
+      "span": [
+        135,
+        136
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "quotes (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.xhtmlOut",
+      "signature": "(self) -> bool",
+      "span": [
+        139,
+        141
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Use '/' to close single tags (<br />).",
+      "doc": "Use '/' to close single tags (<br />)."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.xhtmlOut",
+      "signature": "(self, value: bool) -> None",
+      "span": [
+        144,
+        145
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "xhtmlOut (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.breaks",
+      "signature": "(self) -> bool",
+      "span": [
+        148,
+        150
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Convert newlines in paragraphs into <br>.",
+      "doc": "Convert newlines in paragraphs into <br>."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.breaks",
+      "signature": "(self, value: bool) -> None",
+      "span": [
+        153,
+        154
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "breaks (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.langPrefix",
+      "signature": "(self) -> str",
+      "span": [
+        157,
+        159
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "CSS language prefix for fenced blocks.",
+      "doc": "CSS language prefix for fenced blocks."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.langPrefix",
+      "signature": "(self, value: str) -> None",
+      "span": [
+        162,
+        163
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "langPrefix (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.highlight",
+      "signature": "(self) -> Callable[[str, str, str], str] | None",
+      "span": [
+        166,
+        168
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Highlighter function: (content, langName, langAttrs) -> escaped HTML.",
+      "doc": "Highlighter function: (content, langName, langAttrs) -> escaped HTML."
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "OptionsDict.highlight",
+      "signature": "(self, value: Callable[[str, str, str], str] | None) -> None",
+      "span": [
+        171,
+        172
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "highlight (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "markdown_it/utils.py",
+      "qualname": "read_fixture_file",
+      "signature": "(path: str | Path) -> list[list[Any]]",
+      "span": [
+        175,
+        194
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "read fixture file (no docstring)",
+      "doc": ""
+    }
+  ],
+  "summary": {
+    "total_public_functions": 207,
+    "auditability": {
+      "spec": 48,
+      "invariant": 8,
+      "none": 151
+    },
+    "deterministic": 200,
+    "auditable": 56
+  }
+}

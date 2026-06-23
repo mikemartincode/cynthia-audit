@@ -95,6 +95,110 @@ def _exc_stub(exc: Exception):
     return fake
 
 
+def test_exemplar_injection_is_role_scoped_and_cache_safe() -> None:
+    """#1 augmented-generation recall: each role's prompt receives ONLY its own exemplar half (so the
+    battery author never sees a reference — independence preserved), the exemplar rides the DYNAMIC
+    suffix so the STATIC contract prefix the passive cache keys on is byte-identical to the
+    no-exemplar prompt, and an absent half is simply not injected."""
+    captured: dict[str, str] = {}
+
+    def fake(model, system, user, **kw):
+        role = "battery" if "BATTERY" in user else "reference"
+        captured[role] = user
+        return {"code": GOOD_BATTERY if role == "battery" else GOOD_REF, "raw": "", "in_tok": 1,
+                "out_tok": 1, "cost": 0.0, "elapsed": 0.0}
+
+    real = author.call_model
+    REF_EX = "def ref_impl(arg):\n    return arg  # REF-EXEMPLAR-MARKER"
+    BAT_EX = "PROBE_INPUTS = []  # BAT-EXEMPLAR-MARKER"
+    try:
+        # baseline (no exemplar) — capture the contract prefix each role sends
+        author.call_model = fake
+        author._author_independent(ENTRY, "stub", "stub", shape="value")
+        base_ref, base_bat = captured["reference"], captured["battery"]
+
+        captured.clear()
+        author._author_independent(ENTRY, "stub", "stub", shape="value",
+                                   exemplar={"reference": REF_EX, "battery": BAT_EX})
+    finally:
+        author.call_model = real
+
+    # role-scoped: each marker lands ONLY in its own role's prompt
+    assert "REF-EXEMPLAR-MARKER" in captured["reference"]
+    assert "REF-EXEMPLAR-MARKER" not in captured["battery"]
+    assert "BAT-EXEMPLAR-MARKER" in captured["battery"]
+    assert "BAT-EXEMPLAR-MARKER" not in captured["reference"]
+    # cache-safe: the static contract prefix (everything before the spec's TARGET line) is unchanged
+    pfx = lambda s: s.split("TARGET BEHAVIOR")[0]
+    assert pfx(captured["reference"]) == pfx(base_ref)
+    assert pfx(captured["battery"]) == pfx(base_bat)
+    # the exemplar trails the spec (dynamic suffix), not the contract prefix
+    assert captured["reference"].index("REF-EXEMPLAR-MARKER") > captured["reference"].index("TARGET BEHAVIOR")
+
+    # absent half -> not injected (reference-only exemplar leaves the battery prompt clean)
+    captured.clear()
+    try:
+        author.call_model = fake
+        author._author_independent(ENTRY, "stub", "stub", shape="value",
+                                   exemplar={"reference": REF_EX})
+    finally:
+        author.call_model = real
+    assert "REF-EXEMPLAR-MARKER" in captured["reference"]
+    assert "EXAMPLE" not in captured["battery"]  # no battery exemplar framing at all
+
+
+def test_convention_hint() -> None:
+    """Multi-arg functions get the EXACT tuple layout pinned into the shared spec text
+    (the measured idna fix: 4/4 convention-mismatch REDs were multi-arg, 0/13 single-arg);
+    single-arg functions get NO hint; a garbage signature degrades to no hint, never raises."""
+    h = author._convention_hint({"qualname": "encode",
+                                 "signature": "(s, strict=False, uts46=False)"})
+    assert "EXACTLY 3 items" in h and "arg = (s, strict, uts46)" in h, h
+    assert "strict=False" in h and "uts46=False" in h, h
+
+    h = author._convention_hint({"qualname": "URL.click", "signature": "(self, href)"})
+    assert "EXACTLY 2 items" in h and "<the object's textual form>, href" in h, h
+
+    h = author._convention_hint({"qualname": "URL.child", "signature": "(self, *segments)"})
+    assert "AT LEAST 1" in h and "*segments" in h, h
+
+    assert author._convention_hint({"qualname": "parse_host", "signature": "(host)"}) == ""
+    assert author._convention_hint({"qualname": "URL.scheme", "signature": "(self)"}) == ""
+    assert author._convention_hint({"qualname": "x", "signature": "(not (valid"}) == ""
+
+    # build_spec carries the hint for multi-arg entries and stays hint-free for single-arg
+    multi = {**ENTRY, "qualname": "encode", "signature": "(s, strict=False)"}
+    assert "CALLING CONVENTION" in author.build_spec(multi)
+    assert "CALLING CONVENTION" not in author.build_spec(ENTRY)
+    print("test_convention_hint: multi-arg pinned, single-arg untouched, garbage safe OK")
+
+
+def test_best_of_n_fallback_only() -> None:
+    """author_best_of_n(n=0) authors ZERO fast drafts and goes straight to the adaptive
+    thinking-ON fallback — the salvage-resume path uses this to pay only the fallback a
+    salvaged-RED function is still owed (its fast drafts already exist on disk, all RED)."""
+    calls = []
+    real = author.call_model
+
+    def fake(model, system, user, **kw):
+        calls.append(kw.get("thinking"))
+        code = GOOD_BATTERY if "BATTERY" in user else GOOD_REF
+        return {"code": code, "raw": code, "in_tok": 100, "out_tok": 200,
+                "cost": 0.001, "elapsed": 0.0}
+
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            author.call_model = fake
+            rec = author.author_best_of_n(ENTRY, "stub-model", Path(td), n=0)
+        assert rec.green, rec.to_dict()
+        assert len(calls) == 2, calls  # ONE fallback draft = one ref call + one battery call
+        assert all(t == {"type": "adaptive"} for t in calls), calls
+        assert [a["attempt"] for a in rec.attempt_log] == ["adaptive_fallback"], rec.attempt_log
+    finally:
+        author.call_model = real
+    print("test_best_of_n_fallback_only: n=0 -> adaptive fallback only, gates GREEN OK")
+
+
 def main() -> None:
     real = author.call_model
     try:
@@ -141,6 +245,8 @@ def main() -> None:
             print("RED (gateway) ok")
     finally:
         author.call_model = real
+    test_convention_hint()
+    test_best_of_n_fallback_only()
     print("test_author: OK")
 
 

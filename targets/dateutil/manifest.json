@@ -1,0 +1,1192 @@
+{
+  "target": "dateutil",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/dateutil/repo",
+  "commit": "48bd1af97e71baf8e96fce5b663d589caac8f147",
+  "package_dir": "src/dateutil",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "src/dateutil/easter.py",
+      "qualname": "easter",
+      "signature": "(year, method=EASTER_WESTERN)",
+      "span": [
+        16,
+        89
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 136 words",
+      "intent": "This method was ported from the work done by GM Arts,",
+      "doc": "This method was ported from the work done by GM Arts,\non top of the algorithm by Claus Tondering, which was\nbased in part on the algorithm of Ouding (1940), as\nquoted in \"Explanatory Supplement to the Astronomical\nAlmanac\", P.  Kenneth Seidelmann, editor.\n\nThis algorithm implements three different Easter\ncalculation methods:\n\n1. Original calculation in Julian calendar, valid in\n   dates after 326 AD\n2. Original method, with date converted to Gregorian\n   calendar, valid in years 1583 to 4099\n3. Revised method, in Gregorian calendar, valid in\n   years 1583 to 4099 as well\n\nThese methods are represented by the constants:\n\n* ``EASTER_JULIAN   = 1``\n* ``EASTER_ORTHODOX = 2``\n* ``EASTER_WESTERN  = 3``\n\nThe default method is method 3.\n\nMore about the algorithm may be found at:\n\n`GM Arts: Easter Algorithms <http://www.gmarts.org/index.php?go=415>`_\n\nand\n\n`The Calendar FAQ: Easter <https://www.tondering.dk/claus/cal/easter.php>`_"
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.jump",
+      "signature": "(self, name)",
+      "span": [
+        319,
+        320
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "jump (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.weekday",
+      "signature": "(self, name)",
+      "span": [
+        322,
+        327
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "weekday (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.month",
+      "signature": "(self, name)",
+      "span": [
+        329,
+        334
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "month (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.hms",
+      "signature": "(self, name)",
+      "span": [
+        336,
+        340
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "hms (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.ampm",
+      "signature": "(self, name)",
+      "span": [
+        342,
+        346
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "ampm (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.pertain",
+      "signature": "(self, name)",
+      "span": [
+        348,
+        349
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "pertain (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.utczone",
+      "signature": "(self, name)",
+      "span": [
+        351,
+        352
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "utczone (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.tzoffset",
+      "signature": "(self, name)",
+      "span": [
+        354,
+        358
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tzoffset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.convertyear",
+      "signature": "(self, year, century_specified=False)",
+      "span": [
+        360,
+        378
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Converts two-digit years to year within [-50, 49]",
+      "doc": "Converts two-digit years to year within [-50, 49]\nrange of self._year (current local time)"
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parserinfo.validate",
+      "signature": "(self, res)",
+      "span": [
+        380,
+        391
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "validate (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parser.parse",
+      "signature": "(self, timestr, default=None, ignoretz=False, tzinfos=None, **kwargs)",
+      "span": [
+        572,
+        659
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 285 words",
+      "intent": "Parse the date/time string into a :class:`datetime.datetime` object.",
+      "doc": "Parse the date/time string into a :class:`datetime.datetime` object.\n\n:param timestr:\n    Any date/time string using the supported formats.\n\n:param default:\n    The default datetime object, if this is a datetime object and not\n    ``None``, elements specified in ``timestr`` replace elements in the\n    default object.\n\n:param ignoretz:\n    If set ``True``, time zones in parsed strings are ignored and a\n    naive :class:`datetime.datetime` object is returned.\n\n:param tzinfos:\n    Additional time zone names / aliases which may be present in the\n    string. This argument maps time zone names (and optionally offsets\n    from those time zones) to time zones. This parameter can be a\n    dictionary with timezone aliases mapping time zone names to time\n    zones or a function taking two parameters (``tzname`` and\n    ``tzoffset``) and returning a time zone.\n\n    The timezones to which the names are mapped can be an integer\n    offset from UTC in seconds or a :class:`tzinfo` object.\n\n    .. doctest::\n       :options: +NORMALIZE_WHITESPACE\n\n        >>> from dateutil.parser import parse\n        >>> from dateutil.tz import gettz\n        >>> tzinfos = {\"BRST\": -7200, \"CST\": gettz(\"America/Chicago\")}\n        >>> parse(\"2012-01-19 17:21:00 BRST\", tzinfos=tzinfos)\n        datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))\n        >>> parse(\"2012-01-19 17:21:00 CST\", tzinfos=tzinfos)\n        datetime.datetime(2012, 1, 19, 17, 21,\n                          tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))\n\n    This parameter is ignored if ``ignoretz`` is set.\n\n:param \\*\\*kwargs:\n    Keyword arguments as passed to ``_parse()``.\n\n:return:\n    Returns a :class:`datetime.datetime` object or, if the\n    ``fuzzy_with_tokens`` option is ``True``, returns a tuple, the\n    first element being a :class:`datetime.datetime` object, the second\n    a tuple containing the fuzzy tokens.\n\n:raises ParserError:\n    Raised for invalid or unknown string format, if the provided\n    :class:`tzinfo` is not in a valid format, or if an invalid date\n    would be created.\n\n:raises TypeError:\n    Raised for non-string or character stream input.\n\n:raises OverflowError:\n    Raised if the parsed date exceeds the largest valid C integer on\n    your system."
+    },
+    {
+      "module": "src/dateutil/parser/_parser.py",
+      "qualname": "parse",
+      "signature": "(timestr, parserinfo=None, **kwargs)",
+      "span": [
+        1270,
+        1368
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 500 words",
+      "intent": "Parse a string in one of the supported formats, using the",
+      "doc": "Parse a string in one of the supported formats, using the\n``parserinfo`` parameters.\n\n:param timestr:\n    A string containing a date/time stamp.\n\n:param parserinfo:\n    A :class:`parserinfo` object containing parameters for the parser.\n    If ``None``, the default arguments to the :class:`parserinfo`\n    constructor are used.\n\nThe ``**kwargs`` parameter takes the following keyword arguments:\n\n:param default:\n    The default datetime object, if this is a datetime object and not\n    ``None``, elements specified in ``timestr`` replace elements in the\n    default object.\n\n:param ignoretz:\n    If set ``True``, time zones in parsed strings are ignored and a naive\n    :class:`datetime` object is returned.\n\n:param tzinfos:\n    Additional time zone names / aliases which may be present in the\n    string. This argument maps time zone names (and optionally offsets\n    from those time zones) to time zones. This parameter can be a\n    dictionary with timezone aliases mapping time zone names to time\n    zones or a function taking two parameters (``tzname`` and\n    ``tzoffset``) and returning a time zone.\n\n    The timezones to which the names are mapped can be an integer\n    offset from UTC in seconds or a :class:`tzinfo` object.\n\n    .. doctest::\n       :options: +NORMALIZE_WHITESPACE\n\n        >>> from dateutil.parser import parse\n        >>> from dateutil.tz import gettz\n        >>> tzinfos = {\"BRST\": -7200, \"CST\": gettz(\"America/Chicago\")}\n        >>> parse(\"2012-01-19 17:21:00 BRST\", tzinfos=tzinfos)\n        datetime.datetime(2012, 1, 19, 17, 21, tzinfo=tzoffset(u'BRST', -7200))\n        >>> parse(\"2012-01-19 17:21:00 CST\", tzinfos=tzinfos)\n        datetime.datetime(2012, 1, 19, 17, 21,\n                          tzinfo=tzfile('/usr/share/zoneinfo/America/Chicago'))\n\n    This parameter is ignored if ``ignoretz`` is set.\n\n:param dayfirst:\n    Whether to interpret the first value in an ambiguous 3-integer date\n    (e.g. 01/05/09) as the day (``True``) or month (``False``). If\n    ``yearfirst`` is set to ``True``, this distinguishes between YDM and\n    YMD. If set to ``None``, this value is retrieved from the current\n    :class:`parserinfo` object (which itself defaults to ``False``).\n\n:param yearfirst:\n    Whether to interpret the first value in an ambiguous 3-integer date\n    (e.g. 01/05/09) as the year. If ``True``, the first number is taken to\n    be the year, otherwise the last number is taken to be the year. If\n    this is set to ``None``, the value is retrieved from the current\n    :class:`parserinfo` object (which itself defaults to ``False``).\n\n:param fuzzy:\n    Whether to allow fuzzy parsing, allowing for string like \"Today is\n    January 1, 2047 at 8:21:00AM\".\n\n:param fuzzy_with_tokens:\n    If ``True``, ``fuzzy`` is automatically set to True, and the parser\n    will return a tuple where the first element is the parsed\n    :class:`datetime.datetime` datetimestamp and the second element is\n    a tuple containing the portions of the string which were ignored:\n\n    .. doctest::\n\n        >>> from dateutil.parser import parse\n        >>> parse(\"Today is January 1, 2047 at 8:21:00AM\", fuzzy_with_tokens=True)\n        (datetime.datetime(2047, 1, 1, 8, 21), (u'Today is ', u' ', u'at '))\n\n:return:\n    Returns a :class:`datetime.datetime` object or, if the\n    ``fuzzy_with_tokens`` option is ``True``, returns a tuple, the\n    first element being a :class:`datetime.datetime` object, the second\n    a tuple containing the fuzzy tokens.\n\n:raises ParserError:\n    Raised for invalid or unknown string formats, if the provided\n    :class:`tzinfo` is not in a valid format, or if an invalid date would\n    be created.\n\n:raises OverflowError:\n    Raised if the parsed date exceeds the largest valid C integer on\n    your system."
+    },
+    {
+      "module": "src/dateutil/parser/isoparser.py",
+      "qualname": "isoparser.isoparse",
+      "signature": "(self, dt_str)",
+      "span": [
+        60,
+        146
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 316 words",
+      "intent": "Parse an ISO-8601 datetime string into a :class:`datetime.datetime`.",
+      "doc": "Parse an ISO-8601 datetime string into a :class:`datetime.datetime`.\n\nAn ISO-8601 datetime string consists of a date portion, followed\noptionally by a time portion - the date and time portions are separated\nby a single character separator, which is ``T`` in the official\nstandard. Incomplete date formats (such as ``YYYY-MM``) may *not* be\ncombined with a time portion.\n\nSupported date formats are:\n\nCommon:\n\n- ``YYYY``\n- ``YYYY-MM``\n- ``YYYY-MM-DD`` or ``YYYYMMDD``\n\nUncommon:\n\n- ``YYYY-Www`` or ``YYYYWww`` - ISO week (day defaults to 0)\n- ``YYYY-Www-D`` or ``YYYYWwwD`` - ISO week and day\n\nThe ISO week and day numbering follows the same logic as\n:func:`datetime.date.isocalendar`.\n\nSupported time formats are:\n\n- ``hh``\n- ``hh:mm`` or ``hhmm``\n- ``hh:mm:ss`` or ``hhmmss``\n- ``hh:mm:ss.ssssss`` (Up to 6 sub-second digits)\n\nMidnight is a special case for `hh`, as the standard supports both\n00:00 and 24:00 as a representation. The decimal separator can be\neither a dot or a comma.\n\n\n.. caution::\n\n    Support for fractional components other than seconds is part of the\n    ISO-8601 standard, but is not currently implemented in this parser.\n\nSupported time zone offset formats are:\n\n- `Z` (UTC)\n- `\u00b1HH:MM`\n- `\u00b1HHMM`\n- `\u00b1HH`\n\nOffsets will be represented as :class:`dateutil.tz.tzoffset` objects,\nwith the exception of UTC, which will be represented as\n:class:`dateutil.tz.tzutc`. Time zone offsets equivalent to UTC (such\nas `+00:00`) will also be represented as :class:`dateutil.tz.tzutc`.\n\n:param dt_str:\n    A string or stream containing only an ISO-8601 datetime string\n\n:return:\n    Returns a :class:`datetime.datetime` representing the string.\n    Unspecified components default to their lowest value.\n\n.. warning::\n\n    As of version 2.7.0, the strictness of the parser should not be\n    considered a stable part of the contract. Any valid ISO-8601 string\n    that parses correctly with the default settings will continue to\n    parse correctly in future versions, but invalid strings that\n    currently fail (e.g. ``2017-01-01T00:00+00:00:00``) are not\n    guaranteed to continue failing in future versions if they encode\n    a valid date.\n\n.. versionadded:: 2.7.0"
+    },
+    {
+      "module": "src/dateutil/parser/isoparser.py",
+      "qualname": "isoparser.parse_isodate",
+      "signature": "(self, datestr)",
+      "span": [
+        149,
+        163
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Parse the date portion of an ISO string.",
+      "doc": "Parse the date portion of an ISO string.\n\n:param datestr:\n    The string portion of an ISO string, without a separator\n\n:return:\n    Returns a :class:`datetime.date` object"
+    },
+    {
+      "module": "src/dateutil/parser/isoparser.py",
+      "qualname": "isoparser.parse_isotime",
+      "signature": "(self, timestr)",
+      "span": [
+        166,
+        179
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Parse the time portion of an ISO string.",
+      "doc": "Parse the time portion of an ISO string.\n\n:param timestr:\n    The time portion of an ISO string, without a separator\n\n:return:\n    Returns a :class:`datetime.time` object"
+    },
+    {
+      "module": "src/dateutil/parser/isoparser.py",
+      "qualname": "isoparser.parse_tzstr",
+      "signature": "(self, tzstr, zero_as_utc=True)",
+      "span": [
+        182,
+        199
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 51 words",
+      "intent": "Parse a valid ISO time zone string.",
+      "doc": "Parse a valid ISO time zone string.\n\nSee :func:`isoparser.isoparse` for details on supported formats.\n\n:param tzstr:\n    A string representing an ISO time zone offset\n\n:param zero_as_utc:\n    Whether to return :class:`dateutil.tz.tzutc` for zero-offset zones\n\n:return:\n    Returns :class:`dateutil.tz.tzoffset` for offsets and\n    :class:`dateutil.tz.tzutc` for ``Z`` and (if ``zero_as_utc`` is\n    specified) offsets equivalent to UTC."
+    },
+    {
+      "module": "src/dateutil/relativedelta.py",
+      "qualname": "relativedelta.weeks",
+      "signature": "(self)",
+      "span": [
+        265,
+        266
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "weeks (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/relativedelta.py",
+      "qualname": "relativedelta.weeks",
+      "signature": "(self, value)",
+      "span": [
+        269,
+        270
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "weeks (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/relativedelta.py",
+      "qualname": "relativedelta.normalized",
+      "signature": "(self)",
+      "span": [
+        282,
+        315
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Return a version of this object represented entirely using integer",
+      "doc": "Return a version of this object represented entirely using integer\nvalues for the relative attributes.\n\n>>> relativedelta(days=1.5, hours=2).normalized()\nrelativedelta(days=+1, hours=+14)\n\n:return:\n    Returns a :class:`dateutil.relativedelta.relativedelta` object."
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rrulebase.count",
+      "signature": "(self)",
+      "span": [
+        183,
+        189
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 22 words",
+      "intent": "Returns the number of recurrences in this set. It will have go",
+      "doc": "Returns the number of recurrences in this set. It will have go\nthrough the whole recurrence, if this hasn't been done before. "
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rrulebase.before",
+      "signature": "(self, dt, inc=False)",
+      "span": [
+        191,
+        210
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "Returns the last recurrence before the given datetime instance. The",
+      "doc": "Returns the last recurrence before the given datetime instance. The\ninc keyword defines what happens if dt is an occurrence. With\ninc=True, if dt itself is an occurrence, it will be returned. "
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rrulebase.after",
+      "signature": "(self, dt, inc=False)",
+      "span": [
+        212,
+        228
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 32 words",
+      "intent": "Returns the first recurrence after the given datetime instance. The",
+      "doc": "Returns the first recurrence after the given datetime instance. The\ninc keyword defines what happens if dt is an occurrence. With\ninc=True, if dt itself is an occurrence, it will be returned.  "
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rrulebase.xafter",
+      "signature": "(self, dt, count=None, inc=False)",
+      "span": [
+        230,
+        269
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 73 words",
+      "intent": "Generator which yields up to `count` recurrences after the given",
+      "doc": "Generator which yields up to `count` recurrences after the given\ndatetime instance, equivalent to `after`.\n\n:param dt:\n    The datetime at which to start generating recurrences.\n\n:param count:\n    The maximum number of recurrences to generate. If `None` (default),\n    dates are generated until the recurrence rule is exhausted.\n\n:param inc:\n    If `dt` is an instance of the rule and `inc` is `True`, it is\n    included in the output.\n\n:yields: Yields a sequence of `datetime` objects."
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rrulebase.between",
+      "signature": "(self, after, before, inc=False, count=1)",
+      "span": [
+        271,
+        302
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 41 words",
+      "intent": "Returns all the occurrences of the rrule between after and before.",
+      "doc": "Returns all the occurrences of the rrule between after and before.\nThe inc keyword defines what happens if after and/or before are\nthemselves occurrences. With inc=True, they will be included in the\nlist, if they are found in the recurrence set. "
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rrule.replace",
+      "signature": "(self, **kwargs)",
+      "span": [
+        762,
+        774
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 19 words",
+      "intent": "Return new rrule with same attributes except for those attributes given new",
+      "doc": "Return new rrule with same attributes except for those attributes given new\nvalues by whichever keyword arguments are specified."
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rruleset.rrule",
+      "signature": "(self, rrule)",
+      "span": [
+        1357,
+        1360
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Include the given :py:class:`rrule` instance in the recurrence set",
+      "doc": "Include the given :py:class:`rrule` instance in the recurrence set\ngeneration. "
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rruleset.rdate",
+      "signature": "(self, rdate)",
+      "span": [
+        1363,
+        1366
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Include the given :py:class:`datetime` instance in the recurrence",
+      "doc": "Include the given :py:class:`datetime` instance in the recurrence\nset generation. "
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rruleset.exrule",
+      "signature": "(self, exrule)",
+      "span": [
+        1369,
+        1374
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Include the given rrule instance in the recurrence set exclusion",
+      "doc": "Include the given rrule instance in the recurrence set exclusion\nlist. Dates which are part of the given recurrence rules will not\nbe generated, even if some inclusive rrule or rdate matches them."
+    },
+    {
+      "module": "src/dateutil/rrule.py",
+      "qualname": "rruleset.exdate",
+      "signature": "(self, exdate)",
+      "span": [
+        1377,
+        1381
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "Include the given datetime instance in the recurrence set",
+      "doc": "Include the given datetime instance in the recurrence set\nexclusion list. Dates included that way will not be generated,\neven if some inclusive rrule or rdate matches them. "
+    },
+    {
+      "module": "src/dateutil/tz/_common.py",
+      "qualname": "tzname_in_python2",
+      "signature": "(namefunc)",
+      "span": [
+        13,
+        30
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 25 words",
+      "intent": "Change unicode output into bytestrings in Python 2",
+      "doc": "Change unicode output into bytestrings in Python 2\n\ntzname() API changed in Python 3. It used to return bytes, but was changed\nto unicode strings"
+    },
+    {
+      "module": "src/dateutil/tz/_common.py",
+      "qualname": "tzrangebase.utcoffset",
+      "signature": "(self, dt)",
+      "span": [
+        292,
+        300
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "utcoffset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/_common.py",
+      "qualname": "tzrangebase.dst",
+      "signature": "(self, dt)",
+      "span": [
+        302,
+        310
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "dst (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/_common.py",
+      "qualname": "tzrangebase.tzname",
+      "signature": "(self, dt)",
+      "span": [
+        313,
+        317
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tzname (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/_common.py",
+      "qualname": "tzrangebase.fromutc",
+      "signature": "(self, dt)",
+      "span": [
+        319,
+        350
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Given a datetime in UTC, return local time",
+      "doc": "Given a datetime in UTC, return local time "
+    },
+    {
+      "module": "src/dateutil/tz/_common.py",
+      "qualname": "tzrangebase.is_ambiguous",
+      "signature": "(self, dt)",
+      "span": [
+        352,
+        372
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Whether or not the \"wall time\" of a given datetime is ambiguous in this",
+      "doc": "Whether or not the \"wall time\" of a given datetime is ambiguous in this\nzone.\n\n:param dt:\n    A :py:class:`datetime.datetime`, naive or time zone aware.\n\n\n:return:\n    Returns ``True`` if ambiguous, ``False`` otherwise.\n\n.. versionadded:: 2.6.0"
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzutc.utcoffset",
+      "signature": "(self, dt)",
+      "span": [
+        74,
+        75
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "utcoffset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzutc.dst",
+      "signature": "(self, dt)",
+      "span": [
+        77,
+        78
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "dst (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzutc.tzname",
+      "signature": "(self, dt)",
+      "span": [
+        81,
+        82
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tzname (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzutc.is_ambiguous",
+      "signature": "(self, dt)",
+      "span": [
+        84,
+        98
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Whether or not the \"wall time\" of a given datetime is ambiguous in this",
+      "doc": "Whether or not the \"wall time\" of a given datetime is ambiguous in this\nzone.\n\n:param dt:\n    A :py:class:`datetime.datetime`, naive or time zone aware.\n\n\n:return:\n    Returns ``True`` if ambiguous, ``False`` otherwise.\n\n.. versionadded:: 2.6.0"
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzutc.fromutc",
+      "signature": "(self, dt)",
+      "span": [
+        101,
+        106
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Fast track version of fromutc() returns the original ``dt`` object for",
+      "doc": "Fast track version of fromutc() returns the original ``dt`` object for\nany valid :py:class:`datetime.datetime` object."
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzoffset.utcoffset",
+      "signature": "(self, dt)",
+      "span": [
+        154,
+        155
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "utcoffset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzoffset.dst",
+      "signature": "(self, dt)",
+      "span": [
+        157,
+        158
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "dst (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzoffset.tzname",
+      "signature": "(self, dt)",
+      "span": [
+        161,
+        162
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tzname (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzoffset.fromutc",
+      "signature": "(self, dt)",
+      "span": [
+        165,
+        166
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "fromutc (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzoffset.is_ambiguous",
+      "signature": "(self, dt)",
+      "span": [
+        168,
+        180
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Whether or not the \"wall time\" of a given datetime is ambiguous in this",
+      "doc": "Whether or not the \"wall time\" of a given datetime is ambiguous in this\nzone.\n\n:param dt:\n    A :py:class:`datetime.datetime`, naive or time zone aware.\n:return:\n    Returns ``True`` if ambiguous, ``False`` otherwise.\n\n.. versionadded:: 2.6.0"
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzlocal.utcoffset",
+      "signature": "(self, dt)",
+      "span": [
+        218,
+        225
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via tzlocal._isdst"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "utcoffset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzlocal.dst",
+      "signature": "(self, dt)",
+      "span": [
+        227,
+        234
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via tzlocal._isdst"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "dst (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzlocal.tzname",
+      "signature": "(self, dt)",
+      "span": [
+        237,
+        238
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via tzlocal._isdst"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tzname (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzlocal.is_ambiguous",
+      "signature": "(self, dt)",
+      "span": [
+        240,
+        256
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "transitively impure via tzlocal._naive_is_dst"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Whether or not the \"wall time\" of a given datetime is ambiguous in this",
+      "doc": "Whether or not the \"wall time\" of a given datetime is ambiguous in this\nzone.\n\n:param dt:\n    A :py:class:`datetime.datetime`, naive or time zone aware.\n\n\n:return:\n    Returns ``True`` if ambiguous, ``False`` otherwise.\n\n.. versionadded:: 2.6.0"
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzfile.fromutc",
+      "signature": "(self, dt)",
+      "span": [
+        743,
+        777
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 50 words",
+      "intent": "The ``tzfile`` implementation of :py:func:`datetime.tzinfo.fromutc`.",
+      "doc": "The ``tzfile`` implementation of :py:func:`datetime.tzinfo.fromutc`.\n\n:param dt:\n    A :py:class:`datetime.datetime` object.\n\n:raises TypeError:\n    Raised if ``dt`` is not a :py:class:`datetime.datetime` object.\n\n:raises ValueError:\n    Raised if this is called with a ``dt`` which does not have this\n    ``tzinfo`` attached.\n\n:return:\n    Returns a :py:class:`datetime.datetime` object representing the\n    wall time in ``self``'s time zone."
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzfile.is_ambiguous",
+      "signature": "(self, dt, idx=None)",
+      "span": [
+        779,
+        806
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 34 words",
+      "intent": "Whether or not the \"wall time\" of a given datetime is ambiguous in this",
+      "doc": "Whether or not the \"wall time\" of a given datetime is ambiguous in this\nzone.\n\n:param dt:\n    A :py:class:`datetime.datetime`, naive or time zone aware.\n\n\n:return:\n    Returns ``True`` if ambiguous, ``False`` otherwise.\n\n.. versionadded:: 2.6.0"
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzfile.utcoffset",
+      "signature": "(self, dt)",
+      "span": [
+        821,
+        828
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "utcoffset (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzfile.dst",
+      "signature": "(self, dt)",
+      "span": [
+        830,
+        844
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "dst (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzfile.tzname",
+      "signature": "(self, dt)",
+      "span": [
+        847,
+        850
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "tzname (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzrange.transitions",
+      "signature": "(self, year)",
+      "span": [
+        996,
+        1018
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 61 words",
+      "intent": "For a given year, get the DST on and off transition times, expressed",
+      "doc": "For a given year, get the DST on and off transition times, expressed\nalways on the standard time side. For zones with no transitions, this\nfunction returns ``None``.\n\n:param year:\n    The year whose transitions you would like to query.\n\n:return:\n    Returns a :class:`tuple` of :class:`datetime.datetime` objects,\n    ``(dston, dstoff)`` for zones with an annual DST transition, or\n    ``None`` for fixed offset zones."
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzical.keys",
+      "signature": "(self)",
+      "span": [
+        1281,
+        1285
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Retrieves the available time zones as a list.",
+      "doc": "Retrieves the available time zones as a list."
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "tzical.get",
+      "signature": "(self, tzid=None)",
+      "span": [
+        1287,
+        1312
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 75 words",
+      "intent": "Retrieve a :py:class:`datetime.tzinfo` object by its ``tzid``.",
+      "doc": "Retrieve a :py:class:`datetime.tzinfo` object by its ``tzid``.\n\n:param tzid:\n    If there is exactly one time zone available, omitting ``tzid``\n    or passing :py:const:`None` value returns it. Otherwise a valid\n    key (which can be retrieved from :func:`keys`) is required.\n\n:raises ValueError:\n    Raised if ``tzid`` is not specified but there are either more\n    or fewer than 1 zone defined.\n\n:returns:\n    Returns either a :py:class:`datetime.tzinfo` object representing\n    the relevant time zone or :py:const:`None` if the ``tzid`` was\n    not found."
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "datetime_exists",
+      "signature": "(dt, tz=None)",
+      "span": [
+        1683,
+        1714
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 73 words",
+      "intent": "Given a datetime and a time zone, determine whether or not a given datetime",
+      "doc": "Given a datetime and a time zone, determine whether or not a given datetime\nwould fall in a gap.\n\n:param dt:\n    A :class:`datetime.datetime` (whose time zone will be ignored if ``tz``\n    is provided.)\n\n:param tz:\n    A :class:`datetime.tzinfo` with support for the ``fold`` attribute. If\n    ``None`` or not provided, the datetime's own time zone will be used.\n\n:return:\n    Returns a boolean value whether or not the \"wall time\" exists in\n    ``tz``.\n\n.. versionadded:: 2.7.0"
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "datetime_ambiguous",
+      "signature": "(dt, tz=None)",
+      "span": [
+        1717,
+        1760
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 83 words",
+      "intent": "Given a datetime and a time zone, determine whether or not a given datetime",
+      "doc": "Given a datetime and a time zone, determine whether or not a given datetime\nis ambiguous (i.e if there are two times differentiated only by their DST\nstatus).\n\n:param dt:\n    A :class:`datetime.datetime` (whose time zone will be ignored if ``tz``\n    is provided.)\n\n:param tz:\n    A :class:`datetime.tzinfo` with support for the ``fold`` attribute. If\n    ``None`` or not provided, the datetime's own time zone will be used.\n\n:return:\n    Returns a boolean value whether or not the \"wall time\" is ambiguous in\n    ``tz``.\n\n.. versionadded:: 2.6.0"
+    },
+    {
+      "module": "src/dateutil/tz/tz.py",
+      "qualname": "resolve_imaginary",
+      "signature": "(dt)",
+      "span": [
+        1763,
+        1806
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 172 words",
+      "intent": "Given a datetime that may be imaginary, return an existing datetime.",
+      "doc": "Given a datetime that may be imaginary, return an existing datetime.\n\nThis function assumes that an imaginary datetime represents what the\nwall time would be in a zone had the offset transition not occurred, so\nit will always fall forward by the transition's change in offset.\n\n.. doctest::\n\n    >>> from dateutil import tz\n    >>> from datetime import datetime\n    >>> NYC = tz.gettz('America/New_York')\n    >>> print(tz.resolve_imaginary(datetime(2017, 3, 12, 2, 30, tzinfo=NYC)))\n    2017-03-12 03:30:00-04:00\n\n    >>> KIR = tz.gettz('Pacific/Kiritimati')\n    >>> print(tz.resolve_imaginary(datetime(1995, 1, 1, 12, 30, tzinfo=KIR)))\n    1995-01-02 12:30:00+14:00\n\nAs a note, :func:`datetime.astimezone` is guaranteed to produce a valid,\nexisting datetime, so a round-trip to and from UTC is sufficient to get\nan extant datetime, however, this generally \"falls back\" to an earlier time\nrather than falling forward to the STD side (though no guarantees are made\nabout this behavior).\n\n:param dt:\n    A :class:`datetime.datetime` which may or may not exist.\n\n:return:\n    Returns an existing :class:`datetime.datetime`. If ``dt`` was not\n    imaginary, the datetime returned is guaranteed to be the same object\n    passed to the function.\n\n.. versionadded:: 2.7.0"
+    },
+    {
+      "module": "src/dateutil/tz/win.py",
+      "qualname": "tzres.load_name",
+      "signature": "(self, offset)",
+      "span": [
+        71,
+        92
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 59 words",
+      "intent": "Load a timezone name from a DLL offset (integer).",
+      "doc": "Load a timezone name from a DLL offset (integer).\n\n>>> from dateutil.tzwin import tzres\n>>> tzr = tzres()\n>>> print(tzr.load_name(112))\n'Eastern Standard Time'\n\n:param offset:\n    A positive integer value referring to a string from the tzres dll.\n\n.. note::\n\n    Offsets found in the registry are generally of the form\n    ``@tzres.dll,-114``. The offset in this case is 114, not -114."
+    },
+    {
+      "module": "src/dateutil/tz/win.py",
+      "qualname": "tzres.name_from_string",
+      "signature": "(self, tzname_str)",
+      "span": [
+        94,
+        122
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 73 words",
+      "intent": "Parse strings as returned from the Windows registry into the time zone",
+      "doc": "Parse strings as returned from the Windows registry into the time zone\nname as defined in the registry.\n\n>>> from dateutil.tzwin import tzres\n>>> tzr = tzres()\n>>> print(tzr.name_from_string('@tzres.dll,-251'))\n'Dateline Daylight Time'\n>>> print(tzr.name_from_string('Eastern Standard Time'))\n'Eastern Standard Time'\n\n:param tzname_str:\n    A timezone name string as returned from a Windows registry key.\n\n:return:\n    Returns the localized timezone string from tzres.dll if the string\n    is of the form `@tzres.dll,-offset`, else returns the input string."
+    },
+    {
+      "module": "src/dateutil/tz/win.py",
+      "qualname": "tzwinbase.list",
+      "signature": "()",
+      "span": [
+        149,
+        155
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return a list of all time zones known to the system.",
+      "doc": "Return a list of all time zones known to the system."
+    },
+    {
+      "module": "src/dateutil/tz/win.py",
+      "qualname": "tzwinbase.display",
+      "signature": "(self)",
+      "span": [
+        157,
+        161
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the display name of the time zone.",
+      "doc": "Return the display name of the time zone."
+    },
+    {
+      "module": "src/dateutil/tz/win.py",
+      "qualname": "tzwinbase.transitions",
+      "signature": "(self, year)",
+      "span": [
+        163,
+        192
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 61 words",
+      "intent": "For a given year, get the DST on and off transition times, expressed",
+      "doc": "For a given year, get the DST on and off transition times, expressed\nalways on the standard time side. For zones with no transitions, this\nfunction returns ``None``.\n\n:param year:\n    The year whose transitions you would like to query.\n\n:return:\n    Returns a :class:`tuple` of :class:`datetime.datetime` objects,\n    ``(dston, dstoff)`` for zones with an annual DST transition, or\n    ``None`` for fixed offset zones."
+    },
+    {
+      "module": "src/dateutil/tz/win.py",
+      "qualname": "picknthweekday",
+      "signature": "(year, month, dayofweek, hour, minute, whichweek)",
+      "span": [
+        333,
+        344
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "dayofweek == 0 means Sunday, whichweek 5 means last instance",
+      "doc": "dayofweek == 0 means Sunday, whichweek 5 means last instance "
+    },
+    {
+      "module": "src/dateutil/tz/win.py",
+      "qualname": "valuestodict",
+      "signature": "(key)",
+      "span": [
+        347,
+        370
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Convert a registry key's values to a dictionary.",
+      "doc": "Convert a registry key's values to a dictionary."
+    },
+    {
+      "module": "src/dateutil/utils.py",
+      "qualname": "today",
+      "signature": "(tzinfo=None)",
+      "span": [
+        13,
+        26
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 33 words",
+      "intent": "Returns a :py:class:`datetime` representing the current day at midnight",
+      "doc": "Returns a :py:class:`datetime` representing the current day at midnight\n\n:param tzinfo:\n    The time zone to attach (also used to determine the current day).\n\n:return:\n    A :py:class:`datetime.datetime` object representing the current day\n    at midnight."
+    },
+    {
+      "module": "src/dateutil/utils.py",
+      "qualname": "default_tzinfo",
+      "signature": "(dt, tzinfo)",
+      "span": [
+        29,
+        61
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 105 words",
+      "intent": "Sets the ``tzinfo`` parameter on naive datetimes only",
+      "doc": "Sets the ``tzinfo`` parameter on naive datetimes only\n\nThis is useful for example when you are provided a datetime that may have\neither an implicit or explicit time zone, such as when parsing a time zone\nstring.\n\n.. doctest::\n\n    >>> from dateutil.tz import tzoffset\n    >>> from dateutil.parser import parse\n    >>> from dateutil.utils import default_tzinfo\n    >>> dflt_tz = tzoffset(\"EST\", -18000)\n    >>> print(default_tzinfo(parse('2014-01-01 12:30 UTC'), dflt_tz))\n    2014-01-01 12:30:00+00:00\n    >>> print(default_tzinfo(parse('2014-01-01 12:30'), dflt_tz))\n    2014-01-01 12:30:00-05:00\n\n:param dt:\n    The datetime on which to replace the time zone\n\n:param tzinfo:\n    The :py:class:`datetime.tzinfo` subclass instance to assign to\n    ``dt`` if (and only if) it is naive.\n\n:return:\n    Returns an aware :py:class:`datetime.datetime`."
+    },
+    {
+      "module": "src/dateutil/utils.py",
+      "qualname": "within_delta",
+      "signature": "(dt1, dt2, delta)",
+      "span": [
+        64,
+        71
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 15 words",
+      "intent": "Useful for comparing two datetimes that may have a negligible difference",
+      "doc": "Useful for comparing two datetimes that may have a negligible difference\nto be considered equal."
+    },
+    {
+      "module": "src/dateutil/zoneinfo/__init__.py",
+      "qualname": "getzoneinfofile_stream",
+      "signature": "()",
+      "span": [
+        22,
+        27
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "getzoneinfofile stream (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/dateutil/zoneinfo/__init__.py",
+      "qualname": "ZoneInfoFile.get",
+      "signature": "(self, name, default=None)",
+      "span": [
+        54,
+        68
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 44 words",
+      "intent": "Wrapper for :func:`ZoneInfoFile.zones.get`. This is a convenience method",
+      "doc": "Wrapper for :func:`ZoneInfoFile.zones.get`. This is a convenience method\nfor retrieving zones from the zone dictionary.\n\n:param name:\n    The name of the zone to retrieve. (Generally IANA zone names)\n\n:param default:\n    The value to return in the event of a missing key.\n\n.. versionadded:: 2.6.0"
+    },
+    {
+      "module": "src/dateutil/zoneinfo/__init__.py",
+      "qualname": "get_zonefile_instance",
+      "signature": "(new_instance=False)",
+      "span": [
+        80,
+        106
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 69 words",
+      "intent": "This is a convenience function which provides a :class:`ZoneInfoFile`",
+      "doc": "This is a convenience function which provides a :class:`ZoneInfoFile`\ninstance using the data provided by the ``dateutil`` package. By default, it\ncaches a single instance of the ZoneInfoFile object and returns that.\n\n:param new_instance:\n    If ``True``, a new instance of :class:`ZoneInfoFile` is instantiated and\n    used as the cached instance for the next call. Otherwise, new instances\n    are created only as necessary.\n\n:return:\n    Returns a :class:`ZoneInfoFile` object.\n\n.. versionadded:: 2.6"
+    },
+    {
+      "module": "src/dateutil/zoneinfo/__init__.py",
+      "qualname": "gettz",
+      "signature": "(name)",
+      "span": [
+        109,
+        144
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: _CLASS_ZONE_INSTANCE.append()"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 127 words",
+      "intent": "This retrieves a time zone from the local zoneinfo tarball that is packaged",
+      "doc": "This retrieves a time zone from the local zoneinfo tarball that is packaged\nwith dateutil.\n\n:param name:\n    An IANA-style time zone name, as found in the zoneinfo file.\n\n:return:\n    Returns a :class:`dateutil.tz.tzfile` time zone object.\n\n.. warning::\n    It is generally inadvisable to use this function, and it is only\n    provided for API compatibility with earlier versions. This is *not*\n    equivalent to ``dateutil.tz.gettz()``, which selects an appropriate\n    time zone based on the inputs, favoring system zoneinfo. This is ONLY\n    for accessing the dateutil-specific zoneinfo (which may be out of\n    date compared to the system zoneinfo).\n\n.. deprecated:: 2.6\n    If you need to use a specific zoneinfofile over the system zoneinfo,\n    instantiate a :class:`dateutil.zoneinfo.ZoneInfoFile` object and call\n    :func:`dateutil.zoneinfo.ZoneInfoFile.get(name)` instead.\n\n    Use :func:`get_zonefile_instance` to retrieve an instance of the\n    dateutil-provided zoneinfo."
+    },
+    {
+      "module": "src/dateutil/zoneinfo/__init__.py",
+      "qualname": "gettz_db_metadata",
+      "signature": "()",
+      "span": [
+        147,
+        167
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: _CLASS_ZONE_INSTANCE.append()"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "Get the zonefile metadata",
+      "doc": "Get the zonefile metadata\n\nSee `zonefile_metadata`_\n\n:returns:\n    A dictionary with the database metadata\n\n.. deprecated:: 2.6\n    See deprecation warning in :func:`zoneinfo.gettz`. To get metadata,\n    query the attribute ``zoneinfo.ZoneInfoFile.metadata``."
+    },
+    {
+      "module": "src/dateutil/zoneinfo/rebuild.py",
+      "qualname": "rebuild",
+      "signature": "(filename, tag=None, format='gz', zonegroups=[], metadata=None)",
+      "span": [
+        12,
+        38
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to open()",
+        "call to os.listdir",
+        "call to shutil.rmtree",
+        "call to tempfile.mkdtemp",
+        "read of os.listdir"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Rebuild the internal timezone info in dateutil/zoneinfo/zoneinfo*tar*",
+      "doc": "Rebuild the internal timezone info in dateutil/zoneinfo/zoneinfo*tar*\n\nfilename is the timezone tarball from ``ftp.iana.org/tz``."
+    }
+  ],
+  "summary": {
+    "total_public_functions": 77,
+    "auditability": {
+      "spec": 39,
+      "invariant": 0,
+      "none": 38
+    },
+    "deterministic": 70,
+    "auditable": 36
+  }
+}

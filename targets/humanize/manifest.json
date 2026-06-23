@@ -1,0 +1,321 @@
+{
+  "target": "humanize",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/humanize/repo",
+  "commit": "976484a655df046aa6849f440a4f0cd44fc4918c",
+  "package_dir": "src/humanize",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "src/humanize/filesize.py",
+      "qualname": "naturalsize",
+      "signature": "(value: float | str, binary: bool=False, gnu: bool=False, format: str='%.1f') -> str",
+      "span": [
+        38,
+        102
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 129 words",
+      "intent": "Format a number of bytes like a human-readable filesize (e.g. 10 kB).",
+      "doc": "Format a number of bytes like a human-readable filesize (e.g. 10 kB).\n\nBy default, decimal suffixes (kB, MB) are used.\n\nNon-GNU modes are compatible with jinja2's `filesizeformat` filter.\n\nExamples:\n    ```pycon\n    >>> naturalsize(3000000)\n    '3.0 MB'\n    >>> naturalsize(300, False, True)\n    '300B'\n    >>> naturalsize(3000, False, True)\n    '2.9K'\n    >>> naturalsize(3000, False, True, \"%.3f\")\n    '2.930K'\n    >>> naturalsize(3000, True)\n    '2.9 KiB'\n    >>> naturalsize(10**28)\n    '10.0 RB'\n    >>> naturalsize(10**34 * 3)\n    '30000.0 QB'\n    >>> naturalsize(-4096, True)\n    '-4.0 KiB'\n\n    ```\n\nArgs:\n    value (int, float, str): Integer to convert.\n    binary (bool): If `True`, uses binary suffixes (KiB, MiB) with base\n        2<sup>10</sup> instead of 10<sup>3</sup>.\n    gnu (bool): If `True`, the binary argument is ignored and GNU-style\n        (`ls -sh` style) prefixes are used (K, M) with the 2**10 definition.\n    format (str): Custom formatter.\n\nReturns:\n    str: Human readable representation of a filesize."
+    },
+    {
+      "module": "src/humanize/i18n.py",
+      "qualname": "get_translation",
+      "signature": "() -> gettext_module.NullTranslations",
+      "span": [
+        53,
+        54
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "get translation (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "src/humanize/i18n.py",
+      "qualname": "activate",
+      "signature": "(locale: str | None, path: str | os.PathLike[str] | None=None) -> gettext_module.NullTranslations",
+      "span": [
+        57,
+        92
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "mutation of enclosing-scope name: _TRANSLATIONS[...]"
+      ],
+      "auditability": "spec",
+      "auditability_why": "docstring of 53 words",
+      "intent": "Activate internationalisation.",
+      "doc": "Activate internationalisation.\n\nSet `locale` as current locale. Search for locale in directory `path`.\n\nArgs:\n    locale (str | None): Language name, e.g. `en_GB`. If `None`, defaults to no\n        translation. Similar to calling ``deactivate()``.\n    path (str | pathlib.Path): Path to search for locales.\n\nReturns:\n    dict: Translations.\n\nRaises:\n    FileNotFoundError: If humanize cannot find the locale folder."
+    },
+    {
+      "module": "src/humanize/i18n.py",
+      "qualname": "deactivate",
+      "signature": "() -> None",
+      "span": [
+        95,
+        97
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Deactivate internationalisation.",
+      "doc": "Deactivate internationalisation."
+    },
+    {
+      "module": "src/humanize/i18n.py",
+      "qualname": "thousands_separator",
+      "signature": "() -> str",
+      "span": [
+        182,
+        188
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the thousands separator for a locale, default to comma.",
+      "doc": "Return the thousands separator for a locale, default to comma.\n\nReturns:\n     str: Thousands separator."
+    },
+    {
+      "module": "src/humanize/i18n.py",
+      "qualname": "decimal_separator",
+      "signature": "() -> str",
+      "span": [
+        191,
+        197
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Return the decimal separator for a locale, default to dot.",
+      "doc": "Return the decimal separator for a locale, default to dot.\n\nReturns:\n     str: Decimal separator."
+    },
+    {
+      "module": "src/humanize/lists.py",
+      "qualname": "natural_list",
+      "signature": "(items: list[Any]) -> str",
+      "span": [
+        12,
+        38
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 52 words",
+      "intent": "Natural list.",
+      "doc": "Natural list.\n\nConvert a list of items into a human-readable string with commas and 'and'.\n\nExamples:\n    >>> natural_list([\"one\", \"two\", \"three\"])\n    'one, two and three'\n    >>> natural_list([\"one\", \"two\"])\n    'one and two'\n    >>> natural_list([\"one\"])\n    'one'\n\nArgs:\n    items (list): An iterable of items.\n\nReturns:\n    str: A string with commas and 'and' in the right places."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "ordinal",
+      "signature": "(value: NumberOrString, gender: str='male') -> str",
+      "span": [
+        64,
+        111
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 101 words",
+      "intent": "Converts an integer to its ordinal as a string.",
+      "doc": "Converts an integer to its ordinal as a string.\n\nFor example, 1 is \"1st\", 2 is \"2nd\", 3 is \"3rd\", etc. Works for any integer or\nanything `int()` will turn into an integer. Anything else will return the output\nof str(value).\n\nExamples:\n    ```pycon\n    >>> ordinal(1)\n    '1st'\n    >>> ordinal(1002)\n    '1002nd'\n    >>> ordinal(103)\n    '103rd'\n    >>> ordinal(4)\n    '4th'\n    >>> ordinal(12)\n    '12th'\n    >>> ordinal(101)\n    '101st'\n    >>> ordinal(111)\n    '111th'\n    >>> ordinal(\"something else\")\n    'something else'\n    >>> ordinal([1, 2, 3]) == \"[1, 2, 3]\"\n    True\n\n    ```\n\nArgs:\n    value (int, str, float): Integer to convert.\n    gender (str): Gender for translations. Accepts either \"male\" or \"female\".\n\nReturns:\n    str: Ordinal string."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "intcomma",
+      "signature": "(value: NumberOrString, ndigits: int | None=None) -> str",
+      "span": [
+        114,
+        174
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 92 words",
+      "intent": "Converts an integer to a string containing commas every three digits.",
+      "doc": "Converts an integer to a string containing commas every three digits.\n\nFor example, 3000 becomes \"3,000\" and 45000 becomes \"45,000\". To maintain some\ncompatibility with Django's `intcomma`, this function also accepts floats.\n\nExamples:\n    ```pycon\n    >>> intcomma(100)\n    '100'\n    >>> intcomma(\"1000\")\n    '1,000'\n    >>> intcomma(1_000_000)\n    '1,000,000'\n    >>> intcomma(1_234_567.25)\n    '1,234,567.25'\n    >>> intcomma(1234.5454545, 2)\n    '1,234.55'\n    >>> intcomma(14308.40, 1)\n    '14,308.4'\n    >>> intcomma(\"14308.40\", 1)\n    '14,308.4'\n    >>> intcomma(None)\n    'None'\n\n    ```\n\nArgs:\n    value (int, float, str): Integer or float to convert.\n    ndigits (int, None): Digits of precision for rounding after the decimal point.\n\nReturns:\n    str: String containing commas every three digits."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "intword",
+      "signature": "(value: NumberOrString, format: str='%.1f') -> str",
+      "span": [
+        194,
+        265
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 113 words",
+      "intent": "Converts a large integer to a friendly text representation.",
+      "doc": "Converts a large integer to a friendly text representation.\n\nWorks best for numbers over 1 million. For example, 1_000_000 becomes \"1.0 million\",\n1_200_000 becomes \"1.2 million\" and \"1_200_000_000\" becomes \"1.2 billion\". Supports\nup to decillion (33 digits) and googol (100 digits).\n\nExamples:\n    ```pycon\n    >>> intword(\"100\")\n    '100'\n    >>> intword(\"12400\")\n    '12.4 thousand'\n    >>> intword(\"1000000\")\n    '1.0 million'\n    >>> intword(1_200_000_000)\n    '1.2 billion'\n    >>> intword(8100000000000000000000000000000000)\n    '8.1 decillion'\n    >>> intword(None)\n    'None'\n    >>> intword(\"1234000\", \"%0.3f\")\n    '1.234 million'\n\n    ```\n\nArgs:\n    value (int, float, str): Integer to convert.\n    format (str): To change the number of decimal or general format of the number\n        portion.\n\nReturns:\n    str: Friendly text representation as a string, unless the value passed could not\n        be coaxed into an `int`."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "apnumber",
+      "signature": "(value: NumberOrString) -> str",
+      "span": [
+        268,
+        306
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 63 words",
+      "intent": "Converts an integer to Associated Press style.",
+      "doc": "Converts an integer to Associated Press style.\n\nExamples:\n  ```pycon\n  >>> apnumber(0)\n  'zero'\n  >>> apnumber(5)\n  'five'\n  >>> apnumber(10)\n  '10'\n  >>> apnumber(\"7\")\n  'seven'\n  >>> apnumber(\"foo\")\n  'foo'\n  >>> apnumber(None)\n  'None'\n\n  ```\n\nArgs:\n    value (int, float, str): Integer to convert.\n\nReturns:\n    str: For numbers 0-9, the number spelled out. Otherwise, the number. This always\n        returns a string unless the value was not `int`-able, then `str(value)`\n        is returned."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "fractional",
+      "signature": "(value: NumberOrString) -> str",
+      "span": [
+        309,
+        370
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 119 words",
+      "intent": "Convert to fractional number.",
+      "doc": "Convert to fractional number.\n\nThere will be some cases where one might not want to show ugly decimal places for\nfloats and decimals.\n\nThis function returns a human-readable fractional number in form of fractions and\nmixed fractions.\n\nPass in a string, or a number or a float, and this function returns:\n\n* a string representation of a fraction\n* or a whole number\n* or a mixed fraction\n* or the str output of the value, if it could not be converted\n\nExamples:\n    ```pycon\n    >>> fractional(0.3)\n    '3/10'\n    >>> fractional(1.3)\n    '1 3/10'\n    >>> fractional(float(1/3))\n    '1/3'\n    >>> fractional(1)\n    '1'\n    >>> fractional(\"ten\")\n    'ten'\n    >>> fractional(None)\n    'None'\n\n    ```\n\nArgs:\n    value (int, float, str): Integer to convert.\n\nReturns:\n    str: Fractional number as a string."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "scientific",
+      "signature": "(value: NumberOrString, precision: int=2) -> str",
+      "span": [
+        373,
+        417
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 77 words",
+      "intent": "Return number in string scientific notation z.wq x 10\u207f.",
+      "doc": "Return number in string scientific notation z.wq x 10\u207f.\n\nExamples:\n    ```pycon\n    >>> scientific(float(0.3))\n    '3.00 x 10\u207b\u00b9'\n    >>> scientific(int(500))\n    '5.00 x 10\u00b2'\n    >>> scientific(-1000)\n    '-1.00 x 10\u00b3'\n    >>> scientific(1000, 1)\n    '1.0 x 10\u00b3'\n    >>> scientific(1000, 3)\n    '1.000 x 10\u00b3'\n    >>> scientific(\"99\")\n    '9.90 x 10\u00b9'\n    >>> scientific(\"foo\")\n    'foo'\n    >>> scientific(None)\n    'None'\n\n    ```\n\nArgs:\n    value (int, float, str): Input number.\n    precision (int): Number of decimal for first part of the number.\n\nReturns:\n    str: Number in scientific notation z.wq x 10\u207f."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "clamp",
+      "signature": "(value: float, format: str='{:}', floor: float | None=None, ceil: float | None=None, floor_token: str='<', ceil_token: str='>') -> str",
+      "span": [
+        420,
+        494
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 177 words",
+      "intent": "Returns number with the specified format, clamped between floor and ceil.",
+      "doc": "Returns number with the specified format, clamped between floor and ceil.\n\nIf the number is larger than ceil or smaller than floor, then the respective limit\nwill be returned, formatted and prepended with a token specifying as such.\n\nExamples:\n    ```pycon\n    >>> clamp(123.456)\n    '123.456'\n    >>> clamp(0.0001, floor=0.01)\n    '<0.01'\n    >>> clamp(0.99, format=\"{:.0%}\", ceil=0.99)\n    '99%'\n    >>> clamp(0.999, format=\"{:.0%}\", ceil=0.99)\n    '>99%'\n    >>> clamp(1, format=intword, floor=1e6, floor_token=\"under \")\n    'under 1.0 million'\n    >>> clamp(None) is None\n    True\n\n    ```\n\nArgs:\n    value (int, float): Input number.\n    format (str OR callable): Can either be a formatting string, or a callable\n        function that receives value and returns a string.\n    floor (int, float): Smallest value before clamping.\n    ceil (int, float): Largest value before clamping.\n    floor_token (str): If value is smaller than floor, token will be prepended\n        to output.\n    ceil_token (str): If value is larger than ceil, token will be prepended\n        to output.\n\nReturns:\n    str: Formatted number. The output is clamped between the indicated floor and\n        ceil. If the number is larger than ceil or smaller than floor, the output\n        will be prepended with a token indicating as such."
+    },
+    {
+      "module": "src/humanize/number.py",
+      "qualname": "metric",
+      "signature": "(value: float, unit: str='', precision: int=3) -> str",
+      "span": [
+        497,
+        554
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 116 words",
+      "intent": "Return a value with a metric SI unit-prefix appended.",
+      "doc": "Return a value with a metric SI unit-prefix appended.\n\nExamples:\n    ```pycon\n    >>> metric(1500, \"V\")\n    '1.50 kV'\n    >>> metric(2e8, \"W\")\n    '200 MW'\n    >>> metric(220e-6, \"F\")\n    '220 \u03bcF'\n    >>> metric(1e-14, precision=4)\n    '10.00 f'\n\n    ```\n\nThe unit prefix is always chosen so that non-significant zero digits are required.\ni.e. `123,000` will become `123k` instead of `0.123M` and `1,230,000` will become\n`1.23M` instead of `1230K`. For numbers that are either too huge or too tiny to\nrepresent without resorting to either leading or trailing zeroes, it falls back to\n`scientific()`.\n```pycon\n>>> metric(1e40)\n'1.00 x 10\u2074\u2070'\n\n```\n\nArgs:\n    value (int, float): Input number.\n    unit (str): Optional base unit.\n    precision (int): The number of digits the output should contain.\n\nReturns:\n    str:"
+    },
+    {
+      "module": "src/humanize/time.py",
+      "qualname": "naturaldelta",
+      "signature": "(value: dt.timedelta | float, months: bool=True, minimum_unit: str='seconds') -> str",
+      "span": [
+        95,
+        246
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 174 words",
+      "intent": "Return a natural representation of a timedelta or number of seconds.",
+      "doc": "Return a natural representation of a timedelta or number of seconds.\n\nThis is similar to `naturaltime`, but does not add tense to the result.\n\nThe timedelta will be rounded to the nearest unit that makes sense.\n\nArgs:\n    value (datetime.timedelta, int or float): A timedelta or a number of seconds.\n    months (bool): If `True`, then a number of months (based on 30.5 days) will be\n        used for fuzziness between years.\n    minimum_unit (str): The lowest unit that can be used.\n\nReturns:\n    str (str or `value`): A natural representation of the amount of time\n        elapsed unless `value` is not datetime.timedelta or cannot be\n        converted to int (cannot be float due to 'inf' or 'nan').\n        In that case, a `value` is returned unchanged.\n\nRaises:\n    OverflowError: If `value` is too large to convert to datetime.timedelta.\n\nExamples:\n    Compare two timestamps in a custom local timezone::\n\n    ```pycon\n    >>> import datetime as dt\n    >>> from dateutil.tz import gettz\n\n    >>> berlin = gettz(\"Europe/Berlin\")\n    >>> now = dt.datetime.now(tz=berlin)\n    >>> later = now + dt.timedelta(minutes=30)\n\n    >>> assert naturaldelta(later - now) == \"30 minutes\"\n    True\n    ```"
+    },
+    {
+      "module": "src/humanize/time.py",
+      "qualname": "naturaltime",
+      "signature": "(value: dt.datetime | dt.timedelta | float, future: bool=False, months: bool=True, minimum_unit: str='seconds', when: dt.datetime | None=None) -> str",
+      "span": [
+        249,
+        297
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 150 words",
+      "intent": "Return a natural representation of a time in a resolution that makes sense.",
+      "doc": "Return a natural representation of a time in a resolution that makes sense.\n\nThis is more or less compatible with Django's `naturaltime` filter.\n\nThe time will be rounded to the nearest unit that makes sense.\n\nArgs:\n    value (datetime.datetime, datetime.timedelta, int or float): A `datetime`, a\n        `timedelta`, or a number of seconds.\n    future (bool): Ignored for `datetime`s and `timedelta`s, where the tense is\n        always figured out based on the current time. For integers and floats, the\n        return value will be past tense by default, unless future is `True`.\n    months (bool): If `True`, then a number of months (based on 30.5 days) will be\n        used for fuzziness between years.\n    minimum_unit (str): The lowest unit that can be used.\n    when (datetime.datetime): Point in time relative to which _value_ is\n        interpreted.  Defaults to the current time in the local timezone.\n\nReturns:\n    str: A natural representation of the input in a resolution that makes sense."
+    },
+    {
+      "module": "src/humanize/time.py",
+      "qualname": "naturalday",
+      "signature": "(value: dt.date | dt.datetime, format: str='%b %d') -> str",
+      "span": [
+        314,
+        349
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 28 words",
+      "intent": "Return a natural day.",
+      "doc": "Return a natural day.\n\nFor date values that are tomorrow, today or yesterday compared to\npresent day return representing string. Otherwise, return a string\nformatted according to `format`."
+    },
+    {
+      "module": "src/humanize/time.py",
+      "qualname": "naturaldate",
+      "signature": "(value: dt.date | dt.datetime) -> str",
+      "span": [
+        352,
+        372
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Like `naturalday`, but append a year for dates more than ~five months away.",
+      "doc": "Like `naturalday`, but append a year for dates more than ~five months away."
+    },
+    {
+      "module": "src/humanize/time.py",
+      "qualname": "precisedelta",
+      "signature": "(value: dt.timedelta | float | None, minimum_unit: str='seconds', suppress: Iterable[str]=(), format: str='%0.2f') -> str",
+      "span": [
+        465,
+        669
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 228 words",
+      "intent": "Return a precise representation of a timedelta or number of seconds.",
+      "doc": "Return a precise representation of a timedelta or number of seconds.\n\n```pycon\n>>> import datetime as dt\n>>> from humanize.time import precisedelta\n\n>>> delta = dt.timedelta(seconds=3633, days=2, microseconds=123000)\n>>> precisedelta(delta)\n'2 days, 1 hour and 33.12 seconds'\n\n```\n\nA custom `format` can be specified to control how the fractional part\nis represented:\n\n```pycon\n>>> precisedelta(delta, format=\"%0.4f\")\n'2 days, 1 hour and 33.1230 seconds'\n\n```\n\nInstead, the `minimum_unit` can be changed to have a better resolution;\nthe function will still readjust the unit to use the greatest of the\nunits that does not lose precision.\n\nFor example setting microseconds but still representing the date with milliseconds:\n\n```pycon\n>>> precisedelta(delta, minimum_unit=\"microseconds\")\n'2 days, 1 hour, 33 seconds and 123 milliseconds'\n\n```\n\nIf desired, some units can be suppressed: you will not see them represented and the\ntime of the other units will be adjusted to keep representing the same timedelta:\n\n```pycon\n>>> precisedelta(delta, suppress=['days'])\n'49 hours and 33.12 seconds'\n\n```\n\nNote that microseconds precision is lost if the seconds and all\nthe units below are suppressed:\n\n```pycon\n>>> delta = dt.timedelta(seconds=90, microseconds=100)\n>>> precisedelta(delta, suppress=['seconds', 'milliseconds', 'microseconds'])\n'1.50 minutes'\n\n```\n\nIf the delta is too small to be represented with the minimum unit,\na value of zero will be returned:\n\n```pycon\n>>> delta = dt.timedelta(seconds=1)\n>>> precisedelta(delta, minimum_unit=\"minutes\")\n'0.02 minutes'\n\n>>> delta = dt.timedelta(seconds=0.1)\n>>> precisedelta(delta, minimum_unit=\"minutes\")\n'0 minutes'\n\n```"
+    }
+  ],
+  "summary": {
+    "total_public_functions": 20,
+    "auditability": {
+      "spec": 15,
+      "invariant": 0,
+      "none": 5
+    },
+    "deterministic": 19,
+    "auditable": 14
+  }
+}

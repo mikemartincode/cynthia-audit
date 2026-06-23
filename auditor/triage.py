@@ -66,11 +66,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author as author_mod  # noqa: E402
 from author import (  # noqa: E402
-    _safe_leaf, author_and_gate, author_best_of_n, build_spec, call_model, gate_authored,
+    DEFAULT_BEST_OF_N, _safe_leaf, author_and_gate, author_best_of_n, build_spec, call_model,
+    gate_authored,
 )
 from adapters import ADAPTERS  # noqa: E402
 from sweep import _equal, _load_oracle, classify  # noqa: E402
 from run import BudgetTracker  # noqa: E402
+from spec_vectors import iter_vectors as sv_iter, lookup as sv_lookup  # noqa: E402
 
 # Independent-check model selection (empirical, on this repo):
 #   - the first oracle (A03) is deepseek-PRO; a deepseek-family vote shares its blind spots and
@@ -110,6 +112,49 @@ def _first_oracle(records_dir: Path):
         out[rec["qualname"]] = (m.REFERENCE_FUNC, getattr(m, "EQUIV_KEY", None),
                                 rec["oracle_path"])
     return out
+
+
+# ---------------------------------------------------------------- second-oracle salvage
+
+def _meta_settled(meta: dict) -> bool:
+    """A persisted second-oracle meta is settled iff it is GREEN or it came from a real
+    authoring pass. A salvage-only RED is NOT settled: its drafts were re-gated but the
+    adaptive thinking-ON fallback never ran on it — re-persisting it as final would
+    permanently suppress the function's cross-oracle vote (the salvage dead-end)."""
+    return bool(meta.get("green") or not meta.get("salvaged"))
+
+
+def _salvage_drafts(qual: str, second_dir: Path):
+    """Re-gate already-authored best-of-N drafts from a prior (interrupted) run instead of
+    re-authoring — gating is cheap (batched, local), authoring is the slow part. Returns a
+    GREEN meta when any draft re-gates GREEN (a settled result), the best RED meta when
+    drafts exist but none gate (the caller still owes the adaptive fallback), or None when
+    nothing usable is on disk (the caller authors from scratch)."""
+    qhash = hashlib.sha1(qual.encode()).hexdigest()[:10]
+    base = second_dir / "oracles" / f"{_safe_leaf(qual)}_{qhash}"
+    if not base.is_dir():
+        return None
+    draft_dirs = sorted([d for d in base.glob("n*") if d.is_dir()])
+    adaptive = base / "adaptive"
+    if adaptive.is_dir():
+        draft_dirs.append(adaptive)
+    best = None
+    for d in draft_dirs:
+        mod = f"orc_{qhash}_{d.name}"
+        if not (d / f"{mod}.py").exists():
+            continue
+        try:
+            v = gate_authored(mod, d, cap=40)
+        except Exception:  # noqa: BLE001
+            continue
+        op = str(d / f"{mod}.py")
+        if v.get("green"):
+            return {"green": True, "kill_rate": v.get("kill_rate"), "oracle_path": op,
+                    "drafts": "salvaged", "salvaged": True}
+        if best is None or (v.get("kill_rate") or 0) > (best.get("kill_rate") or 0):
+            best = {"green": False, "kill_rate": v.get("kill_rate"), "oracle_path": op,
+                    "drafts": "salvaged", "salvaged": True}
+    return best  # None when no usable draft exists — that is NOT a settled RED
 
 
 # ---------------------------------------------------------------- delta-debug minimal-ize
@@ -238,24 +283,67 @@ def _is_crash_divergence(cand: dict) -> bool:
             and "library raised" in cand.get("note", ""))
 
 
-def classify_candidate(cand, *, valid, vote, spec_match):
+def _model_family(name: str) -> str:
+    """Coarse model family from a model id: deepseek-v4-pro -> deepseek, minimax-m3 -> minimax,
+    gemini-flash -> gemini. Family (not exact model) is what determines correlated blind spots."""
+    return ((name or "").split("-", 1)[0].lower()) or "unknown"
+
+
+def spec_vector_check(qual, x, real_fn, key):
+    """Compare the REAL library's output for `x` against the spec's OWN canonical vector (RFC 3986
+    §5.4 reference-resolution table), when one is published for this input. Ground truth — no
+    model. Returns {match: real_wrong|real_matches, expected, citation, real} or None when the
+    spec publishes no vector for `x` (the only inputs we can assert a VALUE bug on)."""
+    sv = sv_lookup(qual, x)
+    if sv is None:
+        return None
+    r_ok, r_val, _ = _answer(real_fn, x)
+    if not r_ok:
+        # the library raised on a spec-TABLED (therefore spec-valid) input — it must return the
+        # tabled value; a refusal is a divergence from the spec's own example.
+        return {"match": "real_wrong", "expected": sv.expected, "citation": sv.citation,
+                "real": "RAISED", "input": repr(x)}
+    matches = _equal(qual, r_val, sv.expected, key)
+    return {"match": ("real_matches" if matches else "real_wrong"),
+            "expected": sv.expected, "citation": sv.citation,
+            "real": r_val if isinstance(r_val, str) else repr(r_val), "input": repr(x)}
+
+
+def classify_candidate(cand, *, valid, vote, spec_match, spec_vector=None,
+                       first_family=None, vote_family=None, spec_family=None,
+                       second_oracle_green=False):
     """Conservative final label + confidence.
 
     Hard lesson from the first all-deepseek run: two same-family oracles plus a same-family
     arbiter AGREE on the same wrong spec reading (default ports, query decoding, rooted
     semantics), manufacturing false "real-bug"s at a 100% rate. So automated agreement on a
-    subtle VALUE is NOT proof of a bug — adjudicating URL semantics against the RFC needs a
-    human. Therefore:
-      * a VALUE divergence is NEVER auto-promoted to real-bug. Strong cross-check agreement with
-        the oracle makes it a HIGH-priority human-review item (spec-ambiguity/high), not a bug.
-      * a library CRASH (NotImplementedError etc. on a valid input) is the one self-evident
-        case — a refusal to perform a valid operation, not a contestable value — so it promotes
-        to real-bug with >=1 independent corroboration.
-    bad-oracle requires positive REAL-side support; everything else is conservative default.
+    subtle VALUE is corroboration, NOT proof — adjudicating URL semantics needs ground truth.
+
+    Two ways a VALUE divergence becomes assertable (E03), in order of strength:
+      1. GROUND TRUTH (`spec_vector`): the spec's OWN canonical vector (RFC 3986 §5.4 table) pins
+         the answer. real ≠ tabled value → real-bug/high; real == tabled value but the oracle
+         differed → bad-oracle/high. No model in the loop, so no correlated-error risk.
+      2. CROSS-FAMILY MAJORITY: ≥2 independent cross-family ORACLES side with the first oracle AND
+         a cross-family blind arbiter agrees — i.e. ≥3 DISTINCT model families agree and none are
+         correlated. 2 families alone proved insufficient on this target (the default-port
+         review-queue cases where deepseek+minimax share the misreading), so the bar is 3 distinct
+         families. real-bug/medium, and A07 still hand-verifies (model agreement, not ground truth).
+
+    A library CRASH (NotImplementedError etc. on a valid input) remains the self-evident case — a
+    refusal to perform a valid operation — promoting with ≥1 corroboration. Otherwise a value
+    divergence with strong agreement is a HIGH-priority human-review item (spec-ambiguity/high),
+    never an auto bug claim. bad-oracle needs positive REAL-side support.
 
     spec_match ∈ {oracle, real, other, invalid, skipped}."""
     if cand["classification"] == "invalid-input" or not valid:
         return "invalid-input", "high"
+
+    # 1. GROUND TRUTH dominates everything — the spec's own published vector, no model involved.
+    if spec_vector:
+        if spec_vector["match"] == "real_wrong":
+            return "real-bug", "high"
+        if spec_vector["match"] == "real_matches":
+            return "bad-oracle", "high"
 
     crash = _is_crash_divergence(cand)
     o_vote, o_spec = vote == "agree_oracle", spec_match == "oracle"
@@ -266,13 +354,19 @@ def classify_candidate(cand, *, valid, vote, spec_match):
     # real-side evidence dominates → the first oracle was wrong.
     if real_support and not oracle_support:
         return "bad-oracle", ("high" if (r_vote and r_spec) else "medium")
-    # the ONLY automated real-bug: a library crash on a valid input, with corroboration that
-    # the operation is valid (a crash leaves no value, so real_support is never set here).
+    # a library crash on a valid input, corroborated that the operation is valid (a crash leaves
+    # no value, so real_support is never set here).
     if crash:
         if oracle_support:
             return "real-bug", ("high" if (o_vote and o_spec) else "medium")
         return "spec-ambiguity", "low"  # uncorroborated crash: suspicious but unconfirmed
-    # a value divergence: never a bug claim. Cross-check agreement → human-review priority.
+    # 2. CROSS-FAMILY MAJORITY value bug: a 2nd cross-family GREEN oracle AND a cross-family blind
+    # arbiter both side with the first oracle → ≥3 distinct families agree, none correlated.
+    if o_vote and second_oracle_green and o_spec:
+        families = {f for f in (first_family, vote_family, spec_family) if f}
+        if len(families) >= 3:
+            return "real-bug", "medium"   # model corroboration, not ground truth → A07 verifies
+    # a value divergence below the bar: never a bug claim. Strong agreement → human-review.
     if o_vote and o_spec:
         return "spec-ambiguity", "high"
     if oracle_support or vote == "three_way" or spec_match == "other":
@@ -293,6 +387,14 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
     by_qual = {f["qualname"]: f for f in manifest["functions"]}
     target = manifest.get("target", "")
     first = _first_oracle(records_dir)
+    # the authoring model per GREEN first oracle → its family (for the cross-family majority rule).
+    first_family = {}
+    for rp in sorted((records_dir / "records").glob("*.json")):
+        rec = json.loads(rp.read_text())
+        if rec.get("green"):
+            first_family[rec["qualname"]] = _model_family(rec.get("model", ""))
+    vote_family = _model_family(vote_model)
+    spec_family = _model_family(spec_model)
     budget = BudgetTracker(float(os.environ.get("AUDIT_BUDGET_USD", "50")))
     lock = threading.Lock()
 
@@ -317,51 +419,26 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         except Exception:  # noqa: BLE001 — a stale/broken oracle file is treated as no-second
             return None
 
-    def _salvage(qual):
-        """Re-gate already-authored best-of-N drafts from a prior (interrupted) run instead of
-        re-authoring — gating is cheap (batched, local), authoring is the slow part. Returns a
-        meta if a draft dir exists on disk (green if any draft re-gates GREEN), else None."""
-        qhash = hashlib.sha1(qual.encode()).hexdigest()[:10]
-        base = second_dir / "oracles" / f"{_safe_leaf(qual)}_{qhash}"
-        if not base.is_dir():
-            return None
-        draft_dirs = sorted([d for d in base.glob("n*") if d.is_dir()])
-        adaptive = base / "adaptive"
-        if adaptive.is_dir():
-            draft_dirs.append(adaptive)
-        best = None
-        for d in draft_dirs:
-            mod = f"orc_{qhash}_{d.name}"
-            if not (d / f"{mod}.py").exists():
-                continue
-            try:
-                v = gate_authored(mod, d, cap=40)
-            except Exception:  # noqa: BLE001
-                continue
-            op = str(d / f"{mod}.py")
-            if v.get("green"):
-                return {"green": True, "kill_rate": v.get("kill_rate"), "oracle_path": op,
-                        "drafts": "salvaged", "salvaged": True}
-            if best is None or (v.get("kill_rate") or 0) > (best.get("kill_rate") or 0):
-                best = {"green": False, "kill_rate": v.get("kill_rate"), "oracle_path": op,
-                        "drafts": "salvaged", "salvaged": True}
-        return best or {"green": False, "note": "salvage: no usable draft", "salvaged": True}
-
     def author_second(qual):
         entry = by_qual.get(qual)
         if entry is None:
             return qual, None, {"note": "not in manifest"}
-        # RESUME: a recorded meta (green OR not) is a settled result — never re-spend on it.
+        # RESUME: a settled meta (GREEN, or RED after a real authoring pass) is never
+        # re-spent. A salvage-only RED falls through: its adaptive fallback never ran.
         mp = _meta_path(qual)
         if mp.exists():
             try:
                 meta = {**json.loads(mp.read_text()), "resumed": True}
-                return qual, _ref_from_meta(meta), meta
             except Exception:  # noqa: BLE001 — unreadable meta falls through to salvage/author
-                pass
-        # SALVAGE: reuse drafts left on disk by an interrupted run (re-gate, don't re-author).
-        salv = _salvage(qual)
-        if salv is not None:
+                meta = None
+            if meta is not None and _meta_settled(meta):
+                return qual, _ref_from_meta(meta), meta
+        # SALVAGE: re-gate drafts left on disk by an interrupted run (gating is cheap,
+        # authoring is the slow part). GREEN settles here; RED means the cheap drafts are
+        # spent and only the adaptive fallback is still owed; None means nothing usable —
+        # author from scratch.
+        salv = _salvage_drafts(qual, second_dir)
+        if salv is not None and salv.get("green"):
             mp.write_text(json.dumps(salv) + "\n")
             return qual, _ref_from_meta(salv), salv
         with lock:
@@ -369,7 +446,10 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         if reservation is None:
             return qual, None, {"note": "budget-stop"}
         if is_reasoning_vote:
-            rec = author_best_of_n(entry, vote_model, second_dir, target=target)
+            # a salvaged-RED already spent its N fast think-OFF drafts — pay ONLY the
+            # thinking-ON adaptive fallback (n=0 authors zero fast drafts).
+            n = 0 if salv is not None else DEFAULT_BEST_OF_N
+            rec = author_best_of_n(entry, vote_model, second_dir, target=target, n=n)
         else:
             rec = author_and_gate(entry, vote_model, second_dir, attempts=2, target=target)
         with lock:
@@ -377,6 +457,12 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         meta = {"green": rec.green, "kill_rate": rec.gate.get("kill_rate"),
                 "cost": round(rec.cost, 6), "oracle_path": rec.oracle_path,
                 "drafts": rec.attempts}
+        if salv is not None:
+            meta["salvage_then_fallback"] = True
+            if not rec.green and (salv.get("kill_rate") or 0) > (meta["kill_rate"] or 0):
+                # keep the strongest oracle on record for inspection (neither is usable
+                # for voting — only a GREEN ref is ever loaded).
+                meta["kill_rate"], meta["oracle_path"] = salv["kill_rate"], salv["oracle_path"]
         ref = None
         if rec.green:
             try:
@@ -488,7 +574,15 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         spec_match = spec.get("match", "skipped")
         vote = r.get("_vote", "no_second")
         valid = r.get("_valid", True)
-        cls, conf = classify_candidate(r, valid=valid, vote=vote, spec_match=spec_match)
+        second_green = bool(second_meta.get(qual, {}).get("green"))
+        # ground-truth spec vector (RFC §5.4 table) for this exact input, if the spec publishes one
+        sv = None
+        if r.get("_recon") and ADAPTERS.get(qual) is not None and qual in first:
+            sv = spec_vector_check(qual, r["_x"], ADAPTERS[qual], first[qual][1])
+        cls, conf = classify_candidate(
+            r, valid=valid, vote=vote, spec_match=spec_match, spec_vector=sv,
+            first_family=first_family.get(qual), vote_family=vote_family,
+            spec_family=spec_family, second_oracle_green=second_green)
         counts[cls] += 1
 
         minimal = r["input"]
@@ -530,13 +624,42 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
                 "valid_input": valid,
                 "a04_classification": r["classification"],
                 "cross_oracle_vote": vote,
-                "second_oracle_green": bool(second_meta.get(qual, {}).get("green")),
+                "second_oracle_green": second_green,
                 "spec_rederivation": spec_match,
                 "spec_answer": spec.get("answer"),
+                "spec_vector": sv,  # GROUND TRUTH (RFC table) when present; the assertable basis
+                "corroborating_families": sorted(
+                    {f for f in (first_family.get(qual), vote_family, spec_family) if f}
+                    if (vote == "agree_oracle" and second_green and spec_match == "oracle")
+                    else []),
                 "is_crash_divergence": _is_crash_divergence(r),
                 "note": r.get("note", ""),
             },
         })
+
+    # PHASE 5 — SPEC-VECTOR SWEEP (E03). Run the real library directly over the spec's OWN
+    # canonical vectors (RFC 3986 §5.4 table) — ground truth, no model, no candidate needed. A
+    # divergence here is assertable on the spec's own example. These augment the candidate-derived
+    # findings: a real bug whose canonical-input form was never generated still surfaces.
+    spec_vector_findings = []
+    for qual, x, expected, citation in sv_iter():
+        adapter = ADAPTERS.get(qual)
+        if adapter is None or qual not in first:
+            continue
+        chk = spec_vector_check(qual, x, adapter, first[qual][1])
+        if chk and chk["match"] == "real_wrong":
+            spec_vector_findings.append({
+                "qualname": qual, "minimal_input": repr(x), "original_input": repr(x),
+                "source": "spec-vector", "classification": "real-bug", "confidence": "high",
+                "real_result": chk["real"], "oracle_expected": repr(expected),
+                "evidence": {"valid_input": True, "a04_classification": "spec-vector",
+                             "spec_vector": chk, "ground_truth": citation,
+                             "note": "real library output disagrees with the spec's own "
+                                     f"published vector ({citation})"},
+            })
+    # NOTE: these are NOT A04 candidates, so they do not touch per_candidate_counts; they flow
+    # into findings → deduped → real_bugs (and real_bug_by_basis['ground-truth']) on their own.
+    findings.extend(spec_vector_findings)
 
     # dedupe findings by (qual, minimal_input, classification); keep the highest confidence.
     _rank = {"high": 3, "medium": 2, "low": 1}
@@ -556,6 +679,18 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
                     if f["classification"] == "spec-ambiguity" and f["confidence"] == "high"]
     review_queue.sort(key=lambda f: f["qualname"])
 
+    # the honest distinction (E03): ground-truth (spec-vector) and crash bugs are assertable;
+    # model-corroborated value bugs are corroboration-not-proof and still need A07 hand-verify.
+    def _basis(f):
+        ev = f["evidence"]
+        if ev.get("spec_vector") and ev["spec_vector"].get("match") == "real_wrong":
+            return "ground-truth"
+        if ev.get("is_crash_divergence"):
+            return "crash"
+        return "model-corroborated"
+    real_bug_basis = {b: sum(1 for f in real_bugs if _basis(f) == b)
+                      for b in ("ground-truth", "crash", "model-corroborated")}
+
     summary = {
         "candidates_in": len(cands),
         "reconstruct_failures": sum(1 for r in enriched if not r.get("_recon")),
@@ -566,6 +701,8 @@ def run_triage(candidates_path: Path, records_dir: Path, manifest_path: Path, ou
         "real_bug_findings": len(real_bugs),
         "real_bug_by_confidence": {c: sum(1 for f in real_bugs if f["confidence"] == c)
                                    for c in ("high", "medium", "low")},
+        "real_bug_by_basis": real_bug_basis,
+        "spec_vector_findings": len(spec_vector_findings),
         "human_review_queue": len(review_queue),
         "shortlist_size": len(shortlist),
         "shortlist_capped": short_capped,
@@ -587,15 +724,26 @@ def _print_report(summary, real_bugs, review_queue):
     print(f"\nclassification: {summary['per_candidate_counts']}")
     print(f"deduped findings: {summary['findings_deduped']} | "
           f"real-bug: {summary['real_bug_findings']} {summary['real_bug_by_confidence']} | "
+          f"by basis: {summary.get('real_bug_by_basis', {})} | "
+          f"spec-vector findings: {summary.get('spec_vector_findings', 0)} | "
           f"human-review queue (spec-ambiguity/high): {len(review_queue)}")
     if real_bugs:
-        print("\nRANKED real-bug findings (library crashes on valid inputs — A07 must verify):")
+        print("\nRANKED real-bug findings (ground-truth + crash are assertable; "
+              "model-corroborated still needs A07 verification):")
         for f in real_bugs:
-            print(f"  [{f['confidence']:6s}] {f['qualname']}  input={f['minimal_input']}")
-            print(f"           real={f['real_result']}  oracle={f['oracle_expected']}")
             ev = f["evidence"]
-            print(f"           vote={ev['cross_oracle_vote']} spec={ev['spec_rederivation']}"
-                  f" crash={ev['is_crash_divergence']}")
+            sv = ev.get("spec_vector")
+            basis = ("ground-truth" if (sv and sv.get("match") == "real_wrong")
+                     else "crash" if ev.get("is_crash_divergence") else "model-corroborated")
+            print(f"  [{f['confidence']:6s}] [{basis}] {f['qualname']}  "
+                  f"input={f['minimal_input']}")
+            print(f"           real={f['real_result']}  oracle/spec={f['oracle_expected']}")
+            if basis == "ground-truth":
+                print(f"           ground truth: {sv['citation']} (no model in the loop)")
+            else:
+                print(f"           vote={ev.get('cross_oracle_vote')} "
+                      f"spec={ev.get('spec_rederivation')} crash={ev.get('is_crash_divergence')}"
+                      f" families={ev.get('corroborating_families')}")
     else:
         print("\n0 real-bug findings — an honest, recorded outcome (the tool is a verifier first).")
     if review_queue:

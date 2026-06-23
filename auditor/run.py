@@ -93,7 +93,8 @@ async def _author_one_attempt(entry: dict, model: str, bat_model: str, target: s
         return None
     async with sem:
         r = await asyncio.to_thread(author_mod._author_independent, entry, model, bat_model,
-                                    target=target, max_tokens=max_tokens)
+                                    target=target, max_tokens=max_tokens,
+                                    trace_meta={"module": module_name})
     if "error" in r:  # _author_independent never raises; a gateway failure is a RED attempt
         budget.settle(reservation, 0.0)
         return r
@@ -138,7 +139,8 @@ async def process_function(entry: dict, model: str, run_dir: Path, target: str,
         rec.tokens["out"] += r["out_tok"]
         rec.oracle_path = str(oracles_dir / f"{module_name}.py")
         rec.gate = await loop.run_in_executor(gate_pool, _gate_in_pool,
-                                              module_name, str(oracles_dir), gate_cap)
+                                              module_name, str(oracles_dir), gate_cap,
+                                              entry["qualname"])
         disagree = author_mod._is_spec_disagreement(rec.gate)
         rec.attempt_log.append({"attempt": n, "green": rec.gate["green"],
                                 "kill_rate": rec.gate["kill_rate"], "note": rec.gate["note"],
@@ -153,9 +155,9 @@ async def process_function(entry: dict, model: str, run_dir: Path, target: str,
     return rec
 
 
-def _gate_in_pool(module_name: str, oracles_dir: str, cap: int) -> dict:
+def _gate_in_pool(module_name: str, oracles_dir: str, cap: int, qualname: str = "") -> dict:
     """Picklable wrapper for the process pool."""
-    return gate_authored(module_name, Path(oracles_dir), cap=cap)
+    return gate_authored(module_name, Path(oracles_dir), cap=cap, qualname=qualname)
 
 
 def _record_path(records_dir: Path, qualname: str) -> Path:

@@ -1,0 +1,279 @@
+{
+  "target": "email_validator",
+  "repo_path": "/home/mike/projects/cynthia-audit/targets/email-validator/repo",
+  "commit": "4cb55802cbaed782f5d9cffb4b7b717b3af7bd0a",
+  "package_dir": "email_validator",
+  "indexer": "auditor/index.py",
+  "functions": [
+    {
+      "module": "email_validator/__main__.py",
+      "qualname": "main",
+      "signature": "(dns_resolver: Optional[_Resolver]=None) -> None",
+      "span": [
+        27,
+        57
+      ],
+      "deterministic": false,
+      "impure_reasons": [
+        "call to print()",
+        "read of os.environ",
+        "read of sys.argv",
+        "read of sys.stdin"
+      ],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "main (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/deliverability.py",
+      "qualname": "caching_resolver",
+      "signature": "(*, timeout: Optional[int]=None, cache: Any=None, dns_resolver: Optional[dns.resolver.Resolver]=None) -> dns.resolver.Resolver",
+      "span": [
+        11,
+        18
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "caching resolver (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/deliverability.py",
+      "qualname": "validate_email_deliverability",
+      "signature": "(domain: str, domain_i18n: str, timeout: Optional[int]=None, dns_resolver: Optional[dns.resolver.Resolver]=None) -> DeliverabilityInfo",
+      "span": [
+        28,
+        159
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "validate email deliverability (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "split_email",
+      "signature": "(email: str) -> tuple[Optional[str], str, str, bool]",
+      "span": [
+        14,
+        198
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "split email (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "get_length_reason",
+      "signature": "(addr: str, limit: int) -> str",
+      "span": [
+        201,
+        205
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Helper function to return an error message related to invalid length.",
+      "doc": "Helper function to return an error message related to invalid length."
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "safe_character_display",
+      "signature": "(c: str) -> str",
+      "span": [
+        208,
+        222
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "safe character display (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "validate_email_local_part",
+      "signature": "(local: str, allow_smtputf8: bool=True, allow_empty_local: bool=False, quoted_local_part: bool=False, strict: bool=False) -> LocalPartValidationResult",
+      "span": [
+        231,
+        389
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Validates the syntax of the local part of an email address.",
+      "doc": "Validates the syntax of the local part of an email address."
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "check_unsafe_chars",
+      "signature": "(s: str, allow_space: bool=False) -> None",
+      "span": [
+        392,
+        441
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "check unsafe chars (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "check_dot_atom",
+      "signature": "(label: str, start_descr: str, end_descr: str, is_hostname: bool) -> None",
+      "span": [
+        444,
+        460
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "check dot atom (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "uts46_valid_char",
+      "signature": "(char: str) -> bool",
+      "span": [
+        463,
+        490
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "uts46 valid char (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "validate_email_domain_name",
+      "signature": "(domain: str, test_environment: bool=False, globally_deliverable: bool=True) -> DomainNameValidationResult",
+      "span": [
+        498,
+        694
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "Validates the syntax of the domain part of an email address.",
+      "doc": "Validates the syntax of the domain part of an email address."
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "validate_email_length",
+      "signature": "(addrinfo: ValidatedEmail) -> None",
+      "span": [
+        697,
+        757
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "validate email length (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/syntax.py",
+      "qualname": "validate_email_domain_literal",
+      "signature": "(domain_literal: str) -> DomainLiteralValidationResult",
+      "span": [
+        765,
+        822
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "validate email domain literal (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/types.py",
+      "qualname": "ValidatedEmail.email",
+      "signature": "(self) -> str",
+      "span": [
+        65,
+        67
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "email (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/types.py",
+      "qualname": "ValidatedEmail.as_constructor",
+      "signature": "(self) -> str",
+      "span": [
+        110,
+        119
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "as constructor (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/types.py",
+      "qualname": "ValidatedEmail.as_dict",
+      "signature": "(self) -> dict[str, Any]",
+      "span": [
+        122,
+        126
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "none",
+      "auditability_why": "no substantive docstring, no recognized universal invariant",
+      "intent": "as dict (no docstring)",
+      "doc": ""
+    },
+    {
+      "module": "email_validator/validate_email.py",
+      "qualname": "validate_email",
+      "signature": "(email: str | bytes, /, *, allow_smtputf8: Optional[bool]=None, allow_empty_local: Optional[bool]=None, allow_quoted_local: Optional[bool]=None, allow_domain_literal: Optional[bool]=None, allow_display_name: Optional[bool]=None, strict: Optional[bool]=None, check_deliverability: Optional[bool]=None, test_environment: Optional[bool]=None, globally_deliverable: Optional[bool]=None, timeout: Optional[int]=None, dns_resolver: Optional[_Resolver]=None) -> ValidatedEmail",
+      "span": [
+        16,
+        209
+      ],
+      "deterministic": true,
+      "impure_reasons": [],
+      "auditability": "spec",
+      "auditability_why": "docstring of 38 words",
+      "intent": "Given an email address, and some options, returns a ValidatedEmail instance",
+      "doc": "Given an email address, and some options, returns a ValidatedEmail instance\nwith information about the address if it is valid or, if the address is not\nvalid, raises an EmailNotValidError. This is the main function of the module."
+    }
+  ],
+  "summary": {
+    "total_public_functions": 17,
+    "auditability": {
+      "spec": 1,
+      "invariant": 0,
+      "none": 16
+    },
+    "deterministic": 16,
+    "auditable": 1
+  }
+}
