@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/slam_dunk.py — the LLM-load-bearing bug hunter: does shipped code obey its own docstring?
+"""auditor/authored_oracle.py — the LLM-authored-oracle path: does shipped code obey its own docstring?
 
 The thing pre-LLM tools categorically cannot do: read a function's BESPOKE natural-language behavioural
 claim and turn it into an executable check. Here the LLM does exactly two load-bearing things, BOTH
@@ -312,13 +312,13 @@ def candidates(manifests: list[Path], repos: set | None) -> list[tuple[dict, dic
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="slam dunk — does shipped code obey its own docstring?")
+    ap = argparse.ArgumentParser(description="authored-oracle audit — does shipped code obey its own docstring?")
     ap.add_argument("--targets", default="targets")
     ap.add_argument("--repos", default="packaging,dateutil,idna,more-itertools,markdown-it-py")
     ap.add_argument("--models", default="minimax-m3,deepseek-v4-pro,gemini-flash",
                     help="DISTINCT model families for diverse-consensus (breaks shared-bias hallucination)")
     ap.add_argument("--limit", type=int, default=0)
-    ap.add_argument("--out", default="results/slam_dunk")
+    ap.add_argument("--out", default="results/authored_oracle")
     args = ap.parse_args()
     models = [m.strip() for m in args.models.split(",") if m.strip()]
     repos = set(args.repos.split(",")) if args.repos else None
@@ -326,7 +326,7 @@ def main() -> int:
     if args.limit:
         cands = cands[: args.limit]
     outdir = Path(args.out); outdir.mkdir(parents=True, exist_ok=True)
-    print(f"[slam] {len(cands)} deterministic+doctested functions | diverse-consensus models={models}", flush=True)
+    print(f"[audit] {len(cands)} deterministic+doctested functions | diverse-consensus models={models}", flush=True)
     records, findings = [], []
     counts: dict = {}
     for i, (entry, man) in enumerate(cands, 1):

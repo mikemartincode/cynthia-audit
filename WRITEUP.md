@@ -118,7 +118,7 @@ The experiments are produced by a small pipeline (`auditor/`): an async author-a
 `cynthia-core` mutation gate with durable checkpointing; a stateless shape→strategy recall store with
 leave-one-out-clean exemplar retrieval; the obligation front-end (`intent_obligation.py`) and its
 validation through an external verification service (`fold_to_frontier.py`); the free-form authoring path
-with the diverse-vote + predicate-guard gate (`slam_dunk.py`); and the precision filter over the external
+with the diverse-vote + predicate-guard gate (`authored_oracle.py`); and the precision filter over the external
 dataset (`combine_filter.py`).
 
 ## Reproduction
