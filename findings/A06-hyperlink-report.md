@@ -13,6 +13,14 @@
 
 ## Real-bug findings (library crashes on a valid input — A07 must reproduce)
 
+> **Post-hoc human correction (2026-06-24):** the `URL.click` rows below are **NOT a confirmed bug.**
+> On source inspection the `NotImplementedError` is raised *intentionally*, under a maintainer comment
+> citing RFC 3986 §5.4.2's "loophole in prior specifications" (`src/hyperlink/_url.py`, the `click`
+> body). It is a deliberate, documented limitation. These rows are retained as the **raw run output**
+> (what the tool emitted, flagged "medium pending repro"); the human characterization and reclassification
+> live in `findings/url-click-rootless/REPORT.md` → *Correction*. This is itself an instance of the
+> doc-vs-source divergence mode the project's `WRITEUP.md` is about.
+
 4 finding(s) across 1 function(s): `URL.click`×4. Multiple inputs under one function are the SAME root cause shown by different minimal triggers — count findings by function, not by row.
 
 Each promotion required a CRASH divergence on a VALID input (never a value disagreement) plus corroboration from the cross-family second oracle and/or the independent spec re-derivation (`evidence` records which fired; an inconclusive cross-family vote still needs spec agreement to promote). Confidence is medium pending an independent A07 repro — none is asserted as a confirmed bug here.

@@ -3,7 +3,44 @@
 **Component:** `hyperlink.URL.click` (`src/hyperlink/_url.py`, the `NotImplementedError` at line 1627)
 **Affected:** hyperlink 21.0.0 (current PyPI release) and commit `978f2e6455` (2026-03-20). Long-standing.
 **Class:** correctness / robustness (crash on a valid input). **Not** a security vulnerability — see Impact.
-**Status:** reproduced standalone and hand-verified against RFC 3986. Reported as a correctness bug; no fix submitted.
+**Status:** ⚠ **Withdrawn as a bug — the raise is intentional** (see the Correction section, next). Reproduced standalone and hand-verified against RFC 3986; the divergence is real, but the source raises by design under a maintainer comment, so it reclassifies to a deliberate, documented limitation. Not filed upstream.
+
+## ⚠ Correction — the raise is intentional (read this first)
+
+The behavior documented below is **deliberate**, not an oversight. `URL.click` guards the scheme+rootless
+case explicitly and raises with a descriptive message under a maintainer comment that cites the RFC
+(`src/hyperlink/_url.py`, the `click` body):
+
+```python
+if clicked.scheme and not clicked.rooted:
+    # Schemes with relative paths are not well-defined.  RFC 3986 calls
+    # them a "loophole in prior specifications" that should be avoided,
+    # or supported only for backwards compatibility.
+    raise NotImplementedError(
+        "absolute URI with rootless path: %r" % (href,)
+    )
+```
+
+This is a **known, source-documented limitation**, so the finding is **not a reportable correctness
+bug**. Two honest nuances, neither of which restores it to one:
+
+- The comment justifies via RFC 3986 **§5.4.2** (the same-scheme "loophole", e.g. base `http:…` + ref
+  `http:g`). But even §5.4.2's *strict* answer is `"http:g" = "http:g"` (resolve to self), and §5.4.1's
+  first *normal* example is `"g:h" = "g:h"` — §5 does define an output; the maintainers simply chose to
+  raise rather than implement either branch.
+- The raise also catches §5.4.1-*normal* references whose scheme differs from the base (`g:h`, `mailto:`),
+  which the loophole reasoning doesn't strictly cover — so the limitation is slightly broader than its
+  stated justification. That is a *scoping/feature* observation, not a correctness defect: the code
+  intends to decline all scheme+rootless resolution and says so.
+
+The only arguably-fileable residue is a **docstring-completeness nit** — `click()`'s docstring cites
+"RFC 3986 section 5" without noting the scheme+rootless-path case it intentionally declines. Too minor
+to warrant an unsolicited report.
+
+**This finding's real value is now as evidence for the project's own thesis** (`WRITEUP.md`): an
+LLM-authored oracle plus a spec re-derivation asserted full §5 resolution as the contract; the library
+deliberately, knowingly scoped it narrower, and only reading the *source* (not the docstring + RFC)
+caught that — the same human-source-read step the writeup argues is load-bearing.
 
 ## Summary
 
@@ -41,7 +78,7 @@ round-trips fine. hyperlink can *parse* these URIs; it only fails to *resolve* t
 
 `URL.click` (docstring: *"Resolve the given URL relative to this URL ... For more information,
 see RFC 3986 section 5"*) reaches a branch for a reference that has a scheme but a rootless path
-and gives up:
+and **deliberately** raises (the maintainers' choice — see the Correction section above):
 
 ```python
 raise NotImplementedError("absolute URI with rootless path: %r" % (href,))
@@ -67,7 +104,9 @@ normalizer — raises an unhandled `NotImplementedError` the moment it meets an 
 (an exception on valid, common input). It is **not** a parser differential, an SSRF, or an
 authorization bypass, and is not represented as one. The worst realistic consequence is a crash in
 a service that resolves attacker-or-user-supplied link targets; severity depends entirely on the
-caller's error handling.
+caller's error handling. Per the Correction above, this is *intended* library behavior, so handling it
+is the caller's responsibility by design — not a defect the library would "fix"; `click()` signals
+"unsupported" loudly via the exception.
 
 ## Provenance (tool-assisted — disclosed)
 
@@ -97,5 +136,8 @@ fired blindly at maintainers. Options, to decide deliberately:
 2. OSS issue **and** a small PR implementing the §5.2.1 scheme-present case.
 3. Local verification only — record as a verified spec-conformance finding without filing upstream.
 
-Recommend (1): a clean, RFC-cited issue with a standalone repro is genuinely useful and low-risk;
-a PR touching reference-resolution semantics deserves more care than an unsolicited drive-by.
+**Superseded by the Correction above** — the limitation is deliberate and documented in the source, so
+there is no correctness bug to file. Recommend **(3), local-only**: retain this as a verified example of
+the auditor's doc-vs-source divergence mode, and of why the human source-read (not docstring + spec
+alone) is the load-bearing step. The lone fileable residue — a docstring that omits the intentional
+limitation — is too minor to be worth an unsolicited report.

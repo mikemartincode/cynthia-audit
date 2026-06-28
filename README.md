@@ -72,8 +72,10 @@ paths kept explicitly distinct in the finding's evidence:
     reference-resolution table) are the truth, not a model. A spec-vector SWEEP runs the real
     library over every published vector; a divergence is a real-bug/high anchored to the RFC's
     own example, with the citation. On hyperlink it is correct on 40/41 vectors — the one
-    divergence is `URL.click('http://a/b/c/d;p?q','g:h')`, re-confirming the A06 finding with no
-    model in the loop.
+    divergence is `URL.click('http://a/b/c/d;p?q','g:h')`, re-confirming the A06 divergence with no
+    model in the loop. (That divergence is real and RFC-table-anchored, but it is an *intentional*,
+    source-documented limitation in hyperlink — a spec-conformance gap, not a reportable bug; see
+    `findings/url-click-rootless/REPORT.md` → Correction.)
   - CROSS-FAMILY MAJORITY: a value divergence promotes only when ≥3 DISTINCT model families side
     with the oracle (≥2 cross-family GREEN oracles + a cross-family blind arbiter). 2 families
     alone (the production deepseek+minimax config) stays in the human-review queue — the
