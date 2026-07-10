@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""auditor/fuzz_obligations.py — STEP 3: hunt REAL property violations in shipped libraries.
+"""auditor/fuzz_obligations.py - STEP 3: hunt REAL property violations in shipped libraries.
 
 The obligations are proven to BITE (fold step 2). Now run them on inputs FAR beyond the doctests,
 against the REAL shipped code, and look for a genuine violation = a bug candidate. Heavy on Unicode,
 because that is where normalization-idempotence and round-trip bugs actually live (NFC/NFD, casefold
 vs lower, Turkish dotted-I, Kelvin sign, ligatures, zero-width/format chars, full-width).
 
-A violation is a CANDIDATE, not a verdict — every hit is hand-triaged: real bug vs misclassification
+A violation is a CANDIDATE, not a verdict - every hit is hand-triaged: real bug vs misclassification
 vs invalid-input (f raising is fine). No false claims; only a survivor that I read counts.
 
 Each obligation: a real callable (+ sibling for round-trip), a property checker (reused from
@@ -49,7 +49,7 @@ def fuzz_corpus(seeds: list[str]) -> list[str]:
     for x in list(seeds) + base + unicode_tricky:
         if x not in seen:
             seen.add(x); out.append(x)
-    # NFC/NFD variants of every seed — the highest-yield normalization probe
+    # NFC/NFD variants of every seed - the highest-yield normalization probe
     for s in list(seeds):
         for form in ("NFC", "NFD", "NFKC", "NFKD"):
             v = unicodedata.normalize(form, s)
@@ -63,7 +63,7 @@ def fuzz_corpus(seeds: list[str]) -> list[str]:
 
 def _imp(stmt, name):
     ns = {}
-    exec(stmt, ns)  # noqa: S102 — trusted import string
+    exec(stmt, ns)  # noqa: S102 - trusted import string
     return ns[name]
 
 
@@ -92,7 +92,7 @@ def load_obligations() -> list[dict]:
             lambda: canonicalize_license_expression, seeds=["MIT", "mit and apache-2.0"])
     except Exception:  # noqa: BLE001
         pass
-    # idna round-trip — prime Unicode bug territory (decode(encode(x)) == x)
+    # idna round-trip - prime Unicode bug territory (decode(encode(x)) == x)
     add("idna.encode/decode", "inverse", lambda: _imp("import idna; f=idna.encode", "f"),
         sibling=lambda: _imp("import idna; f=idna.decode", "f"),
         seeds=["bücher.de", "example.com", "日本.jp", "xn--bcher-kva.de"])
@@ -133,10 +133,10 @@ def main() -> int:
     res = hunt()
     print(f"\n=== {res['total_checks']} checks across {res['obligations']} obligations ===")
     if not res["findings"]:
-        print("No property violations — the audited functions are conformant on the fuzz corpus.")
+        print("No property violations - the audited functions are conformant on the fuzz corpus.")
         print("(Honest artifact: a calibrated prover that ran broadly and found conformance.)")
     else:
-        print(f"⚠ {len(res['findings'])} obligation(s) with VIOLATIONS — candidates for triage:\n")
+        print(f"⚠ {len(res['findings'])} obligation(s) with VIOLATIONS - candidates for triage:\n")
         for f in res["findings"]:
             print(f"  {f['obligation']}:")
             for v in f["violations"]:

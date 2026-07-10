@@ -1,10 +1,10 @@
-"""Self-contained proof for auditor/differential.py — the REAL-vs-REAL parser differential.
+"""Self-contained proof for auditor/differential.py - the REAL-vs-REAL parser differential.
 No network and no model: it runs the actual hyperlink (vendored), urllib.parse (stdlib), and
 rfc3986 (installed) parsers against each other over a deterministic input set.
 
 What it demonstrates, end to end (the E02 done-criteria):
   1. COMPARE: the same url through ≥2 independent real parsers, with a per-component diff.
-  2. CLASSIFY: spec-pinned (candidate) vs spec-permitted (ambiguity), each with an RFC basis —
+  2. CLASSIFY: spec-pinned (candidate) vs spec-permitted (ambiguity), each with an RFC basis -
      not asserted blindly; the verdict follows whether the diff survives RFC-permitted canon.
   3. SECURITY SURFACE: authority-boundary disagreements (host/userinfo/port) are flagged
      distinctly from the rest.
@@ -12,7 +12,7 @@ What it demonstrates, end to end (the E02 done-criteria):
      promoted, and a clean URL with only default-port/representation differences is not either.
 
 The strongest findings (the corroborated host-boundary and the host-VALUE split) require the
-THIRD independent parser — that is the cross-parser-corroboration design working as intended
+THIRD independent parser - that is the cross-parser-corroboration design working as intended
 (≥2 reals must agree on a host for it to be promoted), so this test requires rfc3986 present.
 
 Run: ~/projects/cynthia-core/.venv/bin/python auditor/test_differential.py
@@ -47,14 +47,14 @@ def test_parsers_present():
     findings depend on. urllib is stdlib; hyperlink is the vendored target."""
     ps = parsers()
     assert {"hyperlink", "urllib"} <= set(ps), ps
-    assert "rfc3986" in ps, ("rfc3986 not installed — the corroborated host-boundary findings "
+    assert "rfc3986" in ps, ("rfc3986 not installed - the corroborated host-boundary findings "
                              "need a 3rd independent parser; `pip install rfc3986`")
     print(f"parsers present: {sorted(ps)} (3-way differential)")
 
 
 def test_corroborated_host_boundary():
     """`http://a@b@c/`: two independent reals (urllib + rfc3986) resolve host `c`; hyperlink
-    rejects the authority. The canonical SSRF-bypass shape — promoted, security-relevant, with
+    rejects the authority. The canonical SSRF-bypass shape - promoted, security-relevant, with
     the §3.2 authority-grammar basis. NOT dressed as a CVE (note present, severity per field)."""
     ps = parsers()
     rec = compare("http://a@b@c/", ps)
@@ -66,11 +66,11 @@ def test_corroborated_host_boundary():
     assert "§3.2" in v["rfc_basis"] and "CVE" in v["note"], v  # cites RFC, disclaims CVE
     json.dumps(rec)  # serializable
     print(f"corroborated: {v['corroborating_parsers']} parsers resolve host {v['resolved_host']!r}, "
-          f"hyperlink rejects — promoted security-relevant")
+          f"hyperlink rejects - promoted security-relevant")
 
 
 def test_host_value_split():
-    r"""`http://evil.com\@good.com/`: ALL three parse it, but they DISAGREE on the host —
+    r"""`http://evil.com\@good.com/`: ALL three parse it, but they DISAGREE on the host -
     hyperlink + urllib read `good.com`, rfc3986 reads `evil.com`. A real host-VALUE differential
     (RFC vs WHATWG backslash handling), promoted as a spec-pinned authority-boundary candidate."""
     ps = parsers()
@@ -82,12 +82,12 @@ def test_host_value_split():
     assert host[0]["authority_boundary"] and "§3.2.2" in host[0]["rfc_basis"], host[0]
     # the three parsers genuinely split on the host value
     assert "good.com" in str(raw) and "evil.com" in str(raw), raw
-    print(f"host-value split: {raw} — spec-pinned authority-boundary candidate")
+    print(f"host-value split: {raw} - spec-pinned authority-boundary candidate")
 
 
 def test_agreement_is_no_finding():
     """Control: `http://example.com@evil.com/` is a scary-LOOKING userinfo URL, but all three
-    parsers agree host=evil.com, userinfo=example.com — so it is NOT promoted and shows no
+    parsers agree host=evil.com, userinfo=example.com - so it is NOT promoted and shows no
     authority-boundary disagreement (only benign default-port/representation diffs remain). No
     false positive on a single-`@` authority every parser reads identically."""
     ps = parsers()
@@ -97,7 +97,7 @@ def test_agreement_is_no_finding():
         assert not _pinned(rec, "host") and not _pinned(rec, "userinfo"), rec["component_diffs"]
         for comp in ("host", "userinfo"):  # parsers genuinely agree on the boundary
             assert not (_pinned(rec, comp) or _permitted(rec, comp)), (comp, rec["component_diffs"])
-    print("agreement control: example.com@evil.com — all parsers agree on host/userinfo, no finding")
+    print("agreement control: example.com@evil.com - all parsers agree on host/userinfo, no finding")
 
 
 def test_permitted_not_promoted():
@@ -115,7 +115,7 @@ def test_permitted_not_promoted():
 
 def test_default_port_not_a_candidate():
     """A clean `http://example.com/` differs only by representation (hyperlink fills the default
-    port 80, urllib/rfc3986 leave it absent) — elided under §6.2.3 and never promoted."""
+    port 80, urllib/rfc3986 leave it absent) - elided under §6.2.3 and never promoted."""
     ps = parsers()
     rec = compare("http://example.com/", ps)
     assert rec is None or not rec["promoted"], rec
@@ -144,7 +144,7 @@ def test_validity_requires_corroboration():
 
 def test_canon_folds_only_permitted():
     """The canonicalizer folds EXACTLY the RFC-permitted variation and no more: scheme/host case,
-    percent-hex case, IP-literal brackets, default-port — but NOT a genuinely different host."""
+    percent-hex case, IP-literal brackets, default-port - but NOT a genuinely different host."""
     assert _canon("scheme", "HTTP", "HTTP") == "http"            # §3.1
     assert _canon("host", "H", "http") == "h"                    # §3.2.2 case
     assert _canon("host", "[::1]", "http") == "::1"              # §3.2.2 brackets
@@ -156,7 +156,7 @@ def test_canon_folds_only_permitted():
 
 def test_run_differential_full():
     """END TO END over the full input set (URL_POOL + the authority probes): a summary, a
-    per-disagreement record file, and a markdown report — with ≥1 promoted security-relevant
+    per-disagreement record file, and a markdown report - with ≥1 promoted security-relevant
     candidate and a non-empty spec-permitted ambiguity table."""
     inputs = list(URL_POOL) + AUTHORITY_PROBES
     with tempfile.TemporaryDirectory() as td:

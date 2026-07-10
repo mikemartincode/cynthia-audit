@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""auditor/holdout.py — the leave-one-out held-out evaluation: build N stochastic reps of every
+"""auditor/holdout.py - the leave-one-out held-out evaluation: build N stochastic reps of every
 (function × candidate-strategy) cell for the held-out repo, then SIMULATE the three arms over those
 recorded outcomes (zero extra spend, full variance bands, no budget-rigging).
 
 Why simulate instead of running each arm live: coverage depends only on the per-(function,strategy)
 gate outcome. Record N independent reps of each cell once, and every arm is a deterministic function
-of those samples — so Arm1/Arm2/Arm3 are compared on the SAME stochastic draws (the cleanest possible
+of those samples - so Arm1/Arm2/Arm3 are compared on the SAME stochastic draws (the cleanest possible
 A/B), and the coverage-vs-budget curve falls out for free. rep j is one "run of the world": within a
 walk we try the arm's strategy order up to budget K, taking each strategy's rep-j sample; the function
 is covered in walk j iff any tried strategy greened at rep j. N reps -> N coverage samples per arm ->
 mean +/- spread.
 
-Arms (author MODEL is fixed across all three — only the retry ORDER differs; Opus does NOT author):
+Arms (author MODEL is fixed across all three - only the retry ORDER differs; Opus does NOT author):
   Arm1 baseline     : K=1, the default strategy (value for deterministic, stubbed_seam otherwise).
   Arm2 blind retry  : budget K, candidate strategies in the FIXED ladder order, stop at green.
   Arm3 recall retry : budget K, candidate strategies in RECALL-recommended order (excluding the

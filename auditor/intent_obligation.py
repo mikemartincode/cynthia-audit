@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""auditor/intent_obligation.py — the auto-obligation FRONT-END for frontier (the keystone).
+"""auditor/intent_obligation.py - the auto-obligation FRONT-END for frontier (the keystone).
 
 Turns a function's natural-language docstring into a *proven* property obligation the frontier
-queen can verify — with the LLM never the judge. The queen + gates are built; obligations were
+queen can verify - with the LLM never the judge. The queen + gates are built; obligations were
 hand-authored (the coverage bottleneck). Here a cheap model (M3) only CLASSIFIES intent into a
 TRUSTED, hand-written property template; execution renders every verdict.
 
-TEMPLATE LIBRARY (each a trusted, hand-written-once checker — the LLM never writes checking logic):
-  * idempotent   — f(f(x)) == f(x)                 (self-checking, parameter-free)
-  * case_lower   — str(f(x)) == str(f(x)).lower()  (output is lowercased; self-checking)
-  * inverse      — g(f(x)) == x for a sibling g    (round-trip; needs the pair, M3 names the sibling)
+TEMPLATE LIBRARY (each a trusted, hand-written-once checker - the LLM never writes checking logic):
+  * idempotent   - f(f(x)) == f(x)                 (self-checking, parameter-free)
+  * case_lower   - str(f(x)) == str(f(x)).lower()  (output is lowercased; self-checking)
+  * inverse      - g(f(x)) == x for a sibling g    (round-trip; needs the pair, M3 names the sibling)
 
 All anchored to the maintainer's OWN doctest inputs, so a confirmation is their ground truth.
 
@@ -67,7 +67,7 @@ def check_idempotent(f, inputs, *, sibling=None) -> dict:
 
 
 def check_case_lower(f, inputs, *, sibling=None) -> dict:
-    """f(x) is lowercased (a casing canonicalizer). GUARD: the property only applies to STRING output —
+    """f(x) is lowercased (a casing canonicalizer). GUARD: the property only applies to STRING output -
     if f returns a non-str (e.g. a bool predicate M3 misclassified), it is NOT_APPLICABLE, never a
     VIOLATION. A rigorous system must not emit a false bug claim from a category error."""
     rows = []
@@ -124,7 +124,7 @@ _CLASSIFY_SYSTEM = "You are a precise software-spec classifier. Output ONLY a JS
 
 _CLASSIFY_PROMPT = """\
 Read the function's documented behaviour and decide which of these PROPERTIES it satisfies for valid
-inputs. Be strict — a property applies only if the DOCS imply it, and the output can be fed where the
+inputs. Be strict - a property applies only if the DOCS imply it, and the output can be fed where the
 checker needs it.
 
 PROPERTIES:
@@ -215,7 +215,7 @@ def doctest_inputs(entry: dict) -> list:
 
 
 def to_frontier_gate(fn_name: str, prop: str, inputs: list, *, sibling_name: str | None = None) -> str:
-    """Emit a frontier-compatible gate_src for a property — assertions that PASS on a fill satisfying
+    """Emit a frontier-compatible gate_src for a property - assertions that PASS on a fill satisfying
     the property and RED otherwise. This is the auto-derived OBLIGATION expressed as a frontier gate
     (frontier runs `preamble + fill_src + gate_src`). The front-end produces the gate; the queen runs it."""
     lit = repr(list(inputs))
@@ -314,7 +314,7 @@ def run_slice(manifests: list[Path], model: str, limit: int) -> dict:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="auto-obligation front-end — template registry")
+    ap = argparse.ArgumentParser(description="auto-obligation front-end - template registry")
     ap.add_argument("--targets", default="targets")
     ap.add_argument("--model", default="minimax-m3")
     ap.add_argument("--limit", type=int, default=0)

@@ -1,0 +1,76 @@
+{
+  "per_repo": [
+    {
+      "repo": "packaging",
+      "det": {
+        "arm3_gt_arm2": true,
+        "arm2_gt_arm1_band": true,
+        "recall_proven": true,
+        "arm3_minus_arm2": 0.0247,
+        "ladder_only": false
+      },
+      "det_arms": {
+        "baseline": 0.12345679012345678,
+        "blind": 0.16049382716049382,
+        "recall": 0.18518518518518517
+      }
+    },
+    {
+      "repo": "dateutil",
+      "det": {
+        "arm3_gt_arm2": true,
+        "arm2_gt_arm1_band": false,
+        "recall_proven": false,
+        "arm3_minus_arm2": 0.0115,
+        "ladder_only": false
+      },
+      "det_arms": {
+        "baseline": 0.04597701149425287,
+        "blind": 0.08045977011494253,
+        "recall": 0.09195402298850575
+      }
+    },
+    {
+      "repo": "markdown-it-py",
+      "det": {
+        "arm3_gt_arm2": true,
+        "arm2_gt_arm1_band": true,
+        "recall_proven": true,
+        "arm3_minus_arm2": 0.0111,
+        "ladder_only": false
+      },
+      "det_arms": {
+        "baseline": 0.12222222222222222,
+        "blind": 0.18888888888888888,
+        "recall": 0.19999999999999998
+      }
+    },
+    {
+      "repo": "bleach",
+      "det": {
+        "arm3_gt_arm2": true,
+        "arm2_gt_arm1_band": true,
+        "recall_proven": true,
+        "arm3_minus_arm2": 0.0119,
+        "ladder_only": false
+      },
+      "det_arms": {
+        "baseline": 0.07142857142857142,
+        "blind": 0.15476190476190477,
+        "recall": 0.16666666666666666
+      }
+    }
+  ],
+  "pooled_det": {
+    "baseline": 0.09064327485380116,
+    "blind": 0.14619883040935674,
+    "recall": 0.1608187134502924,
+    "n": 114
+  },
+  "pooled_all": {
+    "baseline": 0.09166666666666666,
+    "blind": 0.14444444444444443,
+    "recall": 0.15833333333333333,
+    "n": 120
+  }
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/fold_to_frontier.py — STEP 2: prove the auto-derived obligations are real frontier gates.
+"""auditor/fold_to_frontier.py - STEP 2: prove the auto-derived obligations are real frontier gates.
 
 For each verified (function, property) the front-end produced, emit its frontier gate (intent_obligation
 .to_frontier_gate) and run it through frontier's OWN gate machinery (cynthia.services.frontier.gates
@@ -23,7 +23,7 @@ if str(_V3) not in sys.path:
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from intent_obligation import to_frontier_gate  # noqa: E402
-from cynthia.services.frontier.gates import run_gate  # noqa: E402 — frontier's real gate runner
+from cynthia.services.frontier.gates import run_gate  # noqa: E402 - frontier's real gate runner
 
 # verified obligations from the idempotent-slice run (real packaging functions), each with a
 # property-BREAKING mutant of the SAME name to prove the auto-derived gate bites.
@@ -40,7 +40,7 @@ CASES = [
      "import": "from packaging.utils import canonicalize_version",
      "inputs": ["1.0.1", "1.0.0"],
      "mutant": "def canonicalize_version(v):\n    return str(v) + '.0'"},  # grows each call -> not idempotent
-    # (normalize_pre is internal — absent from pip packaging's public utils; it must be folded against
+    # (normalize_pre is internal - absent from pip packaging's public utils; it must be folded against
     #  the SAME vendored commit the obligation was verified on. Version consistency matters for auditing.)
 ]
 

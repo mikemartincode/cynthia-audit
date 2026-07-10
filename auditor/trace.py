@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""auditor/trace.py — full execution trace of the audit pipeline (LLMs + gates + oracles).
+"""auditor/trace.py - full execution trace of the audit pipeline (LLMs + gates + oracles).
 
 The records the pipeline already writes (results/<run>/records/*.json, the oracle .py + _raw.txt
 files, the sweep JSON) capture OUTCOMES. They do NOT capture the two things you'd need to ever
 PREDICT an outcome from its inputs and "feed it" precomputed:
 
-  1. the exact LLM INPUT — `call_model` saved only the response (`_raw.txt`), never the
+  1. the exact LLM INPUT - `call_model` saved only the response (`_raw.txt`), never the
      system+user prompt that produced it. An (prompt -> response -> verdict) corpus needs both.
-  2. the per-MUTANT gate detail — the verdict names survivors/errored by tag, but not the full
+  2. the per-MUTANT gate detail - the verdict names survivors/errored by tag, but not the full
      generated mutant set with each mutant's source + kill/survive verdict. That table is the
      ground truth a "will this oracle gate GREEN?" predictor would learn from.
 
@@ -15,9 +15,9 @@ This module is that capture, as an append-only JSONL event stream, env-gated and
 when off. Two events cover the whole pipeline because the pipeline has exactly two LLM/gate
 chokepoints:
 
-  llm_call  — one per gateway call: {qualname, role (reference|battery|...), model, shape,
+  llm_call  - one per gateway call: {qualname, role (reference|battery|...), model, shape,
               system, user, response_raw, extracted_code, in_tok, out_tok, cost, elapsed, meta}
-  gate      — one per mutation gate: {qualname, module, verdict (full dict), mutants:[{tag,
+  gate      - one per mutation gate: {qualname, module, verdict (full dict), mutants:[{tag,
               kind, verdict, src}], equivalent_count, cap}
 
 PROCESS SAFETY. Authoring runs in main-process threads (asyncio.to_thread); the gate runs in a
@@ -27,7 +27,7 @@ OWN shard `trace.<pid>.jsonl`; `merge()` concatenates + ts-sorts them into `trac
 `trace_summary.json`. The distinct shard pids are also a free parallelism artifact.
 
 Enable by setting AUDITOR_TRACE_DIR to a directory; everything else is automatic. Tracing NEVER
-raises into the pipeline — a trace failure is swallowed, the audit run is never collateral.
+raises into the pipeline - a trace failure is swallowed, the audit run is never collateral.
 
 CLI:
     python auditor/trace.py merge <trace_dir>     # shards -> trace.jsonl + trace_summary.json
@@ -66,7 +66,7 @@ def _coerce(o):
 
 def emit(event: str, **fields) -> None:
     """Append one event to this process's shard. No-op when AUDITOR_TRACE_DIR is unset.
-    Swallows every error — tracing is observation, it must never break the observed run."""
+    Swallows every error - tracing is observation, it must never break the observed run."""
     d = trace_dir()
     if d is None:
         return
@@ -83,7 +83,7 @@ def emit(event: str, **fields) -> None:
                 _FH_PID = pid
             _FH.write(line)
             _FH.flush()
-    except Exception:  # noqa: BLE001 — tracing is best-effort, never fatal
+    except Exception:  # noqa: BLE001 - tracing is best-effort, never fatal
         pass
 
 
@@ -102,7 +102,7 @@ def merge(d: Path) -> dict:
                 continue
             try:
                 events.append(json.loads(ln))
-            except Exception:  # noqa: BLE001 — a torn line is skipped, not fatal
+            except Exception:  # noqa: BLE001 - a torn line is skipped, not fatal
                 continue
     events.sort(key=lambda e: e.get("ts", 0.0))
     (d / "trace.jsonl").write_text(

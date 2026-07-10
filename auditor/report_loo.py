@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""auditor/report_loo.py — assemble the LEAVE-ONE-OUT deliverables across all eligible held-out repos.
+"""auditor/report_loo.py - assemble the LEAVE-ONE-OUT deliverables across all eligible held-out repos.
 
 For each eligible repo R: re-simulate the 3 arms (baseline / blind / recall) over R's recorded
-held-out cell outcomes, with R EXCLUDED from the recall store (the leave-one-out lever — identical to
+held-out cell outcomes, with R EXCLUDED from the recall store (the leave-one-out lever - identical to
 deleting R's rows because recall is stateless aggregation). Reports per repo AND a pooled
 micro-average (total covered functions / total functions across repos). Two slices: DETERMINISTIC-only
-(the meaningful one — where the strategy ladder has >1 candidate so order can matter) and ALL functions
+(the meaningful one - where the strategy ladder has >1 candidate so order can matter) and ALL functions
 (includes nondeterministic stubbed_seam, ~0 recovery on this basket, dilutes equally across arms).
 
 Pure: reads results/holdout/<repo>/records + results/corpus/recall.db; writes a grouped-bar SVG +
@@ -25,7 +25,7 @@ import holdout as H  # noqa: E402
 from recall_strategy import StrategyRecall  # noqa: E402
 
 ELIGIBLE = ["packaging", "dateutil", "markdown-it-py", "bleach"]
-PRECOMMITTED = "dateutil"  # lowest baseline coverage — the pre-committed primary pick
+PRECOMMITTED = "dateutil"  # lowest baseline coverage - the pre-committed primary pick
 
 
 def _load_repo(repo: str, recall: StrategyRecall, reps: int, budget_k: int, func_limit: int) -> dict:
@@ -76,7 +76,7 @@ def _svg_grouped(per_repo: list[dict], slice_key: str, pooled: dict) -> str:
     P = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H_}" font-family="sans-serif" font-size="12">',
          f'<rect width="{W}" height="{H_}" fill="white"/>',
          f'<text x="{W/2}" y="22" text-anchor="middle" font-size="15" font-weight="bold">'
-         f'Held-out oracle coverage by arm — leave-one-out, {slice_key}-functions</text>']
+         f'Held-out oracle coverage by arm - leave-one-out, {slice_key}-functions</text>']
     for g in range(0, 11, 2):
         v = ymax * g / 10
         P.append(f'<line x1="{ml}" y1="{y(v):.1f}" x2="{W-mr}" y2="{y(v):.1f}" stroke="#eee"/>')
@@ -156,31 +156,31 @@ def main() -> int:
 
 def _build_md(per_repo: list[dict], pooled_det: dict, pooled_all: dict) -> str:
     lift = pooled_det["recall"] - pooled_det["blind"]
-    L = ["# Coverage-Recovery A/B — does shape→strategy recall lift oracle coverage?",
+    L = ["# Coverage-Recovery A/B - does shape->strategy recall lift oracle coverage?",
          "",
          "**Claim boundary.** *Coverage* = fraction of auditable functions whose authored oracle passes "
          "the cynthia-core **mutation gate** (gate-GREEN = proven non-vacuous). The gate proves teeth, "
          "**not** correctness. This measures whether recall learns *which authoring strategy maximizes "
-         "gate-GREEN per function shape* — necessary, not sufficient, for correctness. No model ever "
+         "gate-GREEN per function shape* - necessary, not sufficient, for correctness. No model ever "
          "*approves* an oracle; the gate is the sole authority.",
          "",
-         "**'recall' here** = a run-history *shape→strategy* lookup (which oracle shape — value / "
-         "invariant / property — most often gates GREEN for a function's coarse shape), learned across "
+         "**'recall' here** = a run-history *shape->strategy* lookup (which oracle shape - value / "
+         "invariant / property - most often gates GREEN for a function's coarse shape), learned across "
          "repos. NOT cynthia-audit's E04 input-coverage \"recall\", NOT the cynthia-v3 run-history service.",
          "",
          "## Design",
          "- **Author model fixed** = deepseek-v4-pro across the corpus and all arms (Opus does not author).",
          "- **Leave-one-out across all 4 eligible repos** (packaging, dateutil, markdown-it-py, bleach; "
-         "idna + hyperlink excluded as auditor-built). No single cherry-picked held-out repo — every "
+         "idna + hyperlink excluded as auditor-built). No single cherry-picked held-out repo - every "
          "eligible repo is held out in turn. The **pre-committed** rule (held-out = lowest baseline "
          "coverage) names **dateutil**; it is reported, but all four are shown.",
          "- For each held-out repo, recall is queried with that repo's own rows **excluded** (≡ deleting "
-         "them — recall is stateless aggregation, so leave-one-out is exact by construction).",
+         "them - recall is stateless aggregation, so leave-one-out is exact by construction).",
          "- Arms (per function, author fixed): **Arm1 baseline** = default strategy, 1 attempt; "
          "**Arm2 blind** = fixed ladder order, budget K=2; **Arm3 recall** = recall-recommended order, "
          "K=2. Coverage simulated over 3 independent stochastic reps of each (function × strategy) cell.",
          "",
-         "## Result — deterministic functions (where the ladder has >1 candidate)",
+         "## Result - deterministic functions (where the ladder has >1 candidate)",
          _table(per_repo, "det", pooled_det),
          "",
          "![coverage by arm, deterministic](coverage_by_arm_det.svg)",
@@ -188,15 +188,15 @@ def _build_md(per_repo: list[dict], pooled_det: dict, pooled_all: dict) -> str:
          f"**Pooled recall lift over blind retry (Arm3 − Arm2): {lift:+.3f}.** "
          + ("Recall beats blind retry." if lift > 1e-9 else
             "Recall did NOT beat blind retry on this corpus (the lift, if any, came from the ladder, "
-            "not from shape-conditioned ordering) — reported as a null/negative result."),
+            "not from shape-conditioned ordering) - reported as a null/negative result."),
          "",
          "### Reading this honestly",
          "- This is a **hard corpus**: independently-authored oracles gate-GREEN on a small fraction of "
          "these functions (PEP 440 specifiers, timezone logic, parsers/renderers). Absolute coverage is "
-         "low, so there is little *headroom* for any retry policy to recover — recall can only reorder "
+         "low, so there is little *headroom* for any retry policy to recover - recall can only reorder "
          "toward strategies that work, and on low-ceiling repos (dateutil, packaging) almost no strategy "
          "works at all.",
-         "- Where there IS headroom (bleach, markdown-it-py — invariant/property recover functions value "
+         "- Where there IS headroom (bleach, markdown-it-py - invariant/property recover functions value "
          "misses), that is where any Arm3>Arm2 signal appears; where there isn't, all arms collapse "
          "together. The per-repo table makes this visible rather than averaging it away.",
          "",
@@ -214,7 +214,7 @@ def _build_md(per_repo: list[dict], pooled_det: dict, pooled_all: dict) -> str:
          "- **Coarse shape key** (auditability · deterministic · arity-bucket · has-inverse).",
          "- **Low absolute coverage on this basket** bounds how large any lift can be; a basket chosen "
          "for higher independent-oracle coverage (or best-of-N authoring) would give more headroom.",
-         "- 4 held-out repos, one author model, one gateway snapshot — a point estimate, not a distribution.",
+         "- 4 held-out repos, one author model, one gateway snapshot - a point estimate, not a distribution.",
          "",
          "---", "_Generated by auditor/report_loo.py from the run artifacts._"]
     return "\n".join(L)

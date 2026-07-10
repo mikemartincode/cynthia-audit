@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""auditor/bakeoff.py — STEP 0: the model bake-off (generalizes seed/deepseek_author.py).
+"""auditor/bakeoff.py - STEP 0: the model bake-off (generalizes seed/deepseek_author.py).
 
-Settles who authors before any basket run. On ONE calibration repo (hyperlink — distinct from the
+Settles who authors before any basket run. On ONE calibration repo (hyperlink - distinct from the
 held-out basket), author a value-shape oracle per function with each candidate model, gate it, and
 report per model: gate-GREEN rate, strict-GREEN rate, cost/function, mean latency. The green-rate
 sizes the (deferred) Opus tail; the cost/latency picks the primary author. Routed through the REAL
@@ -10,11 +10,11 @@ predict the basket, not a toy single-call path.
 
 Also runs a CACHE PREFLIGHT: two different functions authored SEQUENTIALLY for one model; the second
 call must report cache_read > 0, proving the static-first prompt assembly makes the passive prefix
-cache fire. A zero here means the prefix isn't stable — the cheapest catch of the most expensive
+cache fire. A zero here means the prefix isn't stable - the cheapest catch of the most expensive
 silent mistake (paying full input price hundreds of times).
 
 Decision rule (apply AFTER measuring, report to Mike): M3 near DeepSeek -> M3 primary (free); M3
-clearly worse -> DeepSeek primary. The gate is the ONLY trust authority throughout — models author,
+clearly worse -> DeepSeek primary. The gate is the ONLY trust authority throughout - models author,
 never approve.
 """
 
@@ -37,12 +37,12 @@ DEFAULT_MODELS = ["minimax-m3", "deepseek-v4-pro", "deepseek-v4-flash"]
 
 async def cache_preflight(funcs: list[dict], target: str, run_dir: Path, model: str) -> dict:
     """Verify the static-first prompt makes the passive prefix cache fire. Tiny (max_tokens=40) direct
-    calls — this measures caching, not authoring. Three reference calls: A (cold store of system+
-    contract+specA), B (a DIFFERENT spec — shares only the static contract prefix), then A again
+    calls - this measures caching, not authoring. Three reference calls: A (cold store of system+
+    contract+specA), B (a DIFFERENT spec - shares only the static contract prefix), then A again
     (identical to the first). cache_read>0 on B proves the CONTRACT prefix transfers across functions;
     on A-again it proves the cache fired at all. Three calls makes the signal robust to DeepSeek's
     async cache-write propagation delay (which can zero a strict back-to-back A,B pair while the
-    real concurrent workload — hundreds of cells over minutes — stays warm)."""
+    real concurrent workload - hundreds of cells over minutes - stays warm)."""
     probe = funcs[:2]
     contract = author_mod._REFERENCE_CONTRACTS["value"]
     specs = [author_mod.build_spec(f, target=target, shape="value") for f in probe]

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""auditor/report.py — assemble the deliverables from the run artifacts: the numbers table, one
+"""auditor/report.py - assemble the deliverables from the run artifacts: the numbers table, one
 coverage-by-arm chart (SVG, with Arm-1's variance band drawn), and RESULTS.md in the honest voice of
 the findings/ reports. Pure: reads bakeoff_report.json / corpus_report.json / holdout_report.json and
 writes; no spend, no model.
 
-The chart is hand-emitted SVG (stdlib only — no matplotlib): three bars (baseline / blind retry /
+The chart is hand-emitted SVG (stdlib only - no matplotlib): three bars (baseline / blind retry /
 recall-guided), Arm-1's stochastic band drawn as a shaded rect lo..hi, error bars on the retry arms,
 and the K=infinity ceiling as a dashed line. SVG because it is a real vector figure with zero deps.
 """
@@ -39,7 +39,7 @@ def _svg_coverage_chart(arms: dict, held_out_repo: str, budget_k: int) -> str:
              f'font-family="sans-serif" font-size="13">',
              f'<rect width="{W}" height="{H}" fill="white"/>',
              f'<text x="{W/2}" y="24" text-anchor="middle" font-size="16" font-weight="bold">'
-             f'Oracle coverage by arm — held-out: {held_out_repo}</text>']
+             f'Oracle coverage by arm - held-out: {held_out_repo}</text>']
     # y gridlines + axis
     for g in range(0, 11, 2):
         v = g / 10
@@ -132,22 +132,22 @@ def _arms_table(ho: dict) -> str:
 
 def build_results_md(bk: dict | None, corpus: dict | None, ho: dict | None, *,
                      holdout_rule: str, chart_path: str) -> str:
-    L = ["# Coverage-Recovery A/B — does shape→strategy recall lift oracle coverage?",
+    L = ["# Coverage-Recovery A/B - does shape->strategy recall lift oracle coverage?",
          "",
          "**Claim boundary (read first).** *Coverage* here = the fraction of auditable functions for "
          "which a model authored an oracle that passes the cynthia-core **mutation gate** "
          "(gate-GREEN = proven non-vacuous). The gate proves an oracle has *teeth*, **not** that it is "
          "correct beyond non-vacuity. So this experiment measures whether recall learns *which "
-         "authoring strategy maximizes gate-GREEN per function shape* — necessary-but-not-sufficient "
+         "authoring strategy maximizes gate-GREEN per function shape* - necessary-but-not-sufficient "
          "for correctness. We do **not** claim recall learns correctness. (strict-GREEN, recorded "
-         "alongside, additionally kills an author-blind memorizer — a tighter bar; full correctness "
+         "alongside, additionally kills an author-blind memorizer - a tighter bar; full correctness "
          "would need the differential sweep + a human, out of scope here.)",
          "",
          "**Trust primitive.** No model ever *approves* an oracle. Models only *author*; the mutation "
          "gate is the sole authority that marks an oracle covered. Every number below is gate-decided.",
          "",
-         "**'recall' disambiguation.** This is a run-history shape→strategy lookup built for this "
-         "experiment — *not* cynthia-audit's E04 input-coverage \"RECALL LIFT\" (source lines reached) "
+         "**'recall' disambiguation.** This is a run-history shape->strategy lookup built for this "
+         "experiment - *not* cynthia-audit's E04 input-coverage \"RECALL LIFT\" (source lines reached) "
          "and *not* the cynthia-v3 run-history `recall` service (env_version / tool sequences).",
          ""]
     if bk:
@@ -157,7 +157,7 @@ def build_results_md(bk: dict | None, corpus: dict | None, ho: dict | None, *,
               "basket by construction.", "", _bakeoff_table(bk), ""]
     if corpus:
         L += ["## 2. Per-repo baseline coverage (corpus pass)",
-              "Try-all over every basket repo (each candidate strategy on each function) — the "
+              "Try-all over every basket repo (each candidate strategy on each function) - the "
               "training rows for recall, and the input to the held-out selection rule.", "",
               _per_repo_baseline_table(corpus, corpus.get("recall_db", "")), ""]
     if ho:
@@ -172,19 +172,19 @@ def build_results_md(bk: dict | None, corpus: dict | None, ho: dict | None, *,
               f"![coverage by arm]({chart_path})", "",
               "### What is (and isn't) shown",
               f"- **recall vs blind retry (the thesis): Arm3 − Arm2 = "
-              f"{v['arm3_minus_arm2']:+.3f}** → recall beats blind retry: "
+              f"{v['arm3_minus_arm2']:+.3f}** -> recall beats blind retry: "
               f"**{v['arm3_gt_arm2']}**.",
               f"- retrying at all helps (Arm2 > top of Arm1 band): **{v['arm2_gt_arm1_band']}**.",
-              f"- strict 3-way chain (Arm3 > Arm2 > Arm1 band) — the handoff's IFF: "
+              f"- strict 3-way chain (Arm3 > Arm2 > Arm1 band) - the handoff's IFF: "
               f"**{v['recall_proven']}**.",
-              ("- ⚠ Arm3 ≈ Arm2 → the lift came from the *ladder*, not recall (honest negative)."
+              ("- ⚠ Arm3 ≈ Arm2 -> the lift came from the *ladder*, not recall (honest negative)."
                if v["ladder_only"] else
                "- The Arm3/Arm2 gap is the recall-attributable lift (the ladder alone is Arm2)."),
               "",
               "### Limitations (under-claim)",
-              "- **A single held-out repo, not N** — this is one leave-one-out point, not a "
+              "- **A single held-out repo, not N** - this is one leave-one-out point, not a "
               "distribution. Cross-repo transfer is shown once, not characterized.",
-              "- **Coarse shape key** (`auditability | deterministic | arity-bucket | has-inverse`) — "
+              "- **Coarse shape key** (`auditability | deterministic | arity-bucket | has-inverse`) - "
               "a finer key needs more corpus per cell to stay non-noisy.",
               "- **Coverage = gate-pass = non-vacuity, not correctness** (see claim boundary).",
               "- Arm coverage is reported at budget K with the K=∞ ceiling shown; the lift is "

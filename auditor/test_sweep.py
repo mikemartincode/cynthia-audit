@@ -1,4 +1,4 @@
-"""Self-contained proof for auditor/sweep.py — no network and no live A03 run required (the
+"""Self-contained proof for auditor/sweep.py - no network and no live A03 run required (the
 target clone is needed only to import the auditor, like all auditor code). Synthetic
 self-describing oracles (each ships its own ADAPTER + GEN_INPUTS) exercise the full
 differential sweep WITHOUT touching the real target: the fidelity gate (mappable vs
@@ -208,7 +208,7 @@ def test_run_sweep_end_to_end():
         clean = next(r for r in per if r["qualname"] == "syn.clean")
         assert clean["mappable"] and clean["divergences"] == 0, clean
 
-        # candidates.json shape — every required field present
+        # candidates.json shape - every required field present
         cands = json.loads((out / "candidates.json").read_text())
         assert cands, "expected candidate records"
         for c in cands:

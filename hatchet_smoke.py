@@ -11,7 +11,8 @@ import sys
 from pathlib import Path
 
 # load HATCHET_* from the V3 .env (mirror cynthia.hatchet_client._load_env)
-for _line in Path("/home/mike/projects/cynthiaV3/.env").read_text().splitlines():
+_env_file = Path(__file__).resolve().parent / ".env"
+for _line in (_env_file.read_text().splitlines() if _env_file.exists() else []):
     _line = _line.strip()
     if _line.startswith("HATCHET_") and "=" in _line:
         _k, _, _v = _line.partition("=")
@@ -40,7 +41,7 @@ def main() -> int:
         w = hatchet.worker("audit-spike-worker", workflows=[audit_spike_ping])
         w.start()  # blocks
         return 0
-    # run mode: blocking single-task run (NOT aio_run_many — avoids the known deadlock)
+    # run mode: blocking single-task run (NOT aio_run_many - avoids the known deadlock)
     out = audit_spike_ping.run(PingIn(x=21))
     print("ROUND-TRIP RESULT:", out)
     ok = isinstance(out, dict) and out.get("pong") == 42 and out.get("auditor_importable")

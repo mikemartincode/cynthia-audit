@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""auditor/spike_frontload.py — focused single-function spike: does front-loading spec-side test data
+"""auditor/spike_frontload.py - focused single-function spike: does front-loading spec-side test data
 (frontload.py) cut WALL TIME and/or lift ACCURACY (gate-GREEN), across four authors?
 
 Authors: m3-nothink, m3-think, m27-fast, deepseek-pro. Conditions: baseline vs front-loaded (doctest
 anchors + type-derived edge inputs). Reps per cell give a coverage rate and a wall average on ONE
-function — a fast feasibility read, not a corpus statistic. The mutation gate (capped subprocess) is
+function - a fast feasibility read, not a corpus statistic. The mutation gate (capped subprocess) is
 the sole arbiter; coverage = gate-GREEN = non-vacuity, NOT correctness.
 """
 

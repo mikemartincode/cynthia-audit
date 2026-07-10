@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""auditor/strategies.py — adversarial input generators, one per oracle calling convention.
+"""auditor/strategies.py - adversarial input generators, one per oracle calling convention.
 
 The generated set is where bugs that the oracle author's hand-picked probes missed can fall
 out, so the pools below are deliberately HOSTILE: degenerate ports (leading zeros, overflow,
 non-numeric), unicode hosts/paths, percent-encoding both valid and malformed, IPv6 literals,
 userinfo with/without password, dot-segment paths, mixed-case schemes, schemeless/relative
 refs, very long components, and empty/edge strings. The semver sweep that found nothing did
-so partly on a gentle generator — these are not gentle.
+so partly on a gentle generator - these are not gentle.
 
 Generation is DETERMINISTIC (fixed pools, `itertools.product`, stable order) so a run is
 reproducible and a candidate can be re-found. Each convention caps its product so the sweep
@@ -24,7 +24,7 @@ A convention maps an oracle's one-argument shape to an iterator of those argumen
   url_name_optval -> (url, name) or (url, name, value)
   url_name_value -> (url, name, value)
   url_remove     -> (url, name) | (url, name, value) | (url, name, value, limit)
-  url_remove4    -> (url, name, value, limit)   (DecodedURL.remove — fixed arity)
+  url_remove4    -> (url, name, value, limit)   (DecodedURL.remove - fixed arity)
   parse_triple   -> (url, decoded, lazy)
 """
 
@@ -83,7 +83,7 @@ BOOL_POOL = [True, False]
 
 # ---------------------------------------------------------------- E04 augmentation (opt-in)
 #
-# By default the `url` convention draws from the static, hand-authored URL_POOL above — the
+# By default the `url` convention draws from the static, hand-authored URL_POOL above - the
 # pre-E04 baseline, kept reproducible. When AUDITOR_E04=1 (or `enable_e04()` is called), the
 # single-string `url` convention is EXTENDED with the E04 corpus (grammar ∪ seed-corpus ∪
 # coverage-guided, auditor/grammar.py). The extra inputs are APPENDED, so the capped cartesian
@@ -217,7 +217,7 @@ CONVENTION = {
     "DecodedURL.remove": "url_remove4",
     "parse": "parse_triple",
     # URL.path, URL.replace, iter_pairs, make_sentinel are representation-mismatch
-    # (unmappable) oracles — the sweep gates them out before generation, so no
+    # (unmappable) oracles - the sweep gates them out before generation, so no
     # convention is registered.
 }
 

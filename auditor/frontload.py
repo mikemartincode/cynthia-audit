@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""auditor/frontload.py — deterministic, SPEC-side data front-loaded into the authoring prompt to cut
+"""auditor/frontload.py - deterministic, SPEC-side data front-loaded into the authoring prompt to cut
 the reasoning the model would otherwise spend, WITHOUT coupling the oracle to the implementation.
 
 The reasoning-token cost of authoring an oracle is dominated by two derivations the model does from
-scratch every time: (a) WHICH inputs to probe, (b) the EXPECTED output for each. We hand it both —
+scratch every time: (a) WHICH inputs to probe, (b) the EXPECTED output for each. We hand it both -
 but only from sources that can't defeat the oracle's purpose:
 
-  * doctest anchors — `>>> f(x)` / `expected` pairs lifted from the DOCSTRING (the spec). These are
+  * doctest anchors - `>>> f(x)` / `expected` pairs lifted from the DOCSTRING (the spec). These are
     documented behavior, already legitimately part of the prompt; extracting + highlighting them lets
     the battery anchor expected values instead of re-deriving them. (We never feed the library's SOURCE
-    or its RUNTIME output — that would make the oracle bless the implementation and kill bug-finding.)
-  * type-derived edge inputs — a fixed edge-case set per primitive arg type (empty/space/unicode/long
+    or its RUNTIME output - that would make the oracle bless the implementation and kill bug-finding.)
+  * type-derived edge inputs - a fixed edge-case set per primitive arg type (empty/space/unicode/long
     for str, 0/±1/large for int, …). These are INPUTS only (no answers), so they carry no implementation
     bias; they just save the model from inventing a probe list and tend to cover regions it misses.
 
-Stdlib only (doctest, ast). Pure function of the manifest entry — no LLM, no network, deterministic.
+Stdlib only (doctest, ast). Pure function of the manifest entry - no LLM, no network, deterministic.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ from __future__ import annotations
 import ast
 import doctest
 
-# fixed edge-case input pools per primitive type — INPUTS only (never expected values).
+# fixed edge-case input pools per primitive type - INPUTS only (never expected values).
 _EDGE = {
     "str": ['""', '" "', '"a"', '"A"', '"aB"', '"a.b"', '"a..b"', '"a-_.b"', '"_a_"', '"café"',
             '"日本"', '"a b"', '"123"', '"a1-b2"', '"x" * 200'],
@@ -34,7 +34,7 @@ _EDGE = {
 
 def doctest_anchors(doc: str) -> list[tuple[str, str]]:
     """(call_source, expected_repr) pairs parsed from the docstring's `>>>` examples. Statements with
-    no expected output (imports, assignments) are dropped — only real input→output anchors remain."""
+    no expected output (imports, assignments) are dropped - only real input->output anchors remain."""
     if not doc:
         return []
     try:
@@ -50,7 +50,7 @@ def doctest_anchors(doc: str) -> list[tuple[str, str]]:
 
 
 def _primary_type(signature: str) -> str:
-    """The annotation (or a name-heuristic) of the first real positional parameter — the value the
+    """The annotation (or a name-heuristic) of the first real positional parameter - the value the
     edge-input pool is chosen for. Falls back to 'str' (the dominant arg type in the corpus)."""
     try:
         node = ast.parse(f"def _f{signature or '()'}: pass").body[0]
@@ -81,10 +81,10 @@ def frontload_block(entry: dict) -> str:
     edges = type_edge_inputs(entry.get("signature", ""))
     if not anchors and not edges:
         return ""
-    lines = ["PRE-SUPPLIED TEST DATA (use this to build the battery — you need not re-derive it):"]
+    lines = ["PRE-SUPPLIED TEST DATA (use this to build the battery - you need not re-derive it):"]
     if anchors:
         lines.append("")
-        lines.append("VERIFIED EXAMPLES from the documented spec (known-correct input → expected; "
+        lines.append("VERIFIED EXAMPLES from the documented spec (known-correct input -> expected; "
                      "anchor your battery on these exact pairs):")
         for src, want in anchors:
             lines.append(f"  {src}  ==>  {want}")

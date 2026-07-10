@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for auditor/recall_strategy.py — shape_key derivation, the GROUP BY recommendation, and
+"""Tests for auditor/recall_strategy.py - shape_key derivation, the GROUP BY recommendation, and
 the load-bearing STATELESSNESS property the leave-one-out held-out evaluation depends on."""
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from recall_strategy import (  # noqa: E402
     StrategyRecall, candidate_strategies, shape_key, split_oracle,
 )
 
-# a well-formed combined oracle module (reference FIRST, ending REFERENCE_NAME; battery after) — the
+# a well-formed combined oracle module (reference FIRST, ending REFERENCE_NAME; battery after) - the
 # exact structure author._author_independent assembles and author.REFERENCE_CONTRACT pins.
 _ORACLE = '''import math
 

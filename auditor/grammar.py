@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/grammar.py — E04 input generation: grammar-based, seed-corpus, and coverage-guided.
+"""auditor/grammar.py - E04 input generation: grammar-based, seed-corpus, and coverage-guided.
 
 The pre-E04 sweep (auditor/strategies.py) draws from a fixed, hand-authored `URL_POOL`. That
 is fuzzing-adjacent but finite and static: a bug hiding behind a structurally-unusual-yet-valid
@@ -7,25 +7,25 @@ URI the author didn't think to write is simply never reached. This module raises
 three independent axes, each of which feeds the SAME differential sweep so the lift is measured,
 not asserted:
 
-  1. GRAMMAR  — generate structurally-valid-but-weird URIs straight from RFC 3986's ABNF
+  1. GRAMMAR  - generate structurally-valid-but-weird URIs straight from RFC 3986's ABNF
      (Appendix A): every authority form (reg-name / IPv4 / IPv6 / IPvFuture / empty), rootless
      vs //-authority paths, dot-segments, ports (incl. degenerate), query, fragment, and
      percent-encoded octets. Deterministic (seeded), and every emitted URI is validated to
      parse (so it exercises the post-parse code paths, not just the reject path).
 
-  2. SEED     — the target's OWN test fixtures (the maintainers' adversarial corpus, extracted
+  2. SEED     - the target's OWN test fixtures (the maintainers' adversarial corpus, extracted
      from the test modules by AST) UNION a dictionary of known edge-case values (Unicode
      normalization, the RFC's own §1.1.2 examples, percent-encoding edge cases). A library's
      regression suite is the single densest source of inputs that touch real edge branches.
 
-  3. COVERAGE — a bounded greybox loop (the AFL/libFuzzer core idea, no atheris dependency):
+  3. COVERAGE - a bounded greybox loop (the AFL/libFuzzer core idea, no atheris dependency):
      mutate the corpus, keep only a mutant that executes a target line not yet covered, repeat.
-     Coverage is measured with `sys.settrace` over the vendored target source — pure stdlib, no
+     Coverage is measured with `sys.settrace` over the vendored target source - pure stdlib, no
      `coverage` package. The loop is HARD-CAPPED by iteration budget and the cap is logged, never
      silent: coverage-guided fuzzing is unbounded by nature and this is deliberately not.
 
-HONEST LIMITS (stated wherever the lift is reported): this raises recall — more distinct target
-lines reached and more candidate divergences surfaced — it does NOT make the search exhaustive.
+HONEST LIMITS (stated wherever the lift is reported): this raises recall - more distinct target
+lines reached and more candidate divergences surfaced - it does NOT make the search exhaustive.
 There is no symbolic execution and no constraint solving; a bug behind a branch none of these
 three axes happens to reach is still missed. "More branches / more candidates," never "complete."
 
@@ -42,7 +42,7 @@ import random
 import sys
 from pathlib import Path
 
-# the vendored target, imported by absolute path (never an installed hyperlink) — identical to
+# the vendored target, imported by absolute path (never an installed hyperlink) - identical to
 # the convention adapters.py uses, so coverage is measured against the exact code the sweep runs.
 _REPO_SRC = (Path(__file__).resolve().parent.parent / "targets/hyperlink/repo/src")
 _TARGET_FILE = str(_REPO_SRC / "hyperlink/_url.py")
@@ -75,7 +75,7 @@ _HOST = [
 # port = *DIGIT   §3.2.3   (the empty port and leading-zero/long forms are all grammatical)
 _PORT = ["", "0", "80", "000", "8080", "65535", "99999", "8"]
 
-# path segments — pchar = unreserved / pct-encoded / sub-delims / ":" / "@"   §3.3
+# path segments - pchar = unreserved / pct-encoded / sub-delims / ":" / "@"   §3.3
 _SEG = ["", "a", "b", "a%2Fb", ".", "..", "seg;param", "%C3%A9", "x:y", "p@q", "long-segment"]
 
 # query = *( pchar / "/" / "?" )   §3.4 ; fragment likewise §3.5
@@ -84,13 +84,13 @@ _FRAGMENT = ["", "frag", "%41", "/p?x", "sec:tion"]
 
 
 def _abempty_path(rng: random.Random) -> str:
-    """path-abempty = *( "/" segment ) — used WITH an authority. Always starts with '/' or empty."""
+    """path-abempty = *( "/" segment ) - used WITH an authority. Always starts with '/' or empty."""
     n = rng.choice([0, 1, 1, 2, 3])
     return "".join("/" + rng.choice(_SEG) for _ in range(n))
 
 
 def _rootless_path(rng: random.Random) -> str:
-    """path-rootless = segment-nz *( "/" segment ) — used WITHOUT an authority. Non-empty first."""
+    """path-rootless = segment-nz *( "/" segment ) - used WITHOUT an authority. Non-empty first."""
     first = rng.choice([s for s in _SEG if s]) or "a"
     rest = "".join("/" + rng.choice(_SEG) for _ in range(rng.choice([0, 0, 1, 2])))
     return first + rest
@@ -111,7 +111,7 @@ def _authority(rng: random.Random) -> str:
 
 def _compose(rng: random.Random) -> str:
     """One grammatical URI. ~70% absolute (//authority), ~30% rootless, both with optional
-    query/fragment — so the generated set spans both hier-part forms of §3.3."""
+    query/fragment - so the generated set spans both hier-part forms of §3.3."""
     scheme = rng.choice(_SCHEME)
     if rng.random() < 0.7:
         uri = f"{scheme}://{_authority(rng)}{_abempty_path(rng)}"
@@ -132,7 +132,7 @@ def generate_grammar_uris(limit: int = 300, seed: int = 0) -> tuple[list[str], d
     """Deterministically emit up to `limit` DISTINCT, parse-VALID URIs from the RFC 3986 ABNF.
 
     Returns (uris, stats). `stats` records how many raw compositions were tried, how many were
-    kept (deduped + parse-valid), and how many were dropped as unparseable — so the
+    kept (deduped + parse-valid), and how many were dropped as unparseable - so the
     "structurally valid" guarantee is auditable, not assumed."""
     rng = random.Random(seed)
     seen: set[str] = set()
@@ -148,7 +148,7 @@ def generate_grammar_uris(limit: int = 300, seed: int = 0) -> tuple[list[str], d
         seen.add(uri)
         try:
             URL.from_text(uri)  # structural validity = the target's own parser accepts it
-        except Exception:  # noqa: BLE001 — an unparseable composition is dropped, not a finding
+        except Exception:  # noqa: BLE001 - an unparseable composition is dropped, not a finding
             dropped += 1
             continue
         kept.append(uri)
@@ -159,7 +159,7 @@ def generate_grammar_uris(limit: int = 300, seed: int = 0) -> tuple[list[str], d
 
 # ====================================================================== 2. SEED CORPUS
 #
-# The target's own test fixtures (extracted by AST, not regex — so we get every string constant
+# The target's own test fixtures (extracted by AST, not regex - so we get every string constant
 # the maintainers wrote, including the gnarly ones) UNION a curated edge-case dictionary.
 
 # Known edge-case values: Unicode normalization/confusables, the RFC's §1.1.2 example URIs, and
@@ -195,7 +195,7 @@ NASTY_DICTIONARY = [
 
 def _looks_like_uri(s: str) -> bool:
     """A string fixture is URI-ish if it carries a scheme, an authority marker, or is a path
-    reference — the shapes URL.from_text is meant to consume. Plain words/names are dropped."""
+    reference - the shapes URL.from_text is meant to consume. Plain words/names are dropped."""
     if not s or len(s) > 2048:
         return False
     if "://" in s or s.startswith(("//", "/")):
@@ -253,7 +253,7 @@ def load_seed_corpus(cap: int = 600) -> tuple[list[str], dict]:
 
 # ====================================================================== 3. COVERAGE (sys.settrace)
 #
-# Distinct executable lines reached in the vendored target source — a standard, dependency-free
+# Distinct executable lines reached in the vendored target source - a standard, dependency-free
 # coverage proxy. The global tracer fires on every 'call'; we install a line tracer only for
 # frames whose code lives in the target file, so non-target frames cost nothing.
 
@@ -262,7 +262,7 @@ def load_seed_corpus(cap: int = 600) -> tuple[list[str], dict]:
 def _drive(text: str) -> None:
     try:
         u = URL.from_text(text)
-    except Exception:  # noqa: BLE001 — a reject still executed the parse/validate lines up to it
+    except Exception:  # noqa: BLE001 - a reject still executed the parse/validate lines up to it
         return
     for op in (
         lambda: u.to_text(), lambda: u.to_uri().to_text(), lambda: u.to_iri().to_text(),
@@ -272,7 +272,7 @@ def _drive(text: str) -> None:
     ):
         try:
             op()
-        except Exception:  # noqa: BLE001 — every op's executed lines count, success or raise
+        except Exception:  # noqa: BLE001 - every op's executed lines count, success or raise
             pass
 
 
@@ -374,7 +374,7 @@ def coverage_guided(seeds, budget: int = 2000, seed: int = 0,
 def build_e04_inputs(*, grammar_limit: int = 300, seed_cap: int = 600, fuzz_budget: int = 2000,
                      seed: int = 0) -> tuple[list[str], dict]:
     """The full E04 URL-string corpus: grammar ∪ seed-corpus ∪ coverage-guided, deduped and
-    stable-ordered. Returns (inputs, stats) — every cap/budget surfaced in stats."""
+    stable-ordered. Returns (inputs, stats) - every cap/budget surfaced in stats."""
     grammar_uris, gstats = generate_grammar_uris(limit=grammar_limit, seed=seed)
     corpus, sstats = load_seed_corpus(cap=seed_cap)
     fuzz_seeds = grammar_uris + corpus

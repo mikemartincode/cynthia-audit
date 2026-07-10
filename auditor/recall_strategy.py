@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/recall_strategy.py — stateless shape→strategy "recall" over the authoring corpus.
+"""auditor/recall_strategy.py - stateless shape->strategy "recall" over the authoring corpus.
 
 What this is (and is NOT):
   * It maps a function's coarse SHAPE to the authoring STRATEGY (oracle shape) with the highest
@@ -7,14 +7,14 @@ What this is (and is NOT):
     that shape FIRST instead of walking a fixed ladder.
   * It is NOT the cynthia-v3 run-history `recall` service (that keys on env_version + tool-call
     sequences). It is NOT cynthia-audit's E04 "RECALL LIFT" (that measures input-coverage = source
-    lines reached, model-free). Different substrate, same English word — kept apart on purpose.
+    lines reached, model-free). Different substrate, same English word - kept apart on purpose.
 
-THE LOAD-BEARING PROPERTY — recall is PURE, STATELESS AGGREGATION.
+THE LOAD-BEARING PROPERTY - recall is PURE, STATELESS AGGREGATION.
   The recommendation is a pure function of the rows currently present (a `GROUP BY shape_key,
   strategy` over gate verdicts). There is NO fitted, cached, or persisted state derived from the
   corpus. That is exactly what makes the leave-one-out held-out evaluation clean: querying with
   `exclude_repo=R` is byte-identical to physically deleting R's rows and re-querying (test_recall
-  asserts this). If you ever add caching/fitting, the held-out result is contaminated — don't.
+  asserts this). If you ever add caching/fitting, the held-out result is contaminated - don't.
 
 Stdlib only (sqlite3). The corpus is small (a few thousand rows), so a columnar store buys nothing;
 sqlite keeps the auditor stdlib-only and the leave-one-out semantics trivially exact.
@@ -32,7 +32,7 @@ from pathlib import Path
 
 def _arity(signature: str) -> int:
     """Count the real positional+kw-only params of a manifest signature (drop `self`, count *args
-    as one). Derived from the signature string index.py already emits — index.py is untouched."""
+    as one). Derived from the signature string index.py already emits - index.py is untouched."""
     try:
         node = ast.parse(f"def _f{signature or '()'}: pass").body[0]
     except SyntaxError:
@@ -50,7 +50,7 @@ def _arity_bucket(arity: int) -> str:
 def shape_key(entry: dict) -> str:
     """A COARSE function shape from manifest fields ONLY (no index.py change): a stable string
     flattening (auditability, deterministic, arity_bucket, has_inverse_sibling). Coarse on purpose
-    — the experiment's stated limitation (a finer key needs more corpus per cell to be non-noisy)."""
+    - the experiment's stated limitation (a finer key needs more corpus per cell to be non-noisy)."""
     aud = entry.get("auditability", "none")
     det = bool(entry.get("deterministic", False))
     bucket = _arity_bucket(_arity(entry.get("signature", "")))
@@ -83,10 +83,10 @@ def split_oracle(code: str) -> tuple[str | None, str | None]:
     as the last reference-role statement. So the boundary is deterministic: everything up to and
     including that assignment is the reference (with its own imports at the top); everything after is
     the battery (PROBE_INPUTS + check_impl, with its own imports). The split is by AST line number,
-    not regex — the module is real Python (no_regex_for_structured_langs).
+    not regex - the module is real Python (no_regex_for_structured_langs).
 
     Returns (None, None) if the module won't parse or has no REFERENCE_NAME marker. Callers MUST treat
-    a None half as "no exemplar for this role" and skip injection — never cross-inject a reference
+    a None half as "no exemplar for this role" and skip injection - never cross-inject a reference
     into the battery author (that would re-couple the two independent spec reads the gate relies on).
     """
     try:
@@ -142,7 +142,7 @@ class StrategyRecall:
         """Idempotent insert of one observation (delete-then-insert via INSERT OR REPLACE on the
         natural key). Re-running a repo overwrites its rows rather than double-counting.
 
-        `oracle_code` is the authored reference+battery module text — stored ONLY so a GREEN row can
+        `oracle_code` is the authored reference+battery module text - stored ONLY so a GREEN row can
         later serve as an EXEMPLAR (augmented-generation recall, #1). It is pure payload: it never
         enters the natural key and never the strategy-SELECTION query, so adding it cannot perturb
         recommend_order or the leave-one-out aggregation."""
@@ -162,7 +162,7 @@ class StrategyRecall:
 
     def strategy_rates(self, shape_key: str, *, exclude_repo: str | None = None,
                        model: str | None = None) -> list[dict]:
-        """Per-strategy gate-GREEN rate + support for one shape — the pure GROUP BY the whole idea
+        """Per-strategy gate-GREEN rate + support for one shape - the pure GROUP BY the whole idea
         rests on. `exclude_repo` is the leave-one-out lever (≡ deleting that repo's rows)."""
         q = ("SELECT strategy, AVG(gate_green) AS rate, COUNT(*) AS n, "
              "SUM(gate_green) AS greens, AVG(strict_green) AS strict_rate "
@@ -183,7 +183,7 @@ class StrategyRecall:
         """Reorder `candidates` best-first by this shape's observed gate-GREEN rate (stateless).
 
         Strategies with NO rows for this shape keep their original (fixed-ladder) relative order and
-        fall BEHIND every strategy that does have evidence — recall never invents a preference it
+        fall BEHIND every strategy that does have evidence - recall never invents a preference it
         has no data for, so on a cold/sparse shape Arm3 degrades gracefully toward Arm2's order."""
         rates = {r["strategy"]: (r["rate"], r["n"])
                  for r in self.strategy_rates(shape_key, exclude_repo=exclude_repo, model=model)}
@@ -195,12 +195,12 @@ class StrategyRecall:
     def nearest_exemplar(self, shape_key: str, strategy: str, *, role: str = "reference",
                          exclude_repo: str | None = None, model: str | None = None) -> dict | None:
         """Retrieve a GREEN, gate-passing oracle of the SAME shape+strategy to inject as a generation
-        EXEMPLAR (augmented-generation recall, #1) — the half matching `role` ("reference"/"battery").
+        EXEMPLAR (augmented-generation recall, #1) - the half matching `role` ("reference"/"battery").
 
         Same leave-one-out lever as the selection query: `exclude_repo=R` is byte-identical to having
         deleted R's rows, so an exemplar for a held-out function NEVER comes from its own repo (no
-        train/test leak). "Nearest" is coarse by construction — the shape_key is the only similarity
-        signal the stdlib store has (no embeddings) — so among same-shape GREEN oracles it prefers the
+        train/test leak). "Nearest" is coarse by construction - the shape_key is the only similarity
+        signal the stdlib store has (no embeddings) - so among same-shape GREEN oracles it prefers the
         higher-quality (strict_green) ones, with a deterministic (repo, qualname) tiebreak so the A/B
         is reproducible. This mirrors recommend_order's documented coarse-key limitation.
 

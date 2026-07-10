@@ -1,7 +1,7 @@
-"""Self-contained proof for auditor/triage.py's decision logic — no network, no LLM calls.
+"""Self-contained proof for auditor/triage.py's decision logic - no network, no LLM calls.
 The conservative classification table, the cross-oracle vote, delta-debug minimal-ize, input
 reconstruction, and the salvage-resume contract are tested directly (salvage re-gates through
-the REAL local mutation gate — still zero network). The live LLM phases (second-oracle
+the REAL local mutation gate - still zero network). The live LLM phases (second-oracle
 authorship, spec re-derivation) are exercised by the real triage run, not here.
 
 Run: ~/projects/cynthia-core/.venv/bin/python auditor/test_triage.py
@@ -116,7 +116,7 @@ def test_meta_settled():
     # GREEN is always settled, however it was produced.
     assert _meta_settled({"green": True})
     assert _meta_settled({"green": True, "salvaged": True})
-    # RED after a REAL authoring pass (no salvage marker) is settled — the fallback ran.
+    # RED after a REAL authoring pass (no salvage marker) is settled - the fallback ran.
     assert _meta_settled({"green": False})
     assert _meta_settled({"green": False, "salvage_then_fallback": True})
     # a salvage-only RED is NOT settled: its adaptive fallback never ran (the dead-end fix).
@@ -134,7 +134,7 @@ def _write_draft(base: Path, qhash: str, name: str, code: str) -> None:
 
 def test_salvage_drafts():
     """Salvage settles only on a GREEN re-gate; RED drafts come back as an UNSETTLED best
-    (caller owes the fallback); an empty/missing draft dir returns None (author fresh) —
+    (caller owes the fallback); an empty/missing draft dir returns None (author fresh) -
     previously a dir with no usable drafts persisted a terminal RED that suppressed the
     function's vote on every later resume."""
     qual = "intcmp"
@@ -149,7 +149,7 @@ def test_salvage_drafts():
         # no draft dir at all -> None
         assert _salvage_drafts(qual, second) is None
 
-        # dir exists but holds no usable draft -> None (NOT a settled RED) — the dead-end fix
+        # dir exists but holds no usable draft -> None (NOT a settled RED) - the dead-end fix
         (base / "n0").mkdir(parents=True)
         assert _salvage_drafts(qual, second) is None
 

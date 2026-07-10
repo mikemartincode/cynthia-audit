@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Standalone reproduction — hyperlink.URL.click() crashes resolving an absolute-URI reference
+"""Standalone reproduction - hyperlink.URL.click() crashes resolving an absolute-URI reference
 with a rootless path (mailto:, tel:, urn:, and RFC 3986 5.4.1's own first example "g:h").
 
 Dependencies: hyperlink only.   Reproduce:
@@ -42,7 +42,7 @@ CASES = [
 
 
 def main() -> int:
-    print(f"hyperlink reference-resolution repro — base = {RFC_BASE!r}\n")
+    print(f"hyperlink reference-resolution repro - base = {RFC_BASE!r}\n")
     base = URL.from_text(RFC_BASE)
     crashed = 0
 
@@ -69,10 +69,10 @@ def main() -> int:
               "on absolute-URI references with a rootless path (5.2.1 says resolve to the "
               "reference itself).")
         # exit 0: the script ran and demonstrated the divergence. (A future fixed hyperlink would
-        # print 'ok' for every case and crashed==0 — i.e. the repro self-checks whether it still
+        # print 'ok' for every case and crashed==0 - i.e. the repro self-checks whether it still
         # reproduces.)
     else:
-        print("Not reproduced on this hyperlink version — click() resolved every case.")
+        print("Not reproduced on this hyperlink version - click() resolved every case.")
     return 0
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/adapters.py — faithful bridges from the REAL hyperlink API to each oracle's
+"""auditor/adapters.py - faithful bridges from the REAL hyperlink API to each oracle's
 invented one-argument calling convention.
 
 Each A03 oracle reimplemented a hyperlink behavior as a pure function `ref_<leaf>(arg)`
@@ -10,12 +10,12 @@ SAME one-argument convention that calls the real code and returns the SAME outpu
 
 The adapter is the unavoidable bridge in any "library vs independent spec oracle" diff. It
 is kept deliberately THIN: parse the real object, call the real method, return its native
-result (or `.to_text()` for URL-valued methods — the representation every URL-valued oracle
+result (or `.to_text()` for URL-valued methods - the representation every URL-valued oracle
 chose). An adapter must NOT re-encode spec semantics; where the oracle's chosen output
 representation differs structurally from the real API's (e.g. a path tuple with vs without a
 leading empty segment), that adapter is left faithful to the REAL shape and the sweep's
 empirical fidelity check (adapter vs REFERENCE_FUNC over the mutation-proven PROBE_INPUTS)
-flags it as an unmappable bridge — it is NOT silently normalized into agreement, which would
+flags it as an unmappable bridge - it is NOT silently normalized into agreement, which would
 manufacture or mask divergences.
 
 Inputs are passed straight through (the convention is the oracle's); a real call that raises
@@ -45,7 +45,7 @@ class BridgeInapplicable(Exception):
     """The argument doesn't fit this oracle's tuple convention (e.g. a bare string where a
     tuple is required). Raised BEFORE the real call so the sweep classifies it as a bridge
     artifact, never as a real-code divergence. The oracle's non-tuple-rejection probes test
-    the oracle's own invented input validation, which has no counterpart in the real method —
+    the oracle's own invented input validation, which has no counterpart in the real method -
     silently char-splitting a string via `a, *b = "str"` would manufacture a false finding."""
 
 
@@ -297,7 +297,7 @@ ADAPTERS = {
 
 # Per-oracle "observable" extractor for the differential-generation path: when an oracle's
 # REFERENCE_FUNC and the adapter both return an OPAQUE object (a URL-like wrapper, a
-# generator), reduce both to the comparable value the oracle's own check_impl observes —
+# generator), reduce both to the comparable value the oracle's own check_impl observes -
 # `.to_text()` for URL-valued wrappers, `list()` for the iter_pairs generator. Scalars and
 # text need no extraction (absent from this map). This is NOT spec normalization: it picks
 # the same projection the mutation-proven check_impl already grades on.

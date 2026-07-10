@@ -59,7 +59,7 @@ def main() -> int:
             out_tok = int(rec.tokens.get("out", 0))
             cost = float(rec.cost)
             note = ""
-        except Exception as e:  # noqa: BLE001 — one bad function must not kill the sweep
+        except Exception as e:  # noqa: BLE001 - one bad function must not kill the sweep
             wall = time.time() - t0
             green, kr, out_tok, cost, note = False, 0.0, 0, 0.0, f"ERR {type(e).__name__}: {e}"[:140]
         with args.out.open("a") as fh:

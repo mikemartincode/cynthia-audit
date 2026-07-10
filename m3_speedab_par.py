@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Function-PARALLEL variant of m3_speedab — proves the OOM is orthogonal to the speed lever.
+"""Function-PARALLEL variant of m3_speedab - proves the OOM is orthogonal to the speed lever.
 
 Insight: authoring (the M3 calls) is the SLOW part and is RAM-cheap (holds response strings,
 gateway-bound). Gating (run_mutation_gate's mutant-subprocess swarm) is the RAM hog but is FAST
-(~2s/fn). So we DON'T parallelize the gate — we serialize EVERY gate through one global lock
+(~2s/fn). So we DON'T parallelize the gate - we serialize EVERY gate through one global lock
 (RAM stays at today's safe single-swarm level) while authoring fans out across functions.
 
 Mechanism: monkeypatch auditor.author.gate_authored with a lock-wrapped version (author_best_of_n
 calls it as a module global, so the patch takes effect), then run functions in a ThreadPoolExecutor.
 func_workers x 8 drafts must stay <= gateway max_parallel (64); default 6 -> ~48 concurrent calls.
 
-GREEN set must reproduce the sequential run (same logic, different schedule) — that's the correctness
+GREEN set must reproduce the sequential run (same logic, different schedule) - that's the correctness
 check. The metric is TOTAL wall (per-function walls are contention-inflated and not meaningful here).
 """
 import argparse
@@ -85,7 +85,7 @@ def main() -> int:
     fnw = [r[2] for r in rows]
     print("=" * 64, flush=True)
     print(f"M3 best-of-{args.n} think-OFF | PARALLEL (func_workers={args.func_workers}) | {target} | n={n}", flush=True)
-    print(f"GREEN: {g}/{n} = {g/n:.3f}   (sequential value run got 3/24=0.125 — must match)", flush=True)
+    print(f"GREEN: {g}/{n} = {g/n:.3f}   (sequential value run got 3/24=0.125 - must match)", flush=True)
     print(f"TOTAL WALL: {total/60:.1f}min   (sequential value run was 28.6min)", flush=True)
     print(f"per-fn wall (contention-inflated): median={statistics.median(fnw):.0f}s max={max(fnw):.0f}s", flush=True)
     return 0

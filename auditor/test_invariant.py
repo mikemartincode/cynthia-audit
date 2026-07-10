@@ -1,4 +1,4 @@
-"""Self-contained proof for the INVARIANT (metamorphic) oracle shape — a SECOND oracle type
+"""Self-contained proof for the INVARIANT (metamorphic) oracle shape - a SECOND oracle type
 alongside the value oracle, sharing the SAME mutation gate (cynthia-core), authored through the
 same independent ref+battery contract. No network: authoring is stubbed; the mutation gate and the
 differential sweep run for real, the sweep against the REAL hyperlink library.
@@ -8,10 +8,10 @@ What it demonstrates, end to end:
      from an independent reference + an independent metamorphic battery and is gate-GREEN.
   2. GATE NON-VACUITY (RED-on-bad AND GREEN-on-good): the real round-trip invariant kills every
      non-equivalent mutant of its reference (GREEN); a deliberately VACUOUS invariant (a relation
-     that holds trivially) is caught by the SAME gate as survivors (RED). The gate is not forked —
+     that holds trivially) is caught by the SAME gate as survivors (RED). The gate is not forked -
      run_mutation_gate proves an invariant oracle non-vacuous exactly as it does a value oracle.
   3. SWEEP: the gate-GREEN invariant, run against the REAL hyperlink library, reports the input
-     where the round-trip invariant fails — `http://h/#`, whose empty fragment hyperlink drops on
+     where the round-trip invariant fails - `http://h/#`, whose empty fragment hyperlink drops on
      to_text() (`from_text('http://h/#').to_text() == 'http://h/'`). That is a round-trip-CLASS
      candidate the single-call value oracles structurally cannot see; it is a CANDIDATE, triaged
      like any divergence (crash-vs-value rules from A05 still apply), not an auto-asserted bug.
@@ -28,7 +28,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author  # noqa: E402
-from adapters import _REPO_SRC  # noqa: E402 — vendored hyperlink path (puts it on sys.path)
+from adapters import _REPO_SRC  # noqa: E402 - vendored hyperlink path (puts it on sys.path)
 from sweep import run_sweep  # noqa: E402
 
 INV_ENTRY = {
@@ -87,10 +87,10 @@ REFERENCE_NAME = "ref_from_text"
 
 # --- the independent METAMORPHIC battery (relations, not a value table) -------------------------
 # check_impl asserts ROUND-TRIP IDENTITY (canonical input re-serializes to itself) AND IDEMPOTENCE
-# (re-applying is stable). Both are relations over fn — never a hard-coded input->output value. The
+# (re-applying is stable). Both are relations over fn - never a hard-coded input->output value. The
 # two relations together have teeth: identity kills value-corrupting mutants idempotence is blind to
 # (a const_return mutant is idempotent but breaks identity). PROBE_INPUTS include `http://h/#`,
-# whose empty fragment the reference preserves — the input that later exposes the real-library bug.
+# whose empty fragment the reference preserves - the input that later exposes the real-library bug.
 GOOD_BATTERY = '''
 PROBE_INPUTS = [
     "http://example.com/", "https://example.com/a/b", "http://example.com/a/b?x=y",
@@ -113,9 +113,9 @@ def check_impl(fn):
     return out
 '''
 
-# --- a VACUOUS invariant (a relation that holds trivially) — the gate MUST catch it -------------
+# --- a VACUOUS invariant (a relation that holds trivially) - the gate MUST catch it -------------
 # `fn(x) == fn(x)` is always true and errors are tolerated, so it passes its own reference (no
-# broken-ref RED) yet admits every wrong mutant. The mutation gate flags it RED via survivors —
+# broken-ref RED) yet admits every wrong mutant. The mutation gate flags it RED via survivors -
 # the same non-vacuity proof that protects value oracles, applied to an invariant.
 VACUOUS_BATTERY = '''
 PROBE_INPUTS = [
@@ -154,7 +154,7 @@ GEN_INPUTS = ["http://a/", "https://b/c", "http://d/e?f=g"]
 
 def _stub(ref_code: str, battery_code: str):
     """Prompt-aware authoring stub: the battery prompt carries 'BATTERY'; the reference prompt
-    does not. Zero spend, deterministic — the two independent calls assemble into one oracle."""
+    does not. Zero spend, deterministic - the two independent calls assemble into one oracle."""
     def fake(model, system, user, **kw):
         code = battery_code if "BATTERY" in user else ref_code
         return {"code": code, "raw": code, "in_tok": 100, "out_tok": 200,
@@ -170,13 +170,13 @@ def _author(entry, ref, battery, run, *, qual, attempts=1):
 
 def test_author_and_gate_invariant():
     """AUTHOR (shape='invariant') + GATE: GREEN on the real round-trip invariant, RED on a vacuous
-    one — both through the unmodified cynthia-core mutation gate."""
+    one - both through the unmodified cynthia-core mutation gate."""
     real = author.call_model
     try:
         with tempfile.TemporaryDirectory() as td:
             run = Path(td)
 
-            # GREEN — the metamorphic invariant kills every non-equivalent mutant of its reference.
+            # GREEN - the metamorphic invariant kills every non-equivalent mutant of its reference.
             rec = _author(INV_ENTRY, GOOD_REF, GOOD_BATTERY, run, qual="URL.from_text")
             assert rec.green and not rec.spec_disagreement, rec.to_dict()
             assert rec.gate["kill_rate"] == 1.0 and rec.gate["non_equivalent"] > 0, rec.gate
@@ -185,7 +185,7 @@ def test_author_and_gate_invariant():
             print(f"GREEN ok: invariant killed {rec.gate['killed']}/{rec.gate['non_equivalent']} "
                   "non-equivalent mutants (round-trip identity + idempotence)")
 
-            # RED — the SAME gate catches a vacuous (always-true) invariant as survivors.
+            # RED - the SAME gate catches a vacuous (always-true) invariant as survivors.
             rec_v = _author({**INV_ENTRY, "auditability_why": "vacuous"}, GOOD_REF, VACUOUS_BATTERY,
                             run, qual="URL.from_text_vac")
             assert not rec_v.green and rec_v.gate["survivors"], rec_v.gate
@@ -198,7 +198,7 @@ def test_author_and_gate_invariant():
 
 def test_reference_satisfies_invariant():
     """Pass-count proof (testing-canon §4): the reference satisfies its OWN metamorphic battery on
-    every probe — 0 failures, and a meaningful number of passes (not a degenerate empty battery)."""
+    every probe - 0 failures, and a meaningful number of passes (not a degenerate empty battery)."""
     ns: dict = {}
     exec(compile(GOOD_REF + "\n" + GOOD_BATTERY, "<good_oracle>", "exec"), ns)
     graded = ns["check_impl"](ns["REFERENCE_FUNC"])
@@ -241,7 +241,7 @@ def test_sweep_reports_invariant_failure():
         c = div[0]
         assert c["input"] == repr("http://h/#"), c
         assert c["real_result"] == repr("http://h/") and c["source"] == "probe", c
-        print(f"sweep ok: round-trip invariant flagged {c['input']} — real library returns "
+        print(f"sweep ok: round-trip invariant flagged {c['input']} - real library returns "
               f"{c['real_result']} (empty fragment dropped); 1 candidate, triaged downstream")
 
 

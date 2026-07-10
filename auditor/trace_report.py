@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""auditor/trace_report.py — turn a raw execution trace (auditor/trace.py) into the JOINED,
+"""auditor/trace_report.py - turn a raw execution trace (auditor/trace.py) into the JOINED,
 predictive view: one row per (function, attempt) tying the LLM authoring calls to the gate
-outcome, plus the two things you'd actually want to forecast — will an oracle gate GREEN, and
+outcome, plus the two things you'd actually want to forecast - will an oracle gate GREEN, and
 which mutants survive.
 
 The point (Mike's framing: "see if we can foresee data and feed it"): the raw trace.jsonl is an
@@ -13,12 +13,12 @@ than a flat "RED":
 
   convention-mismatch  the independent reference + battery chose incompatible argument
                        conventions (the gate's own ref-rejection note shows an unpack/arity
-                       TypeError). A HARNESS artifact on multi-arg functions, not a spec finding —
+                       TypeError). A HARNESS artifact on multi-arg functions, not a spec finding -
                        and the most "feedable" class: pin the tuple convention from the signature
                        arity and these recover.
   spec-disagreement    ref_passes is False for a non-arity reason: the two independent spec reads
                        genuinely differ (sometimes one is wrong, sometimes a real ambiguity).
-  vacuous-survivor     ref_passes True but a mutant survived — the oracle is too weak there (the
+  vacuous-survivor     ref_passes True but a mutant survived - the oracle is too weak there (the
                        gate doing its job). The surviving mutant is printed: it is the single most
                        informative training row, the exact defect a non-vacuous oracle must catch.
   broken               the authored module didn't compile/import/respect the gate contract.
@@ -39,7 +39,7 @@ from pathlib import Path
 
 
 def _arity(signature: str) -> int:
-    """Positional-arg count of a manifest signature, minus self — the convention-mismatch
+    """Positional-arg count of a manifest signature, minus self - the convention-mismatch
     predictor (a tuple-unpack oracle pair is far likelier to disagree as arity climbs)."""
     inside = signature[signature.find("(") + 1: signature.rfind(")")]
     if not inside.strip():
@@ -77,7 +77,7 @@ def _classify(verdict: dict) -> str:
 
 
 def build(trace_dir: Path) -> dict:
-    """The trace.jsonl is self-sufficient — every authoring input + gate outcome is in it; the
+    """The trace.jsonl is self-sufficient - every authoring input + gate outcome is in it; the
     per-function record files add nothing the events don't already carry, so this joins purely
     over the trace."""
     events = [json.loads(ln) for ln in (trace_dir / "trace.jsonl").read_text().splitlines()
@@ -130,7 +130,7 @@ def build(trace_dir: Path) -> dict:
     by_outcome: dict[str, int] = {}
     for r in rows:
         by_outcome[r["outcome"]] = by_outcome.get(r["outcome"], 0) + 1
-    # convention-mismatch rate vs arity — the feedable signal
+    # convention-mismatch rate vs arity - the feedable signal
     multi = [r for r in rows if r["arity"] and r["arity"] >= 2]
     single = [r for r in rows if r["arity"] == 1]
     summary = {
@@ -160,7 +160,7 @@ def _md(report: dict) -> str:
            "## Outcome breakdown", ""]
     for k, v in sorted(s["by_outcome"].items(), key=lambda kv: -kv[1]):
         out.append(f"- **{k}**: {v}")
-    out += ["", "## The feedable signal — convention mismatch concentrates on multi-arg functions",
+    out += ["", "## The feedable signal - convention mismatch concentrates on multi-arg functions",
             "",
             f"- multi-arg (arity≥2) attempts: {s['multiarg_attempts']}, of which "
             f"{s['multiarg_convention_mismatch']} failed as convention-mismatch",
@@ -168,7 +168,7 @@ def _md(report: dict) -> str:
             f"{s['singlearg_convention_mismatch']} failed as convention-mismatch",
             "",
             "The independent reference+battery authors disagree on the tuple-unpack convention far "
-            "more as argument count rises — a harness artifact (not a spec finding) that a "
+            "more as argument count rises - a harness artifact (not a spec finding) that a "
             "signature-aware convention hint could feed and recover.", "",
             "## Per-function", "",
             "| function | arity | outcome | ref_passes | kill_rate | mutants | ref_tok | bat_tok |",

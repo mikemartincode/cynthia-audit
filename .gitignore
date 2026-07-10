@@ -7,3 +7,4 @@ __pycache__/
 seed/deepseek_oracle.py
 .venv/
 .seer/
+WHERE_WE_ARE.md

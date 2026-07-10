@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""auditor/gate_subprocess.py — run ONE mutation gate in a fresh, killable, memory-capped subprocess.
+"""auditor/gate_subprocess.py - run ONE mutation gate in a fresh, killable, memory-capped subprocess.
 
 The shared safe-gating primitive. Stdlib only (no import of author/coverage_exp), so BOTH
 `coverage_exp` and `author.author_best_of_n` can use it without a circular import. It shells out to
 `_gate_runner.py` (which imports the gate IN its own process) with:
-  * a HARD process-group SIGKILL on timeout — a non-terminating reference (LLM infinite loop /
+  * a HARD process-group SIGKILL on timeout - a non-terminating reference (LLM infinite loop /
     catastrophic regex) can't wedge the caller;
-  * RLIMIT_AS in the runner (see _gate_runner.py) — a MEMORY-bomb reference (allocating loop) dies at
+  * RLIMIT_AS in the runner (see _gate_runner.py) - a MEMORY-bomb reference (allocating loop) dies at
     the cap instead of OOM-killing the host (measured: an in-process best-of-N gate grew a python
     process to 29GB and OOM-killed the box / its tmux pane).
 
 A gate that cannot render a verdict (timeout / OOM- or rlimit-kill / crash / uncaught MemoryError) is
-flagged `gate_failed=True` — that is NOT a RED oracle (RED = the gate ran and the oracle failed to kill
+flagged `gate_failed=True` - that is NOT a RED oracle (RED = the gate ran and the oracle failed to kill
 mutants). Callers should bucket gate_failed as an error, excluded from coverage, never counted as RED.
 """
 
@@ -27,7 +27,7 @@ from pathlib import Path
 GATE_RUNNER = Path(__file__).resolve().parent / "_gate_runner.py"
 GATE_TIMEOUT_S = 90  # a real gate is seconds; this only catches a non-terminating reference/import
 
-# normalized shape for a gate that produced NO verdict — carries every key real-verdict consumers read
+# normalized shape for a gate that produced NO verdict - carries every key real-verdict consumers read
 _FAILED = {"green": False, "strict_green": False, "gate_failed": True, "kill_rate": 0.0,
            "ref_passes": False, "survivors": [], "note": ""}
 

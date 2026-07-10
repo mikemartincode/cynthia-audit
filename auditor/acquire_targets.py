@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/acquire_targets.py — clone + index the §6 basket repos into targets/<name>/, and emit the
+"""auditor/acquire_targets.py - clone + index the §6 basket repos into targets/<name>/, and emit the
 corpus queue. No spend (pure git + AST index). Re-runnable: an already-cloned/indexed repo is skipped.
 
 Targets are high-invariant-density, spec-backed, pure-Python, NOT fuzzed-to-death libraries. Each is

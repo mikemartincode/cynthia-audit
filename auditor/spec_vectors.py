@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""auditor/spec_vectors.py — the spec's OWN canonical input→output vectors as GROUND TRUTH.
+"""auditor/spec_vectors.py - the spec's OWN canonical input->output vectors as GROUND TRUTH.
 
 Triage's hard lesson (A05): a cheap model can author a gate-GREEN oracle that still encodes a
-WRONG spec reading, and a second model from the same family shares the misreading — so model
+WRONG spec reading, and a second model from the same family shares the misreading - so model
 agreement on a subtle VALUE is corroboration, NOT proof (the first all-deepseek run manufactured
 a 100% false-positive rate on default-port / normalization semantics). The only thing that makes
 a value divergence ASSERTABLE without a human is a source of truth that is NOT a model's guess.
 
 RFC 3986 §5.4 provides exactly that for reference resolution (`URL.click`): a fixed base URL and
-a table of relative-reference → resolved-target pairs the RFC itself publishes. Where the target
+a table of relative-reference -> resolved-target pairs the RFC itself publishes. Where the target
 library's output for a tabled input disagrees with the table, the library is wrong by the spec's
-own example — a real bug, anchored to ground truth, no model in the loop. Where it agrees but a
+own example - a real bug, anchored to ground truth, no model in the loop. Where it agrees but a
 gate-GREEN oracle disagreed, the ORACLE was wrong (bad-oracle, also decided by ground truth).
 
 This is deliberately narrow: vectors exist only where the spec publishes them, and we assert ONLY
@@ -21,10 +21,10 @@ the citation travels with every verdict so a reviewer can check the source line.
 
 from __future__ import annotations
 
-# RFC 3986 §5.4 — the worked reference-resolution example. All targets resolve against this base.
+# RFC 3986 §5.4 - the worked reference-resolution example. All targets resolve against this base.
 RFC_BASE = "http://a/b/c/d;p?q"
 
-# §5.4.1 Normal Examples — relative ref → resolved target (verbatim from the RFC table).
+# §5.4.1 Normal Examples - relative ref -> resolved target (verbatim from the RFC table).
 NORMAL = {
     "g:h": "g:h",
     "g": "http://a/b/c/g",
@@ -51,7 +51,7 @@ NORMAL = {
     "../../g": "http://a/g",
 }
 
-# §5.4.2 Abnormal Examples — same base, edge relative refs (verbatim from the RFC table).
+# §5.4.2 Abnormal Examples - same base, edge relative refs (verbatim from the RFC table).
 ABNORMAL = {
     "../../../g": "http://a/g",
     "../../../../g": "http://a/g",
@@ -116,7 +116,7 @@ def lookup(qualname: str, x) -> SpecVector | None:
 
 
 def iter_vectors():
-    """Every published vector as (qualname, input_value, expected_output, citation) — the input
+    """Every published vector as (qualname, input_value, expected_output, citation) - the input
     set for a direct ground-truth sweep of the real library (no oracle, no model)."""
     for qualname, tables in _TABLES.items():
         for table, citation in tables:

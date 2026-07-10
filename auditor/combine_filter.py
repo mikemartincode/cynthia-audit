@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""auditor/combine_filter.py — wire OUR precision signal over Anthropic's agentic-PBT dataset.
+"""auditor/combine_filter.py - wire OUR precision signal over Anthropic's agentic-PBT dataset.
 
 Anthropic's agentic-PBT (Opus 4.1) authors free-form properties and finds bugs at high recall but
 44% of reports are invalid. Our finding: the false positives are LLM-invented-contract hallucinations
-— the property asserts a guarantee the spec never promised (monotonicity of a quadrature method, a
+- the property asserts a guarantee the spec never promised (monotonicity of a quadrature method, a
 stateless contract on a stateful object, a universal postcondition). Our designs avoid this BY
 CONSTRUCTION (assert only docstring-grounded / trusted-template properties).
 
 This filter operationalizes that as a precision signal over THEIR released reports: classify each
-report's violated property as DOCUMENTED (the spec promises it → likely a real bug) vs ASSUMED (an
-LLM-added contract the spec doesn't promise → likely a false positive). Validated against their 21
+report's violated property as DOCUMENTED (the spec promises it -> likely a real bug) vs ASSUMED (an
+LLM-added contract the spec doesn't promise -> likely a false positive). Validated against their 21
 human validity labels: does our signal REJECT their 3 false positives while KEEPING the 18 valid?
 
-The classifier is M3 (cheap) over the report text — but its OUTPUT IS MEASURED against ground-truth
+The classifier is M3 (cheap) over the report text - but its OUTPUT IS MEASURED against ground-truth
 human labels, never trusted on its own. If our signal separates valid from invalid on the 21, it is
 an automatic precision filter for the human-triage step their pipeline requires."""
 
@@ -37,7 +37,7 @@ never promised.
 
 DOCUMENTED  = the docstring/spec/standard explicitly states or directly implies this behaviour
               (e.g. "returns the input lowercased", a documented error condition, a stated invariant).
-ASSUMED     = the tool imposed a general expectation the spec does NOT promise — a mathematical ideal
+ASSUMED     = the tool imposed a general expectation the spec does NOT promise - a mathematical ideal
               the method doesn't guarantee (e.g. monotonicity of a numerical approximation), a
               stateless/deterministic contract on an object documented as stateful, or a universal
               postcondition that only holds for valid/typical inputs.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/sweep.py — differential sweep of the REAL hyperlink code against every
+"""auditor/sweep.py - differential sweep of the REAL hyperlink code against every
 gate-GREEN oracle from A03, with an invalid-input filter.
 
 The gate (cynthia-core mutation gate, A02/A03) proved each GREEN oracle's `check_impl` has
@@ -20,18 +20,18 @@ calls the real code in the oracle's one-argument convention:
 FIDELITY GATE first. An adapter is only a valid bridge if it reproduces the oracle's
 mutation-proven probe expectations. We compute probe pass-rate = check_impl(adapter)
 pass fraction; an oracle below FIDELITY_MIN is an UNMAPPABLE representation mismatch (the
-oracle chose an output encoding structurally different from the real API — e.g. a path tuple
+oracle chose an output encoding structurally different from the real API - e.g. a path tuple
 with a leading empty segment). Those are recorded as excluded coverage and produce NO
 candidates: counting their pervasive encoding disagreements as bugs would be dishonest.
 
 INVALID-INPUT FILTER. A disagreement where the REAL code raised `ValueError`/`URLParseError`
-is the library correctly rejecting a spec-invalid input — tagged `invalid-input`, not a
+is the library correctly rejecting a spec-invalid input - tagged `invalid-input`, not a
 divergence. A real raise that is NOT a ValueError but DID originate inside the library
 (e.g. `NotImplementedError` from `URL.click`) is kept as a `divergence` (the library crashing
 where the spec wants a value is a real candidate). An exception that never reached the
 library (the adapter's own unpacking) is `adapter-error` and excluded from findings.
 
-"0 surviving candidate divergences" is a valid, recorded outcome — this tool is a verifier
+"0 surviving candidate divergences" is a valid, recorded outcome - this tool is a verifier
 first; whether it is also a bug-finder is exactly what the sweep measures.
 
 Parallel: one process per oracle (embarrassingly parallel, CPU-bound). Spot-check it is not
@@ -83,7 +83,7 @@ def _call(fn, x):
     """(ok, value, exc, from_library)."""
     try:
         return (True, fn(x), None, False)
-    except Exception as exc:  # noqa: BLE001 — every failure mode is data for classification
+    except Exception as exc:  # noqa: BLE001 - every failure mode is data for classification
         return (False, None, exc, _from_library(exc))
 
 
@@ -93,7 +93,7 @@ def _reduce(qual, value):
 
 
 def _reduce_repr(qual, value):
-    """repr() of the observed value, never raising — a finding record must always serialize."""
+    """repr() of the observed value, never raising - a finding record must always serialize."""
     try:
         return repr(_reduce(qual, value))
     except Exception as exc:  # noqa: BLE001
@@ -103,7 +103,7 @@ def _reduce_repr(qual, value):
 def _equal(qual, a, b, key) -> bool:
     try:
         ra, rb = _reduce(qual, a), _reduce(qual, b)
-    except Exception:  # noqa: BLE001 — an observable that can't reduce => treat as differing
+    except Exception:  # noqa: BLE001 - an observable that can't reduce => treat as differing
         return False
     try:
         if key:
@@ -126,7 +126,7 @@ def classify(qual, x, adapter, ref, key):
     o_ok, o_val, o_exc, _ = _call(ref, x)
 
     def rec(cls, real_repr, oracle_repr, note=""):
-        # `input` carries the FULL repr (inputs are small literals — str/tuple/int/None/bool),
+        # `input` carries the FULL repr (inputs are small literals - str/tuple/int/None/bool),
         # so a downstream consumer (triage) can reconstruct the exact value via literal_eval.
         # Only the potentially-large result reprs are truncated for display.
         return {"qualname": qual, "input": repr(x),
@@ -134,7 +134,7 @@ def classify(qual, x, adapter, ref, key):
                 "classification": cls, "note": note}
 
     if not r_ok:
-        # the argument didn't fit the oracle's invented tuple convention — a bridge artifact
+        # the argument didn't fit the oracle's invented tuple convention - a bridge artifact
         # (the oracle's non-tuple-rejection probe), never a real-code finding.
         if isinstance(r_exc, BridgeInapplicable):
             return rec("adapter-error", f"RAISED {type(r_exc).__name__}: {r_exc}",
@@ -148,7 +148,7 @@ def classify(qual, x, adapter, ref, key):
                            _reduce_repr(qual, o_val))
             return None  # both reject => agreement
         if r_lib:
-            # a non-ValueError/TypeError raised INSIDE the library (e.g. NotImplementedError) —
+            # a non-ValueError/TypeError raised INSIDE the library (e.g. NotImplementedError) -
             # a real crash where the spec wants a value, IF the oracle produced one.
             if o_ok:
                 return rec("divergence", f"RAISED {type(r_exc).__name__}: {r_exc}",
@@ -161,7 +161,7 @@ def classify(qual, x, adapter, ref, key):
 
     # real returned a value.
     if not o_ok:
-        # real accepts what the oracle rejects — a candidate (real may be too lenient).
+        # real accepts what the oracle rejects - a candidate (real may be too lenient).
         return rec("divergence", _reduce_repr(qual, r_val),
                    f"RAISED {type(o_exc).__name__}: {o_exc}",
                    note="oracle rejects, real accepts")
@@ -203,12 +203,12 @@ def sweep_one(qualname: str, oracle_path: str, cap: int, max_record: int) -> dic
     key = getattr(m, "EQUIV_KEY", None)
     probes = list(getattr(m, "PROBE_INPUTS", []))
 
-    # FIDELITY GATE — check_impl(adapter) pass-rate over the mutation-proven probes.
+    # FIDELITY GATE - check_impl(adapter) pass-rate over the mutation-proven probes.
     try:
         graded = m.check_impl(adapter)
         probe_pass = sum(1 for ok, _ in graded if ok)
         probe_n = len(graded)
-    except Exception as exc:  # noqa: BLE001 — a bridge that crashes check_impl is unmappable
+    except Exception as exc:  # noqa: BLE001 - a bridge that crashes check_impl is unmappable
         out["note"] = f"check_impl(adapter) raised: {type(exc).__name__}: {exc}"
         out["elapsed"] = round(time.time() - t0, 2)
         return out
@@ -216,7 +216,7 @@ def sweep_one(qualname: str, oracle_path: str, cap: int, max_record: int) -> dic
     out["fidelity"] = round(probe_pass / probe_n, 3) if probe_n else 0.0
     if probe_n == 0 or out["fidelity"] < FIDELITY_MIN:
         out["note"] = ("UNMAPPABLE: adapter reproduces only "
-                       f"{probe_pass}/{probe_n} mutation-proven probes — the oracle's output "
+                       f"{probe_pass}/{probe_n} mutation-proven probes - the oracle's output "
                        "representation is structurally incompatible with the real API; "
                        "excluded from divergence counting")
         out["elapsed"] = round(time.time() - t0, 2)
@@ -249,14 +249,14 @@ def sweep_one(qualname: str, oracle_path: str, cap: int, max_record: int) -> dic
             c["source"] = source
             cands.append(c)
 
-    # PROBE REPLAY — authoritative (check_impl is the gated grader). Emit a candidate for
+    # PROBE REPLAY - authoritative (check_impl is the gated grader). Emit a candidate for
     # every probe check_impl rejects, classified via the same real-vs-oracle logic.
     for i, x in enumerate(probes):
         if i < len(graded) and graded[i][0]:
             continue  # check_impl passed real on this probe
         consider(x, "probe")
 
-    # GENERATED DIFF — adversarial inputs, deduped against the probes already replayed.
+    # GENERATED DIFF - adversarial inputs, deduped against the probes already replayed.
     # Registered conventions use the strategy generators; a self-describing oracle may carry
     # its own `GEN_INPUTS` list instead.
     seen = {repr(p) for p in probes}

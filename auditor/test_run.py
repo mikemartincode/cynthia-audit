@@ -23,7 +23,7 @@ from test_author import ENTRY, GOOD_BATTERY, GOOD_REF  # noqa: E402
 
 
 class ConcurrencyProbe:
-    """Stub gateway: sleeps to force overlap, counts concurrent in-flight calls. Prompt-aware —
+    """Stub gateway: sleeps to force overlap, counts concurrent in-flight calls. Prompt-aware -
     authoring is now TWO independent calls per attempt (reference, then battery), so it returns
     the matching snippet and each function costs 2x `cost`."""
 

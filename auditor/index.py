@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
-"""auditor/index.py — AST-index a target repo and emit the auditable-function manifest.
+"""auditor/index.py - AST-index a target repo and emit the auditable-function manifest.
 
 Usage:
     python auditor/index.py <repo_path> [--package <dir>] [--out <manifest.json>]
 
 Walks the target package's source, collects every PUBLIC function (module-level defs and
-methods of module-level classes whose own name doesn't start with "_" — module privacy is
+methods of module-level classes whose own name doesn't start with "_" - module privacy is
 ignored on purpose: many libraries keep the public API in a private module and re-export),
 and classifies each on the two axes the oracle author needs:
 
-  deterministic   — an AST scan for output-affecting impurity (time/random/IO/env/global
+  deterministic   - an AST scan for output-affecting impurity (time/random/IO/env/global
                     state), propagated transitively through the package's internal call
                     graph to a fixpoint. Unresolvable external calls are assumed pure
                     (heuristic; the differential sweep re-checks determinism empirically).
-  auditability    — what an INDEPENDENT oracle could be grounded in:
+  auditability    - what an INDEPENDENT oracle could be grounded in:
                       spec       a substantive docstring (the function documents its own
                                  behavior well enough to prompt an author against)
                       invariant  a recognized universal property: an inverse sibling in
                                  the same package (encode/decode, parse/unparse, ...) or
                                  an idempotent-by-name transform (normalize*, canonical*)
-                      none       neither — honestly out of scope for this auditor
+                      none       neither - honestly out of scope for this auditor
 
 Stdlib + cynthia_core only. Rerunnable; output is deterministic for a given tree.
 """
@@ -53,7 +53,7 @@ IMPURE_ATTRS = {
     ("sys", "stdin"), ("sys", "stdout"), ("sys", "stderr"), ("sys", "argv"),
     ("urllib", "request"),
     # socket: network/syscall surface is impure, but inet_pton/inet_ntop/htonl-family
-    # are pure format converters — list the impure ones explicitly.
+    # are pure format converters - list the impure ones explicitly.
     ("socket", "socket"), ("socket", "create_connection"), ("socket", "getaddrinfo"),
     ("socket", "gethostbyname"), ("socket", "gethostname"), ("socket", "getfqdn"),
 }
@@ -62,7 +62,7 @@ IMPURE_ATTRS = {
 IMPURE_CALLS = {"open", "input", "print", "exec", "eval", "compile", "globals", "vars"}
 
 # Container-mutation methods: calling one on an enclosing-scope (module-level) name is a
-# global-state write — e.g. a register_*() function appending to a module registry.
+# global-state write - e.g. a register_*() function appending to a module registry.
 MUTATOR_METHODS = {"add", "append", "extend", "insert", "remove", "discard", "pop",
                    "clear", "update", "setdefault", "popitem", "sort", "reverse"}
 
@@ -199,7 +199,7 @@ class _BodyScan(ast.NodeVisitor):
         self.generic_visit(node)
 
     # don't descend into nested defs/lambdas' default args twice; nested defs share fate
-    # (they execute inside the function), so descending is correct — keep generic_visit.
+    # (they execute inside the function), so descending is correct - keep generic_visit.
 
 
 class _Imports:
@@ -262,7 +262,7 @@ def index_package(repo: Path, package_dir: Path) -> list[FuncRecord]:
         module_name = package_dir.name if rel_mod == "__init__" else f"{package_dir.name}.{rel_mod}"
         try:
             tree = ast.parse(py.read_text(), filename=str(py))
-        except SyntaxError as exc:  # py2-only files etc. — skip loudly
+        except SyntaxError as exc:  # py2-only files etc. - skip loudly
             print(f"  [skip] {py}: {exc}", file=sys.stderr)
             continue
         trees[module_name] = (tree, py)
@@ -400,7 +400,7 @@ def main() -> int:
             "auditability": basis,
             "auditability_why": why,
             "intent": _intent(rec),
-            "doc": rec.doc,  # full docstring — the spec text the oracle author prompts against
+            "doc": rec.doc,  # full docstring - the spec text the oracle author prompts against
         })
 
     manifest = {

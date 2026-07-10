@@ -104,7 +104,7 @@ def test_branch_recall_lift():
     e04_inputs, stats = build_e04_inputs(grammar_limit=300, seed_cap=600, fuzz_budget=2000)
     base = lines_hit(URL_POOL)
     e04 = lines_hit(list(URL_POOL) + e04_inputs)
-    assert e04 > base, ("E04 reached no new target lines — no recall lift "
+    assert e04 > base, ("E04 reached no new target lines - no recall lift "
                         f"(baseline {len(base)}, e04 {len(e04)})")
     assert base <= e04, "coverage must be monotone under a superset of inputs"
     gained = len(e04) - len(base)

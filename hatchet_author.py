@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Hatchet-wrapped M3 oracle author — the spike.
+"""Hatchet-wrapped M3 oracle author - the spike.
 
 Replaces the two hand-hacks (func_workers ThreadPool + global gate-lock) with platform-owned
 cross-cutting concerns (north-star §2): retries + per-resource concurrency caps live on the tasks.
 
 Two tasks, two resource profiles:
-  author_draft  — network-bound. retries=3/backoff "queues the 500s" (transient gateway errors
+  author_draft  - network-bound. retries=3/backoff "queues the 500s" (transient gateway errors
                   re-enqueue). ConcurrencyExpression max_runs=24 caps concurrent gateway calls
                   (the HTTP-500 cascade ceiling found at fw=6).
-  gate_draft    — RAM-bound mutant-subprocess swarm. ConcurrencyExpression max_runs=8 caps
-                  concurrent gates to box RAM — REPLACES the manual gate-lock. Sync gate runs in
+  gate_draft    - RAM-bound mutant-subprocess swarm. ConcurrencyExpression max_runs=8 caps
+                  concurrent gates to box RAM - REPLACES the manual gate-lock. Sync gate runs in
                   asyncio.to_thread (per reference_hatchet_authoring).
 
 Retryable unit = ONE draft: a 500 on draft 7 re-authors only draft 7, never re-gates or re-authors
-the rest. Driver fans out best-of-N via per-draft aio_run (NOT aio_run_many → avoids the deadlock);
+the rest. Driver fans out best-of-N via per-draft aio_run (NOT aio_run_many -> avoids the deadlock);
 Hatchet's concurrency caps do the throttling server-side, so there is no client-side worker count to tune.
 
     .venv/bin/python hatchet_author.py worker                 # (background) the spike worker
@@ -29,14 +29,15 @@ from pathlib import Path
 
 # Self-sufficient env: the WORKER process (not the driver) runs the author calls, so it needs
 # both HATCHET_* (client) and LITELLM_KEY (gateway auth) loaded here, not just in the launch shell.
-for _line in Path("/home/mike/projects/cynthiaV3/.env").read_text().splitlines():
+_env_file = Path(__file__).resolve().parent / ".env"
+for _line in (_env_file.read_text().splitlines() if _env_file.exists() else []):
     _line = _line.strip()
     if "=" in _line and (_line.startswith("HATCHET_") or _line.startswith("LITELLM_KEY")):
         _k, _, _v = _line.partition("=")
         os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
 # author.call_model reads LITELLM_GATEWAY (base; it appends /v1/chat/completions). Not in .env
-# (which has LITELLM_URL=.../v1) — set the base here.
-os.environ.setdefault("LITELLM_GATEWAY", "http://192.168.1.110:4000")
+# (which has LITELLM_URL=.../v1) - set the base here.
+os.environ.setdefault("LITELLM_GATEWAY", "http://localhost:4000")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from hatchet_sdk import ConcurrencyExpression, ConcurrencyLimitStrategy, Context, Hatchet  # noqa: E402

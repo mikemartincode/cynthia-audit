@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/measure_e04.py — measure the RECALL LIFT E04 input generation buys, honestly.
+"""auditor/measure_e04.py - measure the RECALL LIFT E04 input generation buys, honestly.
 
 Two independent axes, both deterministic and model-free:
 
@@ -15,7 +15,7 @@ Two independent axes, both deterministic and model-free:
 
 HONESTY: this reports "more branches reached / more candidates surfaced," NOT "exhaustive." The
 E04 corpus is bounded by stated caps/budgets (printed). A bug behind a branch none of the three
-axes reaches is still missed — recall is raised, not completed.
+axes reaches is still missed - recall is raised, not completed.
 
 Usage:
     ~/projects/cynthia-core/.venv/bin/python auditor/measure_e04.py \
@@ -54,7 +54,7 @@ def measure_branch_lift(e04_inputs: list[str]) -> dict:
 
 
 def measure_candidate_lift(records_dir: Path, out_dir: Path, e04_stats: dict) -> dict | None:
-    """Run the sweep twice over the url-convention oracles — baseline pool, then E04-augmented —
+    """Run the sweep twice over the url-convention oracles - baseline pool, then E04-augmented -
     and compare. Returns None if the records dir is absent (axis B simply not available)."""
     rec_glob = sorted((records_dir / "records").glob("*.json"))
     if not rec_glob:
@@ -142,10 +142,10 @@ def main() -> int:
               f"{candidate['e04']['surviving_divergences']} "
               f"(+{candidate['extra_surviving_divergences']})")
     else:
-        print("CANDIDATE LIFT: skipped (no gate-GREEN records dir) — branch lift stands alone")
+        print("CANDIDATE LIFT: skipped (no gate-GREEN records dir) - branch lift stands alone")
     if e04_stats["coverage_guided"]["budget_hit"]:
         print(f"NOTE: coverage-guided loop hit its {args.fuzz_budget}-mutation budget cap (logged)")
-    print("HONEST: recall raised (more branches / more candidates), NOT exhaustive — bounded by "
+    print("HONEST: recall raised (more branches / more candidates), NOT exhaustive - bounded by "
           "the stated caps; no symbolic execution.")
     print(f"wrote {args.out / 'recall.json'}")
     return 0

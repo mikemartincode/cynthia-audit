@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""auditor/audit.py — the one-command full audit: author+gate -> differential sweep -> triage,
+"""auditor/audit.py - the one-command full audit: author+gate -> differential sweep -> triage,
 then an honest REPORT.md. Resumable, hard $-capped across stages, prints running spend.
 
 The pipeline's trust hinges on CROSS-FAMILY independence: the first oracle is authored by one
 family (deepseek), the triage second oracle + vote by ANOTHER (minimax-m3). A same-family vote
-re-derives the same spec misreading and launders a value divergence into a false "real-bug" — so
+re-derives the same spec misreading and launders a value divergence into a false "real-bug" - so
 the vote model MUST differ from the author model. The default does: author deepseek, vote m3.
 
 A "real-bug" finding here is conservative BY CONSTRUCTION (triage.classify_candidate): only a
 library CRASH on a valid input is promoted; every value divergence is bad-oracle / invalid-input /
 spec-ambiguity (human review), never an auto-asserted bug. A clean "0 real-bug" pass is therefore a
-real result — evidence the tool is a verifier first — not a failure to report.
+real result - evidence the tool is a verifier first - not a failure to report.
 
 Usage:
     python auditor/audit.py --target hyperlink [--run-dir results/<id>] \
@@ -59,7 +59,7 @@ def write_report(run_dir: Path, manifest: dict, s_sweep: dict, s_tri: dict, real
     wall_total = sum(walls.values())
 
     L: list[str] = []
-    L.append(f"# Audit report — {manifest.get('target')}")
+    L.append(f"# Audit report - {manifest.get('target')}")
     L.append("")
     L.append(f"- **Target:** `{manifest.get('target')}` @ commit "
              f"`{(manifest.get('commit') or '?')[:10]}`")
@@ -95,18 +95,18 @@ def write_report(run_dir: Path, manifest: dict, s_sweep: dict, s_tri: dict, real
         by_fn: dict[str, int] = {}
         for f in real_bugs:
             by_fn[f["qualname"]] = by_fn.get(f["qualname"], 0) + 1
-        L.append("## Real-bug findings (library crashes on a valid input — A07 must reproduce)")
+        L.append("## Real-bug findings (library crashes on a valid input - A07 must reproduce)")
         L.append("")
         L.append(f"{len(real_bugs)} finding(s) across {len(by_fn)} function(s): "
                  + ", ".join(f"`{q}`×{n}" for q, n in sorted(by_fn.items())) + ". Multiple inputs "
-                 "under one function are the SAME root cause shown by different minimal triggers — "
+                 "under one function are the SAME root cause shown by different minimal triggers - "
                  "count findings by function, not by row.")
         L.append("")
         L.append("Each promotion required a CRASH divergence on a VALID input (never a value "
                  "disagreement) plus corroboration from the cross-family second oracle and/or the "
                  "independent spec re-derivation (`evidence` records which fired; an inconclusive "
                  "cross-family vote still needs spec agreement to promote). Confidence is medium "
-                 "pending an independent A07 repro — none is asserted as a confirmed bug here.")
+                 "pending an independent A07 repro - none is asserted as a confirmed bug here.")
         L.append("")
         for f in real_bugs:
             ev = f.get("evidence", {})
@@ -162,7 +162,7 @@ def main() -> int:
     args = ap.parse_args()
 
     if args.author_model.split("-")[0] == args.vote_model.split("-")[0]:
-        print(f"REFUSED: author ({args.author_model}) and vote ({args.vote_model}) share a family — "
+        print(f"REFUSED: author ({args.author_model}) and vote ({args.vote_model}) share a family - "
               f"cross-family independence is the trust premise. Pick different families.",
               file=sys.stderr)
         return 2
@@ -182,7 +182,7 @@ def main() -> int:
     os.environ["AUDIT_BUDGET_USD"] = str(args.budget)
     walls: dict[str, float] = {}
 
-    # STAGE 1 — author + gate (skips functions that already have a record)
+    # STAGE 1 - author + gate (skips functions that already have a record)
     t = time.time()
     s_auth = asyncio.run(run_audit(manifest, args.author_model, run_dir, limit=args.limit,
                                    concurrency=args.concurrency))
@@ -191,14 +191,14 @@ def main() -> int:
     print(f"[audit] author+gate: {s_auth['completed']} new this pass, {n_green} green total, "
           f"+${s_auth['spent_usd']:.4f}", flush=True)
 
-    # STAGE 2 — differential sweep (deterministic; process-pool fan-out)
+    # STAGE 2 - differential sweep (deterministic; process-pool fan-out)
     t = time.time()
     s_sweep = run_sweep(run_dir, run_dir / "sweep")
     walls["sweep"] = time.time() - t
-    print(f"[audit] sweep: {s_sweep['green_oracles']} oracles → "
+    print(f"[audit] sweep: {s_sweep['green_oracles']} oracles -> "
           f"{s_sweep['candidates_recorded']} candidates", flush=True)
 
-    # STAGE 3 — cross-family triage. Cap triage to the budget remaining after authoring.
+    # STAGE 3 - cross-family triage. Cap triage to the budget remaining after authoring.
     author_cost = sum(r.get("cost", 0.0) for r in _records(run_dir))
     os.environ["AUDIT_BUDGET_USD"] = str(max(0.0, args.budget - s_auth["spent_usd"]))
     t = time.time()
@@ -215,7 +215,7 @@ def main() -> int:
     elapsed = [r.get("elapsed", 0.0) for r in _records(run_dir) if r.get("elapsed")]
     serial_est = sum(elapsed)
     report = write_report(run_dir, manifest, s_sweep, s_tri, real_bugs, review_q, walls, serial_est)
-    print(f"[audit] REPORT → {report}", flush=True)
+    print(f"[audit] REPORT -> {report}", flush=True)
     print(f"[audit] DONE: {s_tri['real_bug_findings']} cross-family real-bug finding(s), "
           f"${total:.4f} total spend, {sum(walls.values()):.0f}s wall", flush=True)
     return 0

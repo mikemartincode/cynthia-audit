@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/corpus.py — build the strategy-recall corpus across the basket, durably.
+"""auditor/corpus.py - build the strategy-recall corpus across the basket, durably.
 
 For every basket repo, author+gate EVERY candidate strategy on EVERY auditable function (TRY-ALL, not
 stop-at-first-green) so each strategy's per-shape gate-GREEN rate is observed UNBIASED, then ingest
@@ -105,7 +105,7 @@ def _read_oracle_code(r: ce.CellResult) -> str | None:
 
 
 def ingest_repo(recall: StrategyRecall, results: list[ce.CellResult], repo: str) -> int:
-    """Project this repo's cell results into the recall store (errored cells skipped — a failed
+    """Project this repo's cell results into the recall store (errored cells skipped - a failed
     authoring attempt is not evidence about a strategy's fit). GREEN cells also carry their oracle
     module text (the exemplar payload for augmented-generation recall, #1)."""
     n = 0
@@ -170,7 +170,7 @@ async def run_corpus(queue_path: Path, run_root: Path, recall_db: Path, model: s
             processed.append({"repo": name, "cells": len(cells), "ingested": ingested, **summary})
             print(f"[corpus] {name}: done, ingested {ingested} rows "
                   f"(gate_green {summary['gate_green']}/{summary['completed']})", flush=True)
-        except Exception as exc:  # noqa: BLE001 — one repo erroring must not kill the basket
+        except Exception as exc:  # noqa: BLE001 - one repo erroring must not kill the basket
             queue.mark(name, "failed")
             print(f"[corpus] {name}: FAILED {type(exc).__name__}: {exc}", flush=True)
     report = {"queue": queue.summary(), "processed": processed, "recall_db": str(recall_db),

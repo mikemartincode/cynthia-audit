@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/coverage_exp.py — the shared author+gate engine for the coverage-recall experiment.
+"""auditor/coverage_exp.py - the shared author+gate engine for the coverage-recall experiment.
 
 The whole experiment reduces to one unit of work, a CELL = (function, strategy, rep): author an
 independent reference+battery oracle for `function` using oracle-shape `strategy`, gate it (STRICT,
@@ -11,7 +11,7 @@ of cells over this engine:
   * held-out  : held-out functions × candidate_strategies × N reps               -> holdout.py
 
 Coverage = gate-GREEN (non-vacuity), NOT correctness (claim boundary). The mutation gate is the ONLY
-trust authority — a model only AUTHORS; gate_authored decides. No model ever approves an oracle.
+trust authority - a model only AUTHORS; gate_authored decides. No model ever approves an oracle.
 
 Concurrency mirrors run.py: authoring is I/O-bound (gateway idles minutes) -> asyncio.to_thread under
 a semaphore; gating is subprocess-bound -> ProcessPoolExecutor. A HARD budget rail (run.BudgetTracker)
@@ -38,7 +38,7 @@ import author as author_mod  # noqa: E402
 import frontload as fl  # noqa: E402
 from author import _safe_leaf  # noqa: E402
 from recall_strategy import shape_key as _shape_key  # noqa: E402
-from run import BudgetTracker  # noqa: E402 — reuse the proven hard rail
+from run import BudgetTracker  # noqa: E402 - reuse the proven hard rail
 
 
 def _atomic_write_json(path: Path, obj) -> None:
@@ -81,7 +81,7 @@ class CellResult:
     model: str
     gate_green: bool = False
     strict_green: bool = False
-    gate_failed: bool = False  # gate could not render a verdict (timeout/OOM/crash) — NOT a RED oracle
+    gate_failed: bool = False  # gate could not render a verdict (timeout/OOM/crash) - NOT a RED oracle
     cost: float = 0.0
     in_tok: int = 0
     out_tok: int = 0
@@ -106,7 +106,7 @@ from gate_subprocess import GATE_TIMEOUT_S, _gate_subprocess  # noqa: E402,F401
 
 def _wants_stream(model: str) -> bool:
     """Reasoning models the gateway BUFFERS past the read timeout when non-streamed (minimax-*) MUST
-    stream — measured: minimax-m3 non-streamed timed out on ~half of bake-off cells (288s latency vs
+    stream - measured: minimax-m3 non-streamed timed out on ~half of bake-off cells (288s latency vs
     a 300s timeout). DeepSeek streams fine too but is kept NON-streamed so its passive prefix cache
     fires (MiniMax won't read cache on a streamed request; DeepSeek's cache is the cost lever, and
     minimax is free, so streaming costs it nothing)."""
@@ -127,7 +127,7 @@ async def _run_one_cell(cell: Cell, model: str, run_dir: Path, target: str,
                         front_load: bool = False) -> CellResult | None:
     """Author + gate one cell, BEST-OF-N with early-exit: author up to `best_of_n` independent
     ref+battery drafts (draft 0 cool, rest hot for diversity), gate each, STOP at the first gate-GREEN
-    (the gate is the selector — that's the whole thesis). cost/tokens sum the drafts actually spent;
+    (the gate is the selector - that's the whole thesis). cost/tokens sum the drafts actually spent;
     the recorded verdict is the best draft (first GREEN, else highest (green,strict)). Returns None
     iff the budget stopped this cell before ANY draft. A gateway/author failure on a draft is skipped;
     only if every draft fails to author is it a RED error cell."""
@@ -137,7 +137,7 @@ async def _run_one_cell(cell: Cell, model: str, run_dir: Path, target: str,
     bat_model = author_mod._battery_model(model)
     front = fl.frontload_block(cell.entry) if front_load else None
     oracles_dir = run_dir / "oracles" / cell.cell_id
-    best = None  # (green, strict, note, module_name) — best REAL verdict only
+    best = None  # (green, strict, note, module_name) - best REAL verdict only
     authored_any = False
     gate_failed_note = ""  # set if a draft authored but its gate could not render a verdict
 
@@ -146,8 +146,8 @@ async def _run_one_cell(cell: Cell, model: str, run_dir: Path, target: str,
             reservation = budget.reserve()
             if reservation is None:
                 if draft == 0:
-                    return None  # budget wall before any draft — caller logs as dropped
-                break  # budget exhausted mid-best-of-N — keep the best draft so far
+                    return None  # budget wall before any draft - caller logs as dropped
+                break  # budget exhausted mid-best-of-N - keep the best draft so far
             oracles_dir.mkdir(parents=True, exist_ok=True)
             r = await asyncio.to_thread(
                 author_mod._author_independent, cell.entry, model, bat_model,
@@ -172,7 +172,7 @@ async def _run_one_cell(cell: Cell, model: str, run_dir: Path, target: str,
             verdict = await asyncio.to_thread(_gate_subprocess, mod, str(oracles_dir),
                                               gate_cap, cell.qualname)
         if verdict.get("gate_failed"):
-            # the gate could not evaluate this draft (timeout/OOM/crash) — that is NOT a verdict,
+            # the gate could not evaluate this draft (timeout/OOM/crash) - that is NOT a verdict,
             # so it must not stand in as a RED "best". Note it and move to the next draft.
             gate_failed_note = verdict.get("note", "gate failed")
             continue
@@ -180,7 +180,7 @@ async def _run_one_cell(cell: Cell, model: str, run_dir: Path, target: str,
         if best is None or key > best[:2]:
             best = (key[0], key[1], verdict.get("note", ""), mod)
             res.oracle_path = str(oracles_dir / f"{mod}.py")
-        if key[0]:  # first gate-GREEN — the selector is satisfied, stop drafting
+        if key[0]:  # first gate-GREEN - the selector is satisfied, stop drafting
             break
 
     if not authored_any:
@@ -188,7 +188,7 @@ async def _run_one_cell(cell: Cell, model: str, run_dir: Path, target: str,
         res.elapsed = time.time() - t0
         return res
     if best is None:
-        # authored, but every draft's gate FAILED to render a verdict — this is a gate failure, NOT a
+        # authored, but every draft's gate FAILED to render a verdict - this is a gate failure, NOT a
         # RED oracle. Bucket it as errored (excluded from coverage + recall) rather than miscount it
         # as a non-vacuous-failing oracle.
         res.gate_failed = True
@@ -224,7 +224,7 @@ async def run_cells(cells: list[Cell], model: str, run_dir: Path, *, target_of: 
     budget = BudgetTracker(cap)
     sem = asyncio.Semaphore(concurrency)
     asyncio.get_running_loop().set_default_executor(ThreadPoolExecutor(max_workers=concurrency + 4))
-    # gating is subprocess-bound (each gate spawns a mutant-subprocess swarm) — bound it BELOW the
+    # gating is subprocess-bound (each gate spawns a mutant-subprocess swarm) - bound it BELOW the
     # box's cores so concurrent gate storms don't oversubscribe. Each gate is hard-kill-timeout'd.
     gate_sem = asyncio.Semaphore(max(2, (os.cpu_count() or 4) - 2))
     done = {"n": 0, "green": 0, "strict": 0, "dropped": 0, "errors": 0}
@@ -235,7 +235,7 @@ async def run_cells(cells: list[Cell], model: str, run_dir: Path, *, target_of: 
             res = await _run_one_cell(cell, model, run_dir, target_of.get(cell.repo, ""),
                                       sem, gate_sem, budget, max_tokens=max_tokens, gate_cap=gate_cap,
                                       best_of_n=best_of_n, thinking=thinking, front_load=front_load)
-        except Exception as exc:  # noqa: BLE001 — one cell's surprise must never crash the gather
+        except Exception as exc:  # noqa: BLE001 - one cell's surprise must never crash the gather
             res = CellResult(repo=cell.repo, qualname=cell.qualname, shape_key=cell.shape_key,
                              strategy=cell.strategy, rep=cell.rep, model=model,
                              error=f"{type(exc).__name__}: {exc}", note="cell crashed")
@@ -280,7 +280,7 @@ def load_cell_results(run_dir: Path) -> list[CellResult]:
     for p in sorted(records_dir.glob("*.json")):
         try:
             out.append(CellResult.from_dict(json.loads(p.read_text())))
-        except Exception:  # noqa: BLE001 — a torn file from a hard kill: skip, the cell re-runs
+        except Exception:  # noqa: BLE001 - a torn file from a hard kill: skip, the cell re-runs
             continue
     return out
 

@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
-"""auditor/complexity.py — cost/complexity probe: superlinear growth + ReDoS (E05).
+"""auditor/complexity.py - cost/complexity probe: superlinear growth + ReDoS (E05).
 
 Every other probe in this auditor compares VALUES (oracle sweep, real-vs-real differential).
 This one measures COST: it times target functions across geometrically scaled input sizes
 (n, 2n, 4n, 8n), fits the growth curve, and flags superlinear behavior; and it throws
 catastrophic-backtracking attack strings at regex-bearing functions and flags runaway time
 against a same-length benign baseline (ReDoS). A `complexity` finding carries the measured
-per-size timings as its evidence — the curve IS the claim.
+per-size timings as its evidence - the curve IS the claim.
 
 THE HONESTY LINE (timing is noisy; a finding must be a clear, repeated signal):
   * median-of-k per size, after warmup, each timed call on a DISTINCT payload (no
     memoization flattery); sub-resolution calls are re-measured in batches of distinct
     payloads so the per-call estimate stays above timer noise.
   * the growth verdict is a least-squares log-log slope + R^2, and it must hold in EVERY
-    one of `trials` independent re-measurements (fresh process each) — a single slow trial
+    one of `trials` independent re-measurements (fresh process each) - a single slow trial
     never flags. Constant-factor noise has slope ~0 and fails the fit; it cannot trip this.
   * reported as MEASURED growth over the probed range ("superlinear on n..8n, slope=2.0"),
     never an asymptotic proof. "consistent with quadratic" only when every trial's slope
     lands in the quadratic band.
   * a function whose largest-size median is still below ASSESS_FLOOR_S is recorded
-    `below-noise` (too fast to assess at the bounded sizes) — honestly unassessed, never
+    `below-noise` (too fast to assess at the bounded sizes) - honestly unassessed, never
     extrapolated into a finding.
 
 BOUNDED BY CONSTRUCTION: each trial runs in a forked child that STREAMS one result per size
 through a pipe; the parent enforces a wall-clock bound and kills the child on breach, keeping
 the partial per-size data already received. A genuinely-exponential function therefore cannot
-hang the run — the breach is logged as `bound-hit`, and it promotes to a candidate only when
+hang the run - the breach is logged as `bound-hit`, and it promotes to a candidate only when
 the partial curve ALREADY shows a clean superlinear fit (>=3 sizes); otherwise it stays
 `bound-hit-unassessed` (a logged limit, not a finding).
 
@@ -33,7 +33,7 @@ ReDoS RULE: an attack string flags only if (a) the bounded child never finished 
 bad the wall died), or (b) a single call took >= REDOS_ABS_S AND was >= REDOS_RATIO x the
 same-length benign baseline. The baseline comparison is what separates "this regex
 backtracks catastrophically on THIS shape" from "this function is slow on every 64KB input"
-— the latter is the growth probe's business, not a ReDoS finding.
+- the latter is the growth probe's business, not a ReDoS finding.
 
 Like differential.py, this is a separate module rather than a mode on sweep.py on purpose:
 the sweep is built around oracle calling-conventions and value equality; a cost probe has
@@ -58,7 +58,7 @@ from pathlib import Path
 from statistics import median
 
 # the target lives under the vendored repo, imported by absolute path (never an installed
-# copy) — same rule as adapters.py.
+# copy) - same rule as adapters.py.
 _REPO_SRC = str((Path(__file__).resolve().parent.parent / "targets/hyperlink/repo/src"))
 if _REPO_SRC not in sys.path:
     sys.path.insert(0, _REPO_SRC)
@@ -77,7 +77,7 @@ QUADRATIC_BAND = (1.8, 2.2)  # "consistent with quadratic" only inside this, eve
 REDOS_ABS_S = 0.25        # a single attack call at/above this is runaway-slow...
 REDOS_RATIO = 50.0        # ...if also this many times the same-length benign baseline
 REDOS_SIZES = (1024, 4096, 16384, 65536)
-REDOS_REPS = 3            # median-of-3 per (shape, size) — attack calls can be SLOW
+REDOS_REPS = 3            # median-of-3 per (shape, size) - attack calls can be SLOW
 
 
 # ---------------------------------------------------------------- bounded child harness
@@ -85,7 +85,7 @@ REDOS_REPS = 3            # median-of-3 per (shape, size) — attack calls can b
 def _run_bounded(target, args, wall_s: float):
     """Fork a child running target(*args, conn); collect streamed messages until 'done' or
     the wall expires. Returns (messages, bound_hit). The child is killed on breach; messages
-    already streamed survive — that partial data is the point of streaming."""
+    already streamed survive - that partial data is the point of streaming."""
     ctx = mp.get_context("fork")
     rd, wr = ctx.Pipe(duplex=False)
     proc = ctx.Process(target=target, args=(*args, wr), daemon=True)
@@ -103,7 +103,7 @@ def _run_bounded(target, args, wall_s: float):
         if rd.poll(min(remaining, 0.05)):
             try:
                 m = rd.recv()
-            except EOFError:  # child died without 'done' (crash) — keep what we have
+            except EOFError:  # child died without 'done' (crash) - keep what we have
                 break
             if m == "done":
                 done = True
@@ -226,7 +226,7 @@ def measure_growth(qualname: str, axis: str, build, *, base_n: int = 128, n_size
         return rec
     if all(t["medians_s"][-1] < ASSESS_FLOOR_S for t in trial_recs):
         rec["classification"] = "below-noise"
-        rec["note"] = (f"largest-size median under {ASSESS_FLOOR_S}s in every trial — too "
+        rec["note"] = (f"largest-size median under {ASSESS_FLOOR_S}s in every trial - too "
                        "fast to assess at these sizes; honestly unassessed")
         return rec
 
@@ -245,7 +245,7 @@ def measure_growth(qualname: str, axis: str, build, *, base_n: int = 128, n_size
         rec["classification"] = "linear"
         rec["note"] = f"slope {min(slopes)}..{max(slopes)} across {len(slopes)} trials"
     else:
-        rec["note"] = (f"slopes {sorted(slopes)} straddle the thresholds or fit poorly — "
+        rec["note"] = (f"slopes {sorted(slopes)} straddle the thresholds or fit poorly - "
                        "not a clear repeated signal, so not flagged")
     return rec
 
@@ -290,7 +290,7 @@ def probe_redos(qualname: str, fn, shapes: dict, *, sizes=REDOS_SIZES,
         runaway = bound_hit or bool(slow)
         if bound_hit:
             why = (f"wall bound {wall_s}s hit at "
-                   f"size>{rows[-1]['size'] if rows else sizes[0]} — runaway backtracking")
+                   f"size>{rows[-1]['size'] if rows else sizes[0]} - runaway backtracking")
         elif slow:
             w = slow[0]
             why = (f"attack {w['attack_s']}s vs benign {w['benign_s']}s at size {w['size']} "

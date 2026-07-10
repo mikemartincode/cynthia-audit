@@ -1,4 +1,4 @@
-"""Self-contained proof for auditor/complexity.py — the cost/complexity probe (E05).
+"""Self-contained proof for auditor/complexity.py - the cost/complexity probe (E05).
 No network and no model: planted RED/GREEN control functions prove the probe's detection
 power and its noise immunity, then the real (vendored) hyperlink target is probed.
 
@@ -7,7 +7,7 @@ What it demonstrates, end to end (the E05 done-criteria):
      timing curve as evidence (slope ~2, clean R^2, in EVERY trial), and a planted
      catastrophic-backtracking regex is flagged `redos` (runaway vs the benign baseline,
      or the wall bound itself).
-  2. NOISE IMMUNITY: a linear scan and a constant-time function are NOT flagged — the
+  2. NOISE IMMUNITY: a linear scan and a constant-time function are NOT flagged - the
      median-of-k + log-log fit + all-trials rule means constant-factor noise cannot trip
      a finding. This is checked positively, not assumed.
   3. BOUNDED: a function that would run far past the wall is killed at the bound and
@@ -15,7 +15,7 @@ What it demonstrates, end to end (the E05 done-criteria):
      promoted without a clean partial fit.
   4. REAL TARGET: >=1 size-scalable hyperlink function is timed across n..8n and reports a
      growth class with the measured curve; the ReDoS shapes run against the regex-bearing
-     parser entry point (URL.from_text). The real outcomes are recorded, not asserted —
+     parser entry point (URL.from_text). The real outcomes are recorded, not asserted -
      "0 complexity candidates" is a valid result for a well-built library.
 
 Run: ~/projects/cynthia-core/.venv/bin/python auditor/test_complexity.py
@@ -100,7 +100,7 @@ def test_growth_green_linear():
 
 
 def test_growth_constant_noise_immunity():
-    """O(1) work — pure constant-factor noise across sizes — must never flag. Either the
+    """O(1) work - pure constant-factor noise across sizes - must never flag. Either the
     flat slope fails the superlinear fit or the floor marks it below-noise; both are
     non-findings."""
     rec = measure_growth("control.constant", "chars", _build_constant,
@@ -112,7 +112,7 @@ def test_growth_constant_noise_immunity():
 
 def test_growth_bound_kills_and_logs():
     """A call that would run for an hour is killed at the wall and recorded as a logged
-    limit — not a hang, and not a finding (no clean partial fit exists)."""
+    limit - not a hang, and not a finding (no clean partial fit exists)."""
     t0 = time.monotonic()
     rec = measure_growth("control.sleeper", "n", _build_sleeper,
                          base_n=10, k=2, trials=1, wall_s=1.5)
@@ -127,7 +127,7 @@ def test_growth_bound_kills_and_logs():
 # ---------------------------------------------------------------- redos: RED / GREEN
 
 def test_redos_red_catastrophic():
-    """(a+)+$ against 'a'*n + '!' blows up exponentially — the probe must flag runaway,
+    """(a+)+$ against 'a'*n + '!' blows up exponentially - the probe must flag runaway,
     either by the abs+ratio rule at a small size or by hitting the wall bound."""
     shapes = {"near-miss": lambda n: "a" * n + "!"}
     rec = probe_redos("control.catastrophic", _redos_vulnerable, shapes,
@@ -158,7 +158,7 @@ def test_redos_green_safe():
 def test_real_hyperlink_growth():
     """>=1 size-scalable hyperlink function is timed across n..8n and reports a growth
     class with the full measured curve attached. The class itself is recorded, not
-    presumed — that is the probe doing its job either way."""
+    presumed - that is the probe doing its job either way."""
     q, ax, build = GROWTH_TARGETS[0]  # URL.from_text / path-segments
     rec = measure_growth(q, ax, build, base_n=128, k=5, trials=2, wall_s=30.0)
     assert rec["qualname"] == "URL.from_text"

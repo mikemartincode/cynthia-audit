@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent spec oracle for semver comparison — derived from semver.org §11, NOT
+"""Independent spec oracle for semver comparison - derived from semver.org §11, NOT
 from the python-semver source. compare_ref is the mutation target; EXPECTED is a
 hand-reasoned, spec-derived answer key (independent of compare_ref) so the oracle
 isn't circular.
@@ -74,13 +74,13 @@ REFERENCE_NAME = "compare_ref"
 
 
 def EQUIV_KEY(result: int) -> int:
-    """A comparator's contract is the SIGN of its result, not the magnitude — `-2` and `-1`
+    """A comparator's contract is the SIGN of its result, not the magnitude - `-2` and `-1`
     mean the same ordering. Projecting through this makes the gate's equivalence filter
     correctly drop magnitude-only mutations (`return 1` -> `return 2`) instead of counting
     them as survivors."""
     return (result > 0) - (result < 0)
 
-# Spec-derived answer key — each sign reasoned from semver.org §11 directly, independent
+# Spec-derived answer key - each sign reasoned from semver.org §11 directly, independent
 # of compare_ref. This is the oracle's ground truth; the gate mutates compare_ref and
 # requires the oracle to kill any mutant that gets one of these wrong.
 _PAIRS: list[tuple[str, str, int]] = [
@@ -109,7 +109,7 @@ _PAIRS: list[tuple[str, str, int]] = [
     ("1.0.0-alpha.1", "1.0.0-alpha.1", 0),
 ]
 EXPECTED = {(a, b): s for a, b, s in _PAIRS}
-# the gate's equivalence filter calls REFERENCE_FUNC(probe) — one arg per probe — so each
+# the gate's equivalence filter calls REFERENCE_FUNC(probe) - one arg per probe - so each
 # probe is an (a, b) pair. These distinguish a wrong comparator from the reference.
 PROBE_INPUTS = [(a, b) for (a, b) in EXPECTED]
 
@@ -117,7 +117,7 @@ PROBE_INPUTS = [(a, b) for (a, b) in EXPECTED]
 def check_impl(fn: Callable[[tuple], int]) -> list[tuple[bool, str]]:
     """Grade an arbitrary comparator against the spec-derived answer key. Compares the
     SIGN of fn((a,b)) to the spec sign, so a comparator returning any negative/positive
-    value is fine — only the ordering matters."""
+    value is fine - only the ordering matters."""
     checks: list[tuple[bool, str]] = []
     for (a, b), want in EXPECTED.items():
         try:

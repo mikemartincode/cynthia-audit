@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""auditor/exemplar_ab.py — the augmented-generation recall A/B (#1, the headline open thesis).
+"""auditor/exemplar_ab.py - the augmented-generation recall A/B (#1, the headline open thesis).
 
 Tests whether injecting a GREEN same-shape oracle as a generation EXEMPLAR lets a FIXED author write a
-gate-passing oracle for functions it fails un-augmented — i.e. author PAST its one-shot ceiling. This
+gate-passing oracle for functions it fails un-augmented - i.e. author PAST its one-shot ceiling. This
 is the REAL "recall" idea; the shipped recall_strategy only REORDERS which shape to try (a selector),
 which is ceiling-capped. Here recall RETRIEVES the GREEN oracle CODE of the nearest same-shape function
 (leave-one-out clean) and injects it, so the model has a worked example to imitate.
 
 Invariants the result rests on:
   * PAIRED, author FIXED. Each function is authored TWICE with the SAME model, max_tokens, temperature,
-    and oracle-shape ladder; the ONLY difference between arms is whether the exemplar is injected — so a
+    and oracle-shape ladder; the ONLY difference between arms is whether the exemplar is injected - so a
     flipped verdict is attributable to the exemplar, not to author variance across arms.
   * Per-function COVERAGE = gate-GREEN on ANY candidate strategy (the corpus metric). The mutation gate
     (capped hard-kill subprocess) is the SOLE authority; the exemplar is never trusted, only the gate's
     verdict on the oracle it helped write. (Claim boundary: coverage = non-vacuity, NOT correctness.)
   * LEAVE-ONE-OUT clean. The exemplar for a function in repo R is retrieved with exclude_repo=R, so a
-    function is never shown an oracle from its own repo — the same statelessness recall_strategy proves
+    function is never shown an oracle from its own repo - the same statelessness recall_strategy proves
     for selection (test_recall_strategy::test_nearest_exemplar_is_leave_one_out_clean).
   * McNemar on the discordant pairs: rescued = GREEN only WITH exemplar; broken = GREEN only WITHOUT.
 
@@ -49,7 +49,7 @@ ARMS = ("base", "exemplar")  # base = un-augmented; exemplar = augmented-generat
 
 
 def _hard_functions(recall: StrategyRecall) -> set[tuple[str, str]]:
-    """The (repo, qualname) set that was RED in EVERY strategy in the corpus — the functions the
+    """The (repo, qualname) set that was RED in EVERY strategy in the corpus - the functions the
     corpus author could not cover one-shot. The A/B's spend goes here (where the ceiling bites); the
     PAIRING controls for author, so selecting the set on the corpus author's failures does not bias
     the paired McNemar even if the A/B author differs (a function only counts as rescued if the
@@ -66,7 +66,7 @@ def _exemplar_for(recall: StrategyRecall, entry: dict, strategy: str, repo: str,
                   model: str | None) -> dict | None:
     """The {reference, battery} exemplar halves for one (function, strategy), LOO-clean. Returns None
     if neither role has an other-repo GREEN same-shape oracle (then the arm authors un-augmented and
-    the cell is concordant-by-construction — logged so the report can exclude no-exemplar cells)."""
+    the cell is concordant-by-construction - logged so the report can exclude no-exemplar cells)."""
     sk = _shape_key(entry)
     ref = recall.nearest_exemplar(sk, strategy, role="reference", exclude_repo=repo, model=model)
     bat = recall.nearest_exemplar(sk, strategy, role="battery", exclude_repo=repo, model=model)
@@ -81,13 +81,13 @@ def select_targets(recall: StrategyRecall, run_root: Path, *, hard_only: bool, l
                    exemplar_model: str | None, single_shape: bool = False) -> list[dict]:
     """Eligible A/B targets, richest-exemplar-first. Each target carries its manifest entry, repo,
     target-library name, and the per-strategy exemplars (so retrieval is done ONCE, deterministically,
-    not re-queried per arm). Functions with NO exemplar on any candidate strategy are dropped — the
+    not re-queried per arm). Functions with NO exemplar on any candidate strategy are dropped - the
     exemplar arm would be identical to base, so they carry no signal and waste spend.
 
     `single_shape=True` reduces each function to the ONE recall-recommended strategy that also has a
-    LOO exemplar — the output-token lever (1 shape vs the 3-shape ladder ≈ 3× fewer author calls) AND
+    LOO exemplar - the output-token lever (1 shape vs the 3-shape ladder ≈ 3× fewer author calls) AND
     a cleaner controlled comparison (the oracle shape is held fixed across arms/authors, so the
-    exemplar — or the author swap — is the only variable, no shape confound)."""
+    exemplar - or the author swap - is the only variable, no shape confound)."""
     queue = json.loads((run_root / "queue.json").read_text())["repos"]
     hard = _hard_functions(recall) if hard_only else None
     targets: list[dict] = []
@@ -116,7 +116,7 @@ def select_targets(recall: StrategyRecall, run_root: Path, *, hard_only: bool, l
             targets.append({"repo": name, "entry": f, "target": target_lib,
                             "strategies": strategies, "exemplars": ex_by_strategy,
                             "n_with_ex": n_with_ex})
-    # richest-exemplar-first, then deterministic by qualname — informative cells get the budget first
+    # richest-exemplar-first, then deterministic by qualname - informative cells get the budget first
     targets.sort(key=lambda t: (-t["n_with_ex"], t["repo"], t["entry"]["qualname"]))
     return targets[:limit] if limit else targets
 
@@ -186,7 +186,7 @@ async def _arm_coverage(tgt: dict, arm: str, model: str, run_dir: Path, *, sem: 
 def _arm_trustworthy(arm: dict) -> bool:
     """An arm's covered=False is trustworthy ONLY if every attempted strategy rendered a REAL gate
     verdict. An author error (gateway timeout/500) or a gate_failed (gate could not evaluate), or a
-    budget stop mid-ladder, could be HIDING a would-be-GREEN — so such an arm must not stand in as a
+    budget stop mid-ladder, could be HIDING a would-be-GREEN - so such an arm must not stand in as a
     clean RED. Counting an infrastructure failure as a RED verdict would contaminate the McNemar with
     non-results (the bug that bit the first think-ON run: concurrency-induced 300s timeouts)."""
     if arm["covered"]:
@@ -220,7 +220,7 @@ async def run_ab(targets: list[dict], model: str, run_dir: Path, *, concurrency:
             ex = await _arm_coverage(tgt, "exemplar", model, run_dir, sem=sem, gate_sem=gate_sem,
                                      budget=budget, max_tokens=max_tokens, temperature=temperature,
                                      gate_cap=gate_cap, thinking=thinking)
-        except Exception as exc:  # noqa: BLE001 — one function's surprise must not crash the gather
+        except Exception as exc:  # noqa: BLE001 - one function's surprise must not crash the gather
             rec = {"repo": tgt["repo"], "qualname": tgt["entry"]["qualname"],
                    "error": f"{type(exc).__name__}: {exc}"}
             ce._atomic_write_json(_fn_record_path(run_dir, tgt), rec)
@@ -263,7 +263,7 @@ async def run_ab(targets: list[dict], model: str, run_dir: Path, *, concurrency:
 
 
 def _mcnemar_p(b: int, c: int) -> float:
-    """Exact two-sided McNemar p over the discordant pairs (b rescued, c broken) — a binomial test
+    """Exact two-sided McNemar p over the discordant pairs (b rescued, c broken) - a binomial test
     against p=0.5. Small n, so exact not chi-square. Pure stdlib."""
     n = b + c
     if n == 0:
@@ -283,7 +283,7 @@ def report(run_dir: Path) -> dict:
             continue
         if "error" not in d:
             all_recs.append(d)
-    # ONLY clean functions (both arms rendered real verdicts) enter the contingency table — a
+    # ONLY clean functions (both arms rendered real verdicts) enter the contingency table - a
     # timed-out/errored arm is a non-result, not a RED, and must not pollute the McNemar.
     recs = [r for r in all_recs if r.get("clean", True)]
     excluded = len(all_recs) - len(recs)
@@ -315,7 +315,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="augmented-generation recall A/B (#1)")
     ap.add_argument("--recall-db", type=Path, default=Path("results/corpus/recall.db"))
     ap.add_argument("--corpus-root", type=Path, default=Path("results/corpus"),
-                    help="dir holding queue.json (manifest paths) — the corpus repos")
+                    help="dir holding queue.json (manifest paths) - the corpus repos")
     ap.add_argument("--run-dir", type=Path, required=True)
     ap.add_argument("--model", default="minimax-m3", help="the FIXED author (both arms)")
     ap.add_argument("--exemplar-model", default=None,

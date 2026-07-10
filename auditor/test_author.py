@@ -1,10 +1,10 @@
 """No-network proof for auditor/author.py: the reference and battery are authored
-INDEPENDENTLY (two calls), so the gate's step-0 ref_passes is a real cross-acceptance check —
+INDEPENDENTLY (two calls), so the gate's step-0 ref_passes is a real cross-acceptance check -
 a battery that disagrees with the reference is a SPEC-DISAGREEMENT, not a silent retry. Every
 model-failure mode still degrades to a RED ResultRecord (never an exception), and a well-formed
 ref+battery pair goes GREEN through the real mutation gate. call_model is stubbed (prompt-aware:
 it returns the reference snippet for the reference prompt, the battery snippet for the battery
-prompt) — zero spend, deterministic.
+prompt) - zero spend, deterministic.
 
 Run: ~/projects/cynthia-core/.venv/bin/python auditor/test_author.py
 """
@@ -53,7 +53,7 @@ def check_impl(fn):
     return out
 '''
 
-# always-pass battery — non-vacuity gate must catch it (survivors)
+# always-pass battery - non-vacuity gate must catch it (survivors)
 VACUOUS_BATTERY = '''
 PROBE_INPUTS = [(0, 0), (1, 0), (0, 1), (-5, 3), (3, -5), (7, 7), (-2, -2), (-3, -1)]
 
@@ -61,7 +61,7 @@ def check_impl(fn):
     return [(True, "looks fine") for _ in PROBE_INPUTS]
 '''
 
-# a battery that read the spec BACKWARDS — it expects the sign of (b - a). It REJECTS the correct
+# a battery that read the spec BACKWARDS - it expects the sign of (b - a). It REJECTS the correct
 # reference, so the gate's step-0 ref_passes is False: an independent spec-disagreement to escalate.
 DISAGREE_BATTERY = '''
 PROBE_INPUTS = [(1, 0), (0, 1), (-5, 3)]
@@ -97,7 +97,7 @@ def _exc_stub(exc: Exception):
 
 def test_exemplar_injection_is_role_scoped_and_cache_safe() -> None:
     """#1 augmented-generation recall: each role's prompt receives ONLY its own exemplar half (so the
-    battery author never sees a reference — independence preserved), the exemplar rides the DYNAMIC
+    battery author never sees a reference - independence preserved), the exemplar rides the DYNAMIC
     suffix so the STATIC contract prefix the passive cache keys on is byte-identical to the
     no-exemplar prompt, and an absent half is simply not injected."""
     captured: dict[str, str] = {}
@@ -112,7 +112,7 @@ def test_exemplar_injection_is_role_scoped_and_cache_safe() -> None:
     REF_EX = "def ref_impl(arg):\n    return arg  # REF-EXEMPLAR-MARKER"
     BAT_EX = "PROBE_INPUTS = []  # BAT-EXEMPLAR-MARKER"
     try:
-        # baseline (no exemplar) — capture the contract prefix each role sends
+        # baseline (no exemplar) - capture the contract prefix each role sends
         author.call_model = fake
         author._author_independent(ENTRY, "stub", "stub", shape="value")
         base_ref, base_bat = captured["reference"], captured["battery"]
@@ -175,7 +175,7 @@ def test_convention_hint() -> None:
 
 def test_best_of_n_fallback_only() -> None:
     """author_best_of_n(n=0) authors ZERO fast drafts and goes straight to the adaptive
-    thinking-ON fallback — the salvage-resume path uses this to pay only the fallback a
+    thinking-ON fallback - the salvage-resume path uses this to pay only the fallback a
     salvaged-RED function is still owed (its fast drafts already exist on disk, all RED)."""
     calls = []
     real = author.call_model
@@ -213,7 +213,7 @@ def main() -> None:
             json.dumps(rec.to_dict())  # serializable
             print(f"GREEN ok: kill {rec.gate['killed']}/{rec.gate['non_equivalent']}")
 
-            # RED (vacuous): the gate catches an always-pass battery — survivors, not a crash
+            # RED (vacuous): the gate catches an always-pass battery - survivors, not a crash
             author.call_model = _split_stub(GOOD_REF, VACUOUS_BATTERY)
             rec = author.author_and_gate({**ENTRY, "qualname": "intcmp_vac"}, "stub-model",
                                          run, attempts=1)

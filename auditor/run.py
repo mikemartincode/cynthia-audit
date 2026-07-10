@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/run.py — fan the A02 author+gate worker across every auditable function,
+"""auditor/run.py - fan the A02 author+gate worker across every auditable function,
 with bounded concurrency and a HARD spend cap.
 
 Two pools, matched to the two workloads:
@@ -148,7 +148,7 @@ async def process_function(entry: dict, model: str, run_dir: Path, target: str,
                                 "out_tok": r["out_tok"], "cost": round(r["cost"], 6)})
         if rec.gate["green"]:
             break
-        if disagree:  # independent reference and battery disagree — escalate, don't retry
+        if disagree:  # independent reference and battery disagree - escalate, don't retry
             rec.spec_disagreement = True
             break
     rec.elapsed = time.time() - t0

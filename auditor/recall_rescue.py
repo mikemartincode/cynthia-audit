@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""auditor/recall_rescue.py — the DECISIVE recall test (Mike's design): does a known-good oracle for a
+"""auditor/recall_rescue.py - the DECISIVE recall test (Mike's design): does a known-good oracle for a
 SIMILAR function rescue a function that FAILED before?
 
 This decouples the *mechanism* (can a worked example lift a failure) from *corpus quality* (does our
 sparse corpus happen to hold a good example). We curate a BANK of verified-GREEN oracles, then for each
-previously-RED function we inject the best-matched bank oracle (same shape; BEST-SHOT — same-repo
+previously-RED function we inject the best-matched bank oracle (same shape; BEST-SHOT - same-repo
 allowed, LOO deliberately dropped, because we're measuring the mechanism's CEILING, not generalization)
 and author WITH vs WITHOUT it, same author, paired. The mutation gate is the sole arbiter.
 
-  null result   → recall is a dead end: even a perfect exemplar doesn't help → drop the corpus bet.
-  rescue lift   → the mechanism works → maturing the corpus (free M3 volume) is worth it.
+  null result   -> recall is a dead end: even a perfect exemplar doesn't help -> drop the corpus bet.
+  rescue lift   -> the mechanism works -> maturing the corpus (free M3 volume) is worth it.
 """
 
 from __future__ import annotations
@@ -74,12 +74,12 @@ def failed_functions(db: str) -> set:
 
 def select_cases(failed_db: str, bank_db: str, idx: dict, limit: int) -> list[dict]:
     """Each case = a previously-RED function (from failed_db) paired with the best-matched bank oracle
-    (from bank_db). CROSS-DOMAIN ONLY (exemplar from a DIFFERENT repo) — anti-memorization: a copy then
+    (from bank_db). CROSS-DOMAIN ONLY (exemplar from a DIFFERENT repo) - anti-memorization: a copy then
     reproduces the wrong library's behavior, which the behavioral anti-copy check catches. The model
     must transfer the METHOD, not transplant the answer. Prefer a strict exemplar.
 
     bank_db != failed_db lets the RED set come from one corpus (e.g. the deepseek baseline's all-RED
-    functions) while the exemplars come from another (e.g. the free M3 corpus) — and when the two
+    functions) while the exemplars come from another (e.g. the free M3 corpus) - and when the two
     corpora cover disjoint repos, cross-domain is guaranteed by construction."""
     bank = build_bank(bank_db)
     cases = []
@@ -111,10 +111,10 @@ _ERR = object()
 def inspect_rescue(oracle_path: Path, exemplar_ref: str) -> dict:
     """Post-check a 'rescue' for the two ways it can be fake:
 
-    MEMORIZED — the rescued reference reproduces the (cross-domain) EXEMPLAR's behavior. Agreement is
+    MEMORIZED - the rescued reference reproduces the (cross-domain) EXEMPLAR's behavior. Agreement is
       counted ONLY over probes where the rescued ref returns a MEANINGFUL (non-error) value; two refs
       that merely raise on the same inputs are NOT a copy (the v1 bug that false-flagged insertBefore).
-    DEGENERATE — the rescued ref errors on every probe or returns a single constant: a vacuous 'oracle'
+    DEGENERATE - the rescued ref errors on every probe or returns a single constant: a vacuous 'oracle'
       that gate-greened on trivial structure, not a real test (the OTHER thing insertBefore was).
 
     A genuine rescue must be neither. Both refs already passed the gate, so in-process exec is safe."""

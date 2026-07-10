@@ -1,46 +1,46 @@
 #!/usr/bin/env python3
-"""auditor/differential.py — REAL-vs-REAL differential testing of URL parsers.
+"""auditor/differential.py - REAL-vs-REAL differential testing of URL parsers.
 
 Where auditor/sweep.py compares the target library against a model-authored, mutation-gated
-oracle (the verify-the-verifier path — strong, but bounded by oracle quality), this mode runs
+oracle (the verify-the-verifier path - strong, but bounded by oracle quality), this mode runs
 the SAME input through 2+ INDEPENDENT REAL implementations of the same spec and flags where
 they disagree. There is no model and no oracle here: the ground truth is the agreement of
 independent real code on the shared spec surface. Its sweet spot is the security-relevant
 PARSER-DIFFERENTIAL class (SSRF / request-smuggling / filter-bypass), which exists precisely
-because two real parsers read the SAME url's authority boundary differently — a class the
+because two real parsers read the SAME url's authority boundary differently - a class the
 single-call value oracle structurally cannot see.
 
 A separate module, not a `--mode` on sweep_one, on purpose: sweep_one is built around the
-oracle calling-convention, the fidelity gate against PROBE_INPUTS, and the mutation record —
+oracle calling-convention, the fidelity gate against PROBE_INPUTS, and the mutation record -
 none of which apply when both sides are real libraries. Forcing real-vs-real through that
 machinery would obscure both. This module reuses the generated input pool (strategies.URL_POOL)
 and nothing else.
 
 THREE PARSERS (each an independent implementation of RFC 3986):
-  - hyperlink   — the audit target (vendored under targets/hyperlink/repo/src)
-  - urllib.parse — Python stdlib (always present)
-  - rfc3986      — the `rfc3986` package, OPTIONAL (a third independent voice; absent => 2-way)
+  - hyperlink   - the audit target (vendored under targets/hyperlink/repo/src)
+  - urllib.parse - Python stdlib (always present)
+  - rfc3986      - the `rfc3986` package, OPTIONAL (a third independent voice; absent => 2-way)
 
 THE HONEST CLASSIFICATION LINE. A raw value difference is detected first, then a
 canonicalization that embodies EXACTLY the variation RFC 3986 PERMITS is applied per component
 (scheme/host case-folding §3.1/§3.2.2, percent-hex case §6.2.2.1, default-port elision §6.2.3,
 IP-literal brackets §3.2.2). If the values agree AFTER that canonicalization, the difference is
-spec-PERMITTED — an ambiguity, never promoted. If an AUTHORITY component (scheme/host/port/
+spec-PERMITTED - an ambiguity, never promoted. If an AUTHORITY component (scheme/host/port/
 userinfo) still disagrees, it is a spec-PINNED candidate, because RFC 3986 §3.2 pins the
 authority structure tightly. Residual path/query/fragment differences are conservatively
 treated as spec-PERMITTED: §6.2.2 makes their normalization OPTIONAL, so two parsers may
-legitimately differ — promoting them would be the same trap as same-family agreement (the A05
+legitimately differ - promoting them would be the same trap as same-family agreement (the A05
 rule), one layer up. Under-promotion here is deliberate; a false CVE is worse than a missed one.
 
 ACCEPT-vs-REJECT (validity divergence). When some parsers accept a url and others reject it,
 the promotion rule is CROSS-PARSER CORROBORATION: it is promoted only when ≥2 independent reals
-resolve the SAME host that ≥1 real rejected — two voices agreeing a host exists in a string a
+resolve the SAME host that ≥1 real rejected - two voices agreeing a host exists in a string a
 third refuses is the canonical SSRF-bypass shape (e.g. `http://a@b@c/`: urllib + rfc3986 both
 read host `c`, hyperlink rejects the authority outright). If the accepting parsers disagree
 among themselves on the host, it is recorded as an ambiguity, not promoted.
 
 "0 promoted candidates" is a valid, recorded outcome. The disagreement is shown, the RFC clause
-is cited, and severity follows the field — nothing is dressed as a confirmed vulnerability.
+is cited, and severity follows the field - nothing is dressed as a confirmed vulnerability.
 
 Usage:
     python auditor/differential.py [--out results/e02-differential] [--cap 0]
@@ -58,18 +58,18 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from strategies import URL_POOL  # noqa: E402
 
-# Authority-confusion payloads — the parser-differential corpus the broad URL_POOL doesn't
+# Authority-confusion payloads - the parser-differential corpus the broad URL_POOL doesn't
 # carry. These are the classic SSRF/filter-bypass shapes whose whole point is that independent
 # parsers read the authority's host boundary differently. Kept here (not folded into the shared
 # URL_POOL, which the oracle sweep also consumes) so the differential's targeted surface is
-# explicit. Each is benign per se — the value is purely WHERE the parsers place the host.
+# explicit. Each is benign per se - the value is purely WHERE the parsers place the host.
 AUTHORITY_PROBES = [
     "http://a@b@c/",                    # double '@': lenient parsers read host=c, strict rejects
     "http://a:b@c:d@e/",                # multi '@' with colons: host=e or reject
     r"http://evil.com\@good.com/",      # backslash: RFC vs WHATWG read a different host
-    "http://example.com@evil.com/",     # single userinfo '@' — all should agree host=evil.com
-    "http://good.com#@evil.com/",       # '#' must terminate authority — all should agree good.com
-    "https://expected@evil.com/",       # plain userinfo — control, all agree host=evil.com
+    "http://example.com@evil.com/",     # single userinfo '@' - all should agree host=evil.com
+    "http://good.com#@evil.com/",       # '#' must terminate authority - all should agree good.com
+    "https://expected@evil.com/",       # plain userinfo - control, all agree host=evil.com
 ]
 
 # the target lives under the vendored repo, imported by absolute path (never an installed copy).
@@ -88,7 +88,7 @@ except ImportError:  # pragma: no cover - rfc3986 is an optional third voice
 
 # RFC 3986 components in authority-first order. AUTHORITY is the security-relevant boundary.
 COMPONENTS = ("scheme", "userinfo", "host", "port", "path", "query", "fragment")
-AUTHORITY = ("scheme", "userinfo", "host", "port")          # §3.2 — tightly pinned by grammar
+AUTHORITY = ("scheme", "userinfo", "host", "port")          # §3.2 - tightly pinned by grammar
 BOUNDARY = ("userinfo", "host", "port")                     # the SSRF / smuggling surface
 DEFAULT_PORTS = {"http": 80, "https": 443, "ftp": 21, "ws": 80, "wss": 443}  # §6.2.3
 
@@ -97,7 +97,7 @@ DEFAULT_PORTS = {"http": 80, "https": 443, "ftp": 21, "ws": 80, "wss": 443}  # �
 #
 # Each returns a {component: raw_value} dict or raises. Values are kept RAW (no spec
 # normalization) so the canonicalization step below is the ONLY place permitted variation is
-# folded — a difference that survives it is real. `userinfo` is derived from the authority's
+# folded - a difference that survives it is real. `userinfo` is derived from the authority's
 # last '@' split (RFC 3986 §3.2.1: userinfo is everything before the final '@'); urllib's
 # `.username` is NOT used because it drops the password after the first ':'.
 
@@ -114,7 +114,7 @@ def parse_urllib(url: str) -> dict:
     netloc = s.netloc
     userinfo = netloc.rsplit("@", 1)[0] if "@" in netloc else None
     # `.hostname` (lowercased, brackets stripped) and `.port` are urllib's REAL outputs; .port
-    # validates lazily and may raise — accessed here so a bad port is an honest reject.
+    # validates lazily and may raise - accessed here so a bad port is an honest reject.
     return {"scheme": s.scheme, "userinfo": userinfo, "host": s.hostname,
             "port": s.port, "path": s.path, "query": s.query, "fragment": s.fragment}
 
@@ -148,7 +148,7 @@ def _canon(component: str, value, scheme):
     """Canonical form for equality, folding ONLY RFC-permitted variation.
 
     Every non-port component is string-valued, and a parser spells "not present" as either
-    `None` or `''` — that is a pure representation choice (rfc3986 uses None, hyperlink ''),
+    `None` or `''` - that is a pure representation choice (rfc3986 uses None, hyperlink ''),
     not a spec disagreement, so both collapse to ''. The absent-vs-empty distinction (e.g. a
     bare `#` fragment) is E01's round-trip concern, not this cross-parser authority concern."""
     if component == "port":
@@ -175,13 +175,13 @@ def _canon(component: str, value, scheme):
 # applied before comparison. Phrased neutrally so it reads correctly whether the difference
 # VANISHED under canon (spec-permitted) or SURVIVED it (spec-pinned).
 _CLAUSE = {
-    "scheme": "RFC 3986 §3.1 — scheme grammar; compared case-insensitively (lowercased)",
-    "host": "RFC 3986 §3.2.2 — host grammar; compared case-insensitively, IP-literal brackets stripped",
-    "port": "RFC 3986 §3.2.3 — port = *DIGIT; scheme default-port elided (§6.2.3) before comparison",
-    "userinfo": "RFC 3986 §3.2.1 — userinfo grammar; percent-hex folded (§6.2.2.1)",
-    "path": "RFC 3986 §3.3 / §6.2.2 — path; dot-segment & percent-hex normalization is OPTIONAL",
-    "query": "RFC 3986 §3.4 / §6.2.2.1 — query; percent-hex folded",
-    "fragment": "RFC 3986 §3.5 / §6.2.2.1 — fragment; percent-hex folded",
+    "scheme": "RFC 3986 §3.1 - scheme grammar; compared case-insensitively (lowercased)",
+    "host": "RFC 3986 §3.2.2 - host grammar; compared case-insensitively, IP-literal brackets stripped",
+    "port": "RFC 3986 §3.2.3 - port = *DIGIT; scheme default-port elided (§6.2.3) before comparison",
+    "userinfo": "RFC 3986 §3.2.1 - userinfo grammar; percent-hex folded (§6.2.2.1)",
+    "path": "RFC 3986 §3.3 / §6.2.2 - path; dot-segment & percent-hex normalization is OPTIONAL",
+    "query": "RFC 3986 §3.4 / §6.2.2.1 - query; percent-hex folded",
+    "fragment": "RFC 3986 §3.5 / §6.2.2.1 - fragment; percent-hex folded",
 }
 
 
@@ -190,7 +190,7 @@ _CLAUSE = {
 def _call(fn, url):
     try:
         return True, fn(url), None
-    except Exception as exc:  # noqa: BLE001 — every failure mode is data for classification
+    except Exception as exc:  # noqa: BLE001 - every failure mode is data for classification
         return False, None, f"{type(exc).__name__}: {exc}"
 
 
@@ -244,7 +244,7 @@ def compare(url: str, ps: dict) -> dict | None:
 
 def _classify_validity(accepted: dict, rejected: dict) -> dict:
     """An accept/reject split. PROMOTE only when ≥2 independent reals resolve the SAME host that
-    ≥1 real rejected (cross-parser corroboration — the SSRF-bypass shape). If accepting parsers
+    ≥1 real rejected (cross-parser corroboration - the SSRF-bypass shape). If accepting parsers
     disagree on the host, it is an ambiguity, not a bug."""
     hosts = {n: (_canon("host", c["host"], c["scheme"]) or "") for n, c in accepted.items()}
     resolved = [h for h in hosts.values() if h]
@@ -258,9 +258,9 @@ def _classify_validity(accepted: dict, rejected: dict) -> dict:
             "accepting_hosts": hosts, "rejected": {n: rejected[n] for n in sorted(rejected)},
             "rfc_basis": "RFC 3986 §3.2 (authority = [userinfo '@'] host [':' port]); "
                          f"{agree_n} independent parsers resolve host {host!r} from a string "
-                         "another rejects — a host-boundary disagreement on the SSRF surface",
+                         "another rejects - a host-boundary disagreement on the SSRF surface",
             "note": "lenient parsers resolve a host where the strict parser rejects the "
-                    "authority; severity follows the host field — shown, not asserted as a CVE",
+                    "authority; severity follows the host field - shown, not asserted as a CVE",
         }
     return {
         "kind": "accept-vs-reject", "classification": "spec-permitted",
@@ -268,7 +268,7 @@ def _classify_validity(accepted: dict, rejected: dict) -> dict:
         "rejected": {n: rejected[n] for n in sorted(rejected)},
         "rfc_basis": "RFC 3986 §3.2 authority grammar",
         "note": "accept/reject split without a corroborated host (parsers disagree among "
-                "themselves or resolve no host) — recorded, not promoted",
+                "themselves or resolve no host) - recorded, not promoted",
     }
 
 
@@ -293,7 +293,7 @@ def run_differential(inputs, out_dir: Path) -> dict:
     ambiguities = [d for d in disagreements if not d["promoted"]]
     security = [d for d in promoted if d["security_relevant"]]
 
-    # ambiguities aggregated by (component, clause) — these are pervasive (default ports, case
+    # ambiguities aggregated by (component, clause) - these are pervasive (default ports, case
     # folding) and listing each would bury the signal; candidates are listed individually.
     amb_index = Counter()
     for d in ambiguities:
@@ -326,7 +326,7 @@ def _render_report(summary: dict, promoted: list, security: list) -> str:
     L = []
     L.append("# Real-vs-real URL parser differential\n")
     L.append(f"Parsers compared: {', '.join(summary['parsers'])}"
-             + ("" if summary["rfc3986_present"] else " (rfc3986 absent — 2-way)") + ".\n")
+             + ("" if summary["rfc3986_present"] else " (rfc3986 absent - 2-way)") + ".\n")
     L.append(f"{summary['disagreements']} inputs produced a disagreement: "
              f"{summary['promoted_candidates']} promoted spec-pinned candidate(s) "
              f"({summary['security_relevant_candidates']} security-relevant), "

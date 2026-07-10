@@ -71,13 +71,13 @@ def test_classifier(tmp_path: Path | None = None) -> None:
     with tempfile.TemporaryDirectory() as td:
         recs = _index(Path(td))
 
-        # RED side — each known-impure shape is flagged, with the right reason class
+        # RED side - each known-impure shape is flagged, with the right reason class
         assert any("random" in r for r in recs["roll"].impure_reasons), recs["roll"]
         assert any("transitively" in r for r in recs["wraps_roll"].impure_reasons)
         assert any("enclosing-scope" in r for r in recs["register"].impure_reasons)
         assert any("time" in r for r in recs["stamp"].impure_reasons)
 
-        # GREEN side — pure functions carry no reasons
+        # GREEN side - pure functions carry no reasons
         for name in ("encode_thing", "decode_thing", "normalize_path", "parse", "opaque"):
             assert recs[name].impure_reasons == [], (name, recs[name].impure_reasons)
 

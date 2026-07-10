@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""auditor/author.py — per-function DeepSeek oracle author + mutation-gate worker.
+"""auditor/author.py - per-function DeepSeek oracle author + mutation-gate worker.
 
 Generalizes the proven seed (seed/deepseek_author.py): given one manifest entry
 (from auditor/index.py), build an author prompt from its intent + spec/invariant
@@ -7,7 +7,7 @@ basis, have DeepSeek author an independent oracle module, validate it with the
 cynthia-core mutation gate, and return a structured ResultRecord. Retry-on-RED:
 the gate, not the model, decides when to stop.
 
-Never raises on a bad model response — a broken/truncated/contract-violating
+Never raises on a bad model response - a broken/truncated/contract-violating
 oracle degrades to a RED record so a batch (A03) survives any single failure.
 
 Config is ENV-ONLY (no key in any file):
@@ -35,14 +35,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import trace as _trace  # noqa: E402 — the execution-trace sink (no-op unless AUDITOR_TRACE_DIR set)
-from gate_subprocess import gate_subprocess as _gate_subprocess  # noqa: E402 — capped, hard-kill gate
+import trace as _trace  # noqa: E402 - the execution-trace sink (no-op unless AUDITOR_TRACE_DIR set)
+from gate_subprocess import gate_subprocess as _gate_subprocess  # noqa: E402 - capped, hard-kill gate
 
-# per-model gateway pricing ($/M tokens, in/out) — keep in sync with the gateway config.
-# (input, output) USD per 1M tokens — DeepSeek's published cache-MISS + output rates.
+# per-model gateway pricing ($/M tokens, in/out) - keep in sync with the gateway config.
+# (input, output) USD per 1M tokens - DeepSeek's published cache-MISS + output rates.
 # This is a deliberately conservative budget-rail estimate: it bills every input token at the
 # miss rate, ignoring DeepSeek prefix-cache hits (which bill at ~1/120th: $0.003625/M for pro).
-# The cache-accurate spend is LiteLLM's response_cost (x-litellm-response-cost) / /spend/logs —
+# The cache-accurate spend is LiteLLM's response_cost (x-litellm-response-cost) / /spend/logs -
 # use those for real reporting; this dict only needs to never UNDER-count for the hard cap.
 PRICING = {"deepseek-v4-flash": (0.14, 0.28), "deepseek-v4-pro": (0.435, 0.87)}
 
@@ -56,7 +56,7 @@ DEFAULT_MAX_TOKENS = 20000  # pro is reasoning-on; 12k can truncate mid-module (
 def _read_stream(resp) -> tuple[str, dict]:
     """Accumulate an OpenAI-compatible SSE stream into (content, usage). Streaming is what
     makes a reasoning model (minimax-m3) usable here: the gateway buffers a non-stream response
-    until the whole reasoning trace finishes, which can exceed the read timeout — incremental
+    until the whole reasoning trace finishes, which can exceed the read timeout - incremental
     delivery can't wedge."""
     content, usage = [], {}
     for raw_line in resp:
@@ -68,7 +68,7 @@ def _read_stream(resp) -> tuple[str, dict]:
             break
         try:
             chunk = json.loads(payload)
-        except Exception:  # noqa: BLE001 — keepalive / partial line
+        except Exception:  # noqa: BLE001 - keepalive / partial line
             continue
         if chunk.get("usage"):
             usage = chunk["usage"]
@@ -85,18 +85,18 @@ def call_model(model: str, system: str, user: str, *, max_tokens: int = DEFAULT_
                thinking: dict | None = None, reasoning_effort: str | None = None,
                meta: dict | None = None) -> dict:
     """One authoring call. Returns {code, raw, in_tok, out_tok, cost, elapsed}.
-    Raises urllib errors upward — callers convert them to RED records.
+    Raises urllib errors upward - callers convert them to RED records.
 
     `stream=True` reads the response incrementally (required for reasoning models, whose
     non-stream response the gateway buffers past the timeout). `thinking={'type':'disabled'}`
-    turns OFF a reasoning model's chain-of-thought — ~15x faster, but the draft is more fragile
+    turns OFF a reasoning model's chain-of-thought - ~15x faster, but the draft is more fragile
     (callers compensate with best-of-N + the mutation gate as the selector). `reasoning_effort`
-    ('low'|'medium'|'high') is the OpenAI-style reasoning dial DeepSeek honors — the output-token
+    ('low'|'medium'|'high') is the OpenAI-style reasoning dial DeepSeek honors - the output-token
     lever for a reasoning model that can't go fully OFF (reasoning is ~97% of the spend; 'low' cuts
     it). On M3 it was measured a no-op (use `thinking` instead). Pass at most ONE of the two.
 
     `meta` is trace-only context (qualname, role, attempt/draft id, shape) attached to the emitted
-    `llm_call` event — it never touches the request payload."""
+    `llm_call` event - it never touches the request payload."""
     gateway = os.environ["LITELLM_GATEWAY"].rstrip("/") + "/v1/chat/completions"
     key = os.environ["LITELLM_KEY"]
     payload = {
@@ -128,7 +128,7 @@ def call_model(model: str, system: str, user: str, *, max_tokens: int = DEFAULT_
     cost = u.get("prompt_tokens", 0) / 1e6 * rin + u.get("completion_tokens", 0) / 1e6 * rout
     # Passive prefix-cache read tokens, surfaced so the bake-off can VERIFY the cache fires
     # (cache_read>0 on call 2+). LiteLLM passes the provider's count either flat
-    # (cache_read_input_tokens) or in OpenAI's prompt_tokens_details.cached_tokens — read both.
+    # (cache_read_input_tokens) or in OpenAI's prompt_tokens_details.cached_tokens - read both.
     cache_read = int(u.get("cache_read_input_tokens")
                      or (u.get("prompt_tokens_details") or {}).get("cached_tokens", 0) or 0)
     out = {"code": extract_code(raw), "raw": raw,
@@ -149,12 +149,12 @@ def call_model(model: str, system: str, user: str, *, max_tokens: int = DEFAULT_
 
 
 def extract_code(text: str) -> str:
-    """A fenced block is already delimited code — use the LONGEST one AS-IS (a non-greedy
+    """A fenced block is already delimited code - use the LONGEST one AS-IS (a non-greedy
     match can grab a partial block when a ``` appears inside a docstring). No fence: start
     at the first plausibly-code line so leading reasoning prose is dropped but a leading
     top-level assignment is kept.
 
-    Reasoning-model output is stripped of <think>…</think> FIRST — otherwise the longest-fenced
+    Reasoning-model output is stripped of <think>…</think> FIRST - otherwise the longest-fenced
     heuristic can grab a code snippet from inside the reasoning trace (a no-op for non-reasoning
     models, which emit no think tags)."""
     text = re.sub(r"<think>.*?</think>", "", text, flags=re.S | re.I)
@@ -175,7 +175,7 @@ def extract_code(text: str) -> str:
 SYSTEM_PROMPT = "You are a precise Python engineer. Output only code."
 
 # The reference impl's in-module name is FIXED (not per-function). Each oracle lives in its own
-# module/dir, so a per-function name bought nothing — but a fixed name makes the authoring CONTRACT
+# module/dir, so a per-function name bought nothing - but a fixed name makes the authoring CONTRACT
 # (which embeds {ref_name}) byte-identical across every function, which is what lets the passive
 # prefix cache fire: the static contract block is the cacheable prefix, the per-function spec the
 # dynamic suffix (see _author_independent). The gate reads REFERENCE_NAME from the module, so the
@@ -193,7 +193,7 @@ def _convention_hint(entry: dict) -> str:
     Measured (first idna run, trace_report): every convention-mismatch RED was a multi-arg
     function (4/4) and no single-arg function failed that way (0/13). Left unpinned, the
     independently-authored reference and battery each invent their OWN tuple layout, so the
-    gate's cross-acceptance check fails on layout, not spec — a predictable, recoverable RED.
+    gate's cross-acceptance check fails on layout, not spec - a predictable, recoverable RED.
     Pinning the exact layout here (in the SHARED spec text both calls read) removes the
     ambiguity without coupling the two authors. Single-input functions get no hint: they have
     no measured failures and extra text is extra drift surface."""
@@ -218,10 +218,10 @@ def _convention_hint(entry: dict) -> str:
         return ""
     tuple_disp = "(" + ", ".join(items + ([f"*{vararg}"] if vararg else [])) + ")"
     n = len(items)
-    lines = ["", "CALLING CONVENTION (fixed — the reference and the battery MUST both assume "
+    lines = ["", "CALLING CONVENTION (fixed - the reference and the battery MUST both assume "
                  "exactly this layout; do not invent another):"]
     if vararg:
-        lines.append(f"`arg` is a tuple of AT LEAST {n} item(s): arg = {tuple_disp} — the "
+        lines.append(f"`arg` is a tuple of AT LEAST {n} item(s): arg = {tuple_disp} - the "
                      f"first {n} fixed as named, then zero or more `{vararg}` values.")
     else:
         lines.append(f"`arg` is a tuple of EXACTLY {n} items, in this order: "
@@ -229,14 +229,14 @@ def _convention_hint(entry: dict) -> str:
     if dflt:
         rendered = ", ".join(f"{k}={v}" for k, v in dflt.items())
         lines.append(f"Defaulted parameters ({rendered}) still occupy their slot in EVERY "
-                     "probe tuple — pass the default's value explicitly (use None where the "
+                     "probe tuple - pass the default's value explicitly (use None where the "
                      "default is a library-internal sentinel); never use a shorter tuple.")
     return "\n".join(lines)
 
 
 def build_spec(entry: dict, target: str = "", shape: str = "value", *,
                convention_hint: bool = True) -> str:
-    """The SPEC text for one manifest entry — the single shared input both the reference and the
+    """The SPEC text for one manifest entry - the single shared input both the reference and the
     battery are authored from (independently). The reference/battery CONTRACTS live separately
     (REFERENCE_CONTRACT / BATTERY_CONTRACT); there is no combined single-call contract.
 
@@ -246,16 +246,16 @@ def build_spec(entry: dict, target: str = "", shape: str = "value", *,
     contract, so the standard multi-arg tuple hint (which describes real args only) is suppressed
     for it."""
     lines = [
-        f"TARGET BEHAVIOR — `{entry['qualname']}{entry['signature']}`"
+        f"TARGET BEHAVIOR - `{entry['qualname']}{entry['signature']}`"
         + (f" from the `{target}` library." if target else "."),
         f"INTENT: {entry['intent']}",
     ]
     doc = (entry.get("doc") or "").strip()
     if entry["auditability"] == "spec" and doc:
-        lines += ["", "SPEC (the documented behavior — author your oracle from THIS):",
+        lines += ["", "SPEC (the documented behavior - author your oracle from THIS):",
                   doc]
     elif entry["auditability"] == "invariant":
-        lines += ["", f"UNIVERSAL INVARIANT: {entry['auditability_why']} — check_impl must "
+        lines += ["", f"UNIVERSAL INVARIANT: {entry['auditability_why']} - check_impl must "
                       "verify this invariant over the probe inputs."]
         if doc:
             lines += ["", "Documented behavior:", doc]
@@ -275,30 +275,30 @@ def build_spec(entry: dict, target: str = "", shape: str = "value", *,
 # Authoring reference + battery + probes in ONE call makes the gate's step-0 ref_passes a
 # TAUTOLOGY: the model wrote both to agree, so "battery accepts reference" is guaranteed and
 # proves nothing about spec fidelity. A model that misreads the spec produces a coherent WRONG
-# oracle that gates GREEN. Splitting the authoring into two independent reads of the spec — a
-# reference (model A) and a battery (model B, never shown the reference) — turns ref_passes into
+# oracle that gates GREEN. Splitting the authoring into two independent reads of the spec - a
+# reference (model A) and a battery (model B, never shown the reference) - turns ref_passes into
 # a real CROSS-ACCEPTANCE check: if the independent battery rejects the independent reference,
-# they disagree on the spec → mechanical ESCALATE, not a silent retry into agreement. Set
+# they disagree on the spec -> mechanical ESCALATE, not a silent retry into agreement. Set
 # CYNTHIA_BATTERY_MODEL to author the battery with a DIFFERENT family (breaks correlated misreads).
 
 REFERENCE_CONTRACT = """\
 Write ONE stdlib-only Python snippet defining ONLY a reference implementation of the behavior
-specified below — no probes, no grader:
+specified below - no probes, no grader:
 
 - `def {ref_name}(arg)`: a known-correct PURE reference, written from the SPEC. Do NOT recall the
-  library's own source — implement independently. EXACTLY ONE positional argument; if the behavior
+  library's own source - implement independently. EXACTLY ONE positional argument; if the behavior
   needs multiple inputs, `arg` is a tuple {ref_name} unpacks. Every helper is an INNER function.
   Raise ValueError for spec-invalid inputs.
 - `REFERENCE_FUNC = {ref_name}` and `REFERENCE_NAME = "{ref_name}"`.
 
 HARD rules: `def {ref_name}` first, then the two assignments, nothing else at module level; no
-module-level execution; stdlib only, imports at the top, imports clean. Output ONLY the code —
+module-level execution; stdlib only, imports at the top, imports clean. Output ONLY the code -
 NO PROBE_INPUTS, NO check_impl, no prose, no fences.
 """
 
 BATTERY_CONTRACT = """\
 Write ONE stdlib-only Python snippet defining a mutation-test BATTERY for the behavior specified
-below. You are NOT given the reference implementation — derive EVERY expectation from the SPEC
+below. You are NOT given the reference implementation - derive EVERY expectation from the SPEC
 alone (this independence is the point):
 
 - `PROBE_INPUTS`: 8-20 inputs covering the tricky edges of the spec. Each item is ONE argument
@@ -306,30 +306,30 @@ alone (this independence is the point):
   expected value.
 - `def check_impl(fn)`: grades an ARBITRARY implementation `fn` (one-argument convention matching
   PROBE_INPUTS) against the SPEC. Expected outcomes are HARD-CODED from the spec, or asserted as
-  spec properties (round-trip, idempotence, error-on-invalid). You have NO reference to call —
+  spec properties (round-trip, idempotence, error-on-invalid). You have NO reference to call -
   compute expectations from the SPEC, never by grading fn against itself. Return a LIST of
   (bool, str), exactly one per PROBE_INPUTS, in order. fn raising where the spec demands an error
-  is a PASS; fn raising elsewhere — catch it, record FAIL. check_impl MUST NOT raise.
+  is a PASS; fn raising elsewhere - catch it, record FAIL. check_impl MUST NOT raise.
 - OPTIONAL `EQUIV_KEY = lambda out: ...` ONLY if check_impl grades a projection (e.g. a sign).
 
-HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY — assume it
+HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY - assume it
 exists, grade the `fn` you are handed; define NO reference implementation yourself. No module-level
-execution; stdlib only, imports clean. Output ONLY the code — no reference impl, no prose, no fences.
+execution; stdlib only, imports clean. Output ONLY the code - no reference impl, no prose, no fences.
 """
 
 
 # A SECOND oracle SHAPE. The value battery hard-codes spec expectations per probe; an INVARIANT
-# (metamorphic) battery instead asserts RELATIONS that hold over ALL valid inputs — round-trip
+# (metamorphic) battery instead asserts RELATIONS that hold over ALL valid inputs - round-trip
 # identity (`from_text(to_text(u)) == u`), idempotence (`normalize(normalize(u)) == normalize(u)`),
 # inverse-op stability. This unlocks the round-trip / stateful bug CLASS the single-call value
 # oracle structurally can't see. It reuses the SAME mutation gate and the SAME independent
 # reference (the reference is a correct impl regardless of how it's checked); ONLY the battery
 # contract changes. A vacuous invariant (a relation that holds trivially) is caught RED by the gate
-# exactly like a vacuous value battery — the verify-the-verifier guarantee generalizes for free.
+# exactly like a vacuous value battery - the verify-the-verifier guarantee generalizes for free.
 INVARIANT_BATTERY_CONTRACT = """\
 Write ONE stdlib-only Python snippet defining a mutation-test BATTERY that checks the behavior
-specified below via METAMORPHIC INVARIANTS — relations that hold for EVERY valid input — rather
-than hard-coded input→output values. You are NOT given the reference implementation; derive the
+specified below via METAMORPHIC INVARIANTS - relations that hold for EVERY valid input - rather
+than hard-coded input->output values. You are NOT given the reference implementation; derive the
 invariants from the SPEC alone (this independence is the point):
 
 - `PROBE_INPUTS`: 8-20 valid inputs covering the tricky edges of the spec. Each item is ONE argument
@@ -343,26 +343,26 @@ invariants from the SPEC alone (this independence is the point):
     * inverse / structure preservation: a spec relation between input and output.
   Combine >=2 relations so the battery has TEETH: a relation that holds TRIVIALLY (fn(x) == fn(x),
   isinstance-only, etc.) is VACUOUS and the mutation gate will REJECT it. You have NO reference to
-  call — compute the invariants from the SPEC, never by grading fn against itself. Return a LIST of
+  call - compute the invariants from the SPEC, never by grading fn against itself. Return a LIST of
   (bool, str), exactly one per PROBE_INPUTS, in order. fn raising where the spec demands an error is
-  a PASS; fn raising elsewhere — catch it, record FAIL. check_impl MUST NOT raise.
+  a PASS; fn raising elsewhere - catch it, record FAIL. check_impl MUST NOT raise.
 - OPTIONAL `EQUIV_KEY = lambda out: ...` ONLY if check_impl grades a projection.
 
-HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY — assume it
+HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY - assume it
 exists, grade the `fn` you are handed; define NO reference implementation yourself. No module-level
-execution; stdlib only, imports clean. Output ONLY the code — no reference impl, no prose, no fences.
+execution; stdlib only, imports clean. Output ONLY the code - no reference impl, no prose, no fences.
 """
 
-# A THIRD oracle SHAPE — PROPERTY. The value battery hard-codes spec expectations per probe; the
+# A THIRD oracle SHAPE - PROPERTY. The value battery hard-codes spec expectations per probe; the
 # invariant battery asserts round-trip/idempotence/inverse relations. The property battery asserts
 # RELATIONAL/ALGEBRAIC facts that hold for each input (output domain, ordering/monotonicity,
-# size/bounds, membership/structure, error-on-invalid) WITHOUT needing an inverse sibling — the
+# size/bounds, membership/structure, error-on-invalid) WITHOUT needing an inverse sibling - the
 # coverage rung for functions whose exact output is hard to hard-code yet whose spec still pins
 # checkable properties. Same shared reference, same gate; only the battery contract changes.
 PROPERTY_BATTERY_CONTRACT = """\
 Write ONE stdlib-only Python snippet defining a mutation-test BATTERY that checks the behavior
-specified below via SPEC PROPERTIES — relational/algebraic facts the output must satisfy for each
-input — rather than a single hard-coded input→output value table. You are NOT given the reference
+specified below via SPEC PROPERTIES - relational/algebraic facts the output must satisfy for each
+input - rather than a single hard-coded input->output value table. You are NOT given the reference
 implementation; derive the properties from the SPEC alone (this independence is the point):
 
 - `PROBE_INPUTS`: 8-20 inputs covering the tricky edges of the spec. Each item is ONE argument
@@ -377,22 +377,22 @@ implementation; derive the properties from the SPEC alone (this independence is 
     * error-on-invalid: fn raises where the spec forbids the input.
   Combine >=2 INDEPENDENT properties with REAL discriminating power so the battery has TEETH: a
   property that holds for almost any function (isinstance-only, "is not None", len>=0) is VACUOUS and
-  the mutation gate will REJECT it. You have NO reference to call — compute the properties from the
+  the mutation gate will REJECT it. You have NO reference to call - compute the properties from the
   SPEC, never by grading fn against itself. Return a LIST of (bool, str), exactly one per
   PROBE_INPUTS, in order. fn raising where the spec demands an error is a PASS; fn raising elsewhere
-  — catch it, record FAIL. check_impl MUST NOT raise.
+  - catch it, record FAIL. check_impl MUST NOT raise.
 - OPTIONAL `EQUIV_KEY = lambda out: ...` ONLY if check_impl grades a projection.
 
-HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY — assume it
+HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY - assume it
 exists, grade the `fn` you are handed; define NO reference implementation yourself. No module-level
-execution; stdlib only, imports clean. Output ONLY the code — no reference impl, no prose, no fences.
+execution; stdlib only, imports clean. Output ONLY the code - no reference impl, no prose, no fences.
 """
 
-# A FOURTH oracle SHAPE — STUBBED-SEAM, the recovery rung for deterministic=False functions. The
+# A FOURTH oracle SHAPE - STUBBED-SEAM, the recovery rung for deterministic=False functions. The
 # function's output depends on a nondeterministic SEAM (time/random/env/IO) but is otherwise a
-# deterministic function of its inputs. The reference makes that dependence EXPLICIT — it takes the
+# deterministic function of its inputs. The reference makes that dependence EXPLICIT - it takes the
 # seam value as an injected first element of the input tuple (arg = (seam, *real_inputs)) and never
-# calls the real nondeterministic source — turning an impure function into a pure, mutatable one.
+# calls the real nondeterministic source - turning an impure function into a pure, mutatable one.
 # PROBE_INPUTS vary the seam across a RANGE so the oracle can't memorize one seam (the strict
 # memorizer/coverage closers reject a single-seam oracle). This rung needs its OWN reference contract
 # (the seam-injection convention differs from the plain one); the battery is its twin.
@@ -400,20 +400,20 @@ STUBBED_SEAM_REFERENCE_CONTRACT = """\
 The behavior specified below depends on a NONDETERMINISTIC SEAM (the value a clock / random draw /
 environment lookup / IO read would return); its output is otherwise a deterministic function of its
 inputs. Write ONE stdlib-only Python snippet defining ONLY a reference implementation that makes that
-dependence EXPLICIT by taking the seam value as an injected input — no probes, no grader:
+dependence EXPLICIT by taking the seam value as an injected input - no probes, no grader:
 
 - `def {ref_name}(arg)`: a known-correct PURE reference written from the SPEC, where `arg` is a tuple
   whose FIRST element is the seam value (what the nondeterministic source would have returned) and
   the remaining elements are the function's real inputs in order: arg = (seam, <real inputs...>).
   Compute the spec's result deterministically FROM the seam and the real inputs. Do NOT call
-  time/random/os/secrets/IO yourself — the seam REPLACES them. Implement independently from the SPEC
+  time/random/os/secrets/IO yourself - the seam REPLACES them. Implement independently from the SPEC
   (do not recall the library source). Every helper is an INNER function. Raise ValueError for
   spec-invalid inputs.
 - `REFERENCE_FUNC = {ref_name}` and `REFERENCE_NAME = "{ref_name}"`.
 
 HARD rules: `def {ref_name}` first, then the two assignments, nothing else at module level; no
 module-level execution; NO call to time/random/os/secrets/IO (the seam stands in for all of them);
-stdlib only, imports clean. Output ONLY the code — NO PROBE_INPUTS, NO check_impl, no prose, no fences.
+stdlib only, imports clean. Output ONLY the code - NO PROBE_INPUTS, NO check_impl, no prose, no fences.
 """
 STUBBED_SEAM_BATTERY_CONTRACT = """\
 The behavior specified below depends on a NONDETERMINISTIC SEAM made EXPLICIT as the FIRST element of
@@ -422,7 +422,7 @@ mutation-test BATTERY over that injected-seam convention. You are NOT given the 
 implementation; derive every expectation from the SPEC alone:
 
 - `PROBE_INPUTS`: 8-20 tuples (seam, <real inputs...>). VARY THE SEAM ACROSS A RANGE of >=4 distinct
-  values (never one fixed seam) AND cover the tricky edges of the real inputs — an oracle that probes
+  values (never one fixed seam) AND cover the tricky edges of the real inputs - an oracle that probes
   only one seam value is vacuous and the gate's coverage/memorizer closers will REJECT it. Each item
   round-trips through repr() exactly and carries NO expected value.
 - `def check_impl(fn)`: grades an ARBITRARY `fn(arg)` against the SPEC, computing the expected result
@@ -430,17 +430,17 @@ implementation; derive every expectation from the SPEC alone:
   spec relation that must change with the seam). For at least some probes the expected result MUST
   genuinely depend on the seam, so an impl that ignores the seam FAILS. You have NO reference to call.
   Return a LIST of (bool, str), exactly one per PROBE_INPUTS, in order. fn raising where the spec
-  demands an error is a PASS; fn raising elsewhere — catch it, record FAIL. check_impl MUST NOT raise.
+  demands an error is a PASS; fn raising elsewhere - catch it, record FAIL. check_impl MUST NOT raise.
 - OPTIONAL `EQUIV_KEY = lambda out: ...` ONLY if check_impl grades a projection.
 
-HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY — assume it exists,
+HARD rules: the function being graded (named `{ref_name}`) is provided SEPARATELY - assume it exists,
 grade the `fn` you are handed; define NO reference implementation yourself. No module-level execution;
-stdlib only, imports clean. Output ONLY the code — no reference impl, no prose, no fences.
+stdlib only, imports clean. Output ONLY the code - no reference impl, no prose, no fences.
 """
 
 
 # Shape registries. Every entry is pre-formatted with the FIXED REF_NAME so the contract block is
-# byte-identical across all functions — the stable prefix the passive cache keys on. The reference
+# byte-identical across all functions - the stable prefix the passive cache keys on. The reference
 # contract is shared across value/invariant/property (a correct impl is a correct impl); stubbed_seam
 # needs its own (the seam-injection convention). Adding a shape = one entry in each map + a prompt;
 # the gate is untouched. ORACLE_SHAPES is the canonical strategy-ladder order.
@@ -470,16 +470,16 @@ def build_battery_prompt(entry: dict, target: str = "", shape: str = "value") ->
 
 _EXEMPLAR_FRAME = {
     "reference": (
-        "EXAMPLE (for STRUCTURE ONLY — a reference of the SAME oracle shape that PASSED the mutation "
+        "EXAMPLE (for STRUCTURE ONLY - a reference of the SAME oracle shape that PASSED the mutation "
         "gate for a DIFFERENT function in a DIFFERENT library). Study how it implements independently "
         "from a spec, names its single `arg`, factors helpers as inner functions, and raises on "
         "invalid input. Then write YOUR reference for the TARGET above. Do NOT copy its logic or "
-        "imports — it solves a different spec; reproducing it would be wrong:"),
+        "imports - it solves a different spec; reproducing it would be wrong:"),
     "battery": (
-        "EXAMPLE (for STRUCTURE ONLY — a battery of the SAME oracle shape that PASSED the mutation "
+        "EXAMPLE (for STRUCTURE ONLY - a battery of the SAME oracle shape that PASSED the mutation "
         "gate for a DIFFERENT function in a DIFFERENT library). Study how it builds discriminating, "
         "non-vacuous probes and derives expectations from the spec alone. Then write YOUR battery for "
-        "the TARGET above. Do NOT copy its probes or expectations — it tests a different spec; "
+        "the TARGET above. Do NOT copy its probes or expectations - it tests a different spec; "
         "reproducing it would be wrong. Define NO reference implementation:"),
 }
 
@@ -487,7 +487,7 @@ _EXEMPLAR_FRAME = {
 def _frame_exemplar(role: str, code: str | None) -> str:
     """Wrap a retrieved exemplar half in role-specific framing, or '' when there is none. The frame
     states emphatically that the exemplar is a DIFFERENT function (so the model imitates rigor/shape,
-    not content) — and for the battery role re-asserts 'define NO reference' so a stray reference in
+    not content) - and for the battery role re-asserts 'define NO reference' so a stray reference in
     an example can't tempt the battery author to re-couple the two independent spec reads."""
     if not code:
         return ""
@@ -508,11 +508,11 @@ def _author_independent(entry: dict, ref_model: str, battery_model: str, *, targ
     real best-of-N load: at N=8 the 16 in-flight m3 streams are throughput-bound on the gateway, so
     one 16-wide wave costs the same wall as two 8-wide waves (AUTH 28s either way on URL.scheme).
     The concurrent variant only won in an isolated single-draft test with spare gateway capacity, so
-    it was dropped — it added a cap-breach risk under run.py's fan-out for no real-load gain.
+    it was dropped - it added a cap-breach risk under run.py's fan-out for no real-load gain.
 
     AUGMENTED-GENERATION RECALL (#1): `exemplar`, when given, is {"reference": <ref half>, "battery":
     <battery half>} retrieved (leave-one-out clean) from a GREEN same-shape oracle for a DIFFERENT
-    function — injected so the model can author past its one-shot ceiling. It rides the DYNAMIC suffix
+    function - injected so the model can author past its one-shot ceiling. It rides the DYNAMIC suffix
     (after the spec), so the static contract PREFIX the passive cache keys on stays byte-identical; an
     absent half is simply not injected. Independence is preserved: each role sees only its OWN half, so
     the battery author never sees a reference and the gate's cross-acceptance check stays real."""
@@ -524,7 +524,7 @@ def _author_independent(entry: dict, ref_model: str, battery_model: str, *, targ
                  "battery": _frame_exemplar("battery", ex.get("battery"))}
     base_meta = {"qualname": entry.get("qualname", ""), "shape": shape, **(trace_meta or {})}
     def _call(model, contract, role):
-        # STATIC contract FIRST, DYNAMIC spec + (optional) front-load + exemplar LAST — the byte-identical
+        # STATIC contract FIRST, DYNAMIC spec + (optional) front-load + exemplar LAST - the byte-identical
         # contract block is the passive prefix cache's hit; interleaving per-function text earlier would
         # break it. front_load (spec-derived test data) and the exemplar trail the spec in the suffix.
         user = contract + "\n\n" + spec
@@ -538,7 +538,7 @@ def _author_independent(entry: dict, ref_model: str, battery_model: str, *, targ
     try:
         rr = _call(ref_model, ref_contract, "reference")
         rb = _call(battery_model, bat_contract, "battery")
-    except Exception as exc:  # noqa: BLE001 — gateway failure is a RED attempt, not a crash
+    except Exception as exc:  # noqa: BLE001 - gateway failure is a RED attempt, not a crash
         return {"error": f"{type(exc).__name__}: {exc}"}
     code = rr["code"].rstrip() + "\n\n" + rb["code"]
     return {"code": code, "raw": rr["raw"] + "\n--- battery ---\n" + rb["raw"],
@@ -553,7 +553,7 @@ def _battery_model(ref_model: str) -> str:
 
 def _is_spec_disagreement(gate: dict) -> bool:
     """A non-green verdict whose ref_passes is False: under INDEPENDENT authoring this means the
-    battery rejects the reference — the two spec-reads disagree (escalate), distinct from a
+    battery rejects the reference - the two spec-reads disagree (escalate), distinct from a
     vacuous-but-self-consistent oracle (survivors)."""
     return bool(gate) and not gate.get("green") and not gate.get("ref_passes")
 
@@ -563,12 +563,12 @@ def _is_spec_disagreement(gate: dict) -> bool:
 def _normalize_verdict(v: object) -> dict:
     """MutationVerdict | broken-marker -> plain JSON-able dict.
 
-    `green` is GATE-GREEN — the base operator pass (ref accepted, every non-equivalent mutant
-    killed) — computed from the component fields so it means the same thing whether or not strict
+    `green` is GATE-GREEN - the base operator pass (ref accepted, every non-equivalent mutant
+    killed) - computed from the component fields so it means the same thing whether or not strict
     ran. (MutationVerdict.green folds the strict `loose` check INTO green when strict=True; recording
     that as `green` would silently tighten the flag every existing caller keys on. We keep `green` =
     base operator pass and expose the strict tightening as a separate `strict_green`.)
-    `strict_green` additionally requires the author-blind memorizer + coverage closers to pass —
+    `strict_green` additionally requires the author-blind memorizer + coverage closers to pass -
     the truer (non-example-based) quality bar. Inert (False) unless the gate ran with strict=True."""
     ref_passes = bool(getattr(v, "ref_passes", False))
     non_equivalent = int(getattr(v, "non_equivalent", 0))
@@ -633,7 +633,7 @@ def _gate_remote(src_path: Path, cap: int, host: str, *, fail_fast: bool = False
             p = subprocess.run(cmd, input=src, capture_output=True, text=True, timeout=200)
             if p.returncode == 0 and p.stdout.strip():
                 return json.loads(p.stdout)
-        except Exception:  # noqa: BLE001 — SSH/timeout/parse all retry then RED
+        except Exception:  # noqa: BLE001 - SSH/timeout/parse all retry then RED
             continue
     return _normalize_verdict(_Broken(f"remote gate failed on {host}"))
 
@@ -670,7 +670,7 @@ def _trace_gate(qualname: str, module_name: str, oracles_dir: Path, verdict: dic
                 vr = "killed_or_equivalent"
             mutants_out.append({"tag": tag, "kind": re.split(r"[:#]", tag)[0], "verdict": vr,
                                 "src": src})
-    except Exception as exc:  # noqa: BLE001 — reconstruction is best-effort
+    except Exception as exc:  # noqa: BLE001 - reconstruction is best-effort
         note = f"mutant reconstruction failed: {type(exc).__name__}: {exc}"
     equiv = max(0, verdict.get("generated", 0) - verdict.get("non_equivalent", 0))
     _trace.emit("gate", qualname=qualname, module=module_name, oracle_dir=oracles_dir.name,
@@ -682,7 +682,7 @@ def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40,
     """Compile-check, import, and mutation-gate one authored oracle module.
     Any failure of the AUTHORED module degrades to a RED verdict dict, never an exception.
     With CYNTHIA_GATE_HOST set, the gate runs on that remote worker instead of locally.
-    `fail_fast` (selection contexts) stops at the first genuine survivor — much faster on RED
+    `fail_fast` (selection contexts) stops at the first genuine survivor - much faster on RED
     drafts; keep it OFF where exact kill rates matter. `strict` additionally runs the author-blind
     memorizer + coverage closers so the verdict carries strict_green (the truer quality bar); it is
     cheap for our oracles (memorizer is in-process; coverage fires only if the oracle supplies
@@ -705,7 +705,7 @@ def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40,
     try:
         try:
             importlib.import_module(module_name)
-        except Exception as exc:  # noqa: BLE001 — the LLM module failing to import is a RED
+        except Exception as exc:  # noqa: BLE001 - the LLM module failing to import is a RED
             v = _normalize_verdict(_Broken(f"import failed: {type(exc).__name__}: {exc}"))
             _trace_gate(qualname, module_name, oracles_dir, v, cap)
             return v
@@ -715,7 +715,7 @@ def gate_authored(module_name: str, oracles_dir: Path, *, cap: int = 40,
             # `import <module_name>` and resolve it via the driver script's directory.
             v = run_mutation_gate(module_name, work_dir=oracles_dir, cap=cap, fail_fast=fail_fast,
                                   strict=strict)
-        except Exception as exc:  # noqa: BLE001 — contract violation inside check_impl is a RED
+        except Exception as exc:  # noqa: BLE001 - contract violation inside check_impl is a RED
             vd = _normalize_verdict(_Broken(
                 f"oracle violates the gate contract: {type(exc).__name__}: {exc}"))
             _trace_gate(qualname, module_name, oracles_dir, vd, cap)
@@ -765,15 +765,15 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
                     gate_cap: int = 40, target: str = "", shape: str = "value",
                     strict: bool = False) -> ResultRecord:
     """The per-function unit: author an oracle for one manifest entry, gate it, retry on RED.
-    Returns a ResultRecord in EVERY case — model/HTTP/contract failures become RED records.
+    Returns a ResultRecord in EVERY case - model/HTTP/contract failures become RED records.
 
     `shape` selects the oracle's battery contract: "value" (hard-coded spec expectations) or
-    "invariant" (metamorphic relations over all valid inputs — round-trip / idempotence). Both go
+    "invariant" (metamorphic relations over all valid inputs - round-trip / idempotence). Both go
     through the SAME mutation gate; the gate proves either kind non-vacuous identically.
 
     The reference and battery are authored in SEPARATE calls (_author_independent) so the gate's
     step-0 ref_passes is a real CROSS-ACCEPTANCE check rather than a tautology; a non-green attempt
-    whose ref_passes is False is a SPEC-DISAGREEMENT — recorded distinctly and NOT retried into a
+    whose ref_passes is False is a SPEC-DISAGREEMENT - recorded distinctly and NOT retried into a
     self-consistent (possibly wrong) agreement."""
     t0 = time.time()
     qhash = hashlib.sha1(entry["qualname"].encode()).hexdigest()[:10]
@@ -786,7 +786,7 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
 
     for n in range(1, attempts + 1):
         rec.attempts = n
-        # unique module name per qualname AND attempt — sidesteps importlib's module cache,
+        # unique module name per qualname AND attempt - sidesteps importlib's module cache,
         # which would otherwise gate attempt 1's module again on attempt 2.
         module_name = f"orc_{qhash}_a{n}"
         r = _author_independent(entry, model, bat_model, target=target, max_tokens=max_tokens,
@@ -814,7 +814,7 @@ def author_and_gate(entry: dict, model: str = DEFAULT_MODEL, run_dir: Path = Pat
             rec.spec_disagreement = False
             break
         if disagree:
-            # independent reference and battery disagree on the spec — escalate, don't retry into
+            # independent reference and battery disagree on the spec - escalate, don't retry into
             # a self-consistent (possibly wrong) agreement.
             rec.spec_disagreement = True
             break
@@ -834,16 +834,16 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     """Author an oracle from a reasoning model (minimax-m3) FAST: fire N think-OFF streaming
     drafts in parallel (diverse via temperature) and let the MUTATION GATE select a GREEN one.
 
-    Why this shape: think-OFF makes M3 ~15x faster but its single draft is fragile — under the
+    Why this shape: think-OFF makes M3 ~15x faster but its single draft is fragile - under the
     INDEPENDENT ref+battery contract it fails the gate's ref-consistency check often enough that
     ~25% of functions still find no GREEN draft in N=8 (measured on the first cross-family run).
-    Best-of-N turns the cheap-but-noisy generation into a usable signal — the gate is a mechanical
+    Best-of-N turns the cheap-but-noisy generation into a usable signal - the gate is a mechanical
     selector, so the majority GREEN in ~30s (AUTH ~28s, gate ~2s) instead of a ~150s reasoning call;
     the stubborn ~25% pay the adaptive fallback below. This is the verify-the-verifier thesis applied
     to authoring: trust cheap noisy generation because a non-vacuous gate filters it.
 
     The authoring phase is throughput-bound on the m3 gateway (N drafts share a fixed token rate),
-    NOT latency-bound — so raising n shrinks the slow-fallback tail (P(no GREEN) drops geometrically)
+    NOT latency-bound - so raising n shrinks the slow-fallback tail (P(no GREEN) drops geometrically)
     but is NOT free: more drafts add proportional authoring wall. It's a net win only because one
     avoided fallback (~200s) pays for many extra cheap drafts; tune n against the measured tail.
 
@@ -861,7 +861,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
         # reference + battery authored in two independent think-OFF calls and assembled
         return _author_independent(entry, model, bat_model, target=target, shape=shape, **kw)
 
-    # phase 1 — N parallel think-OFF streaming drafts. Each draft gets its OWN dir so the
+    # phase 1 - N parallel think-OFF streaming drafts. Each draft gets its OWN dir so the
     # gate's tag-named driver/mutant files never collide when phase 2 gates them in parallel.
     def _draft(i: int):
         r = _author_one(max_tokens=max_tokens, temperature=temperature, stream=True,
@@ -889,7 +889,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
         rec.tokens["out"] += r["out_tok"]
         candidates.append(d)
 
-    # phase 2 — gate every draft. Each gate spawns a mutant-subprocess swarm, so gating N
+    # phase 2 - gate every draft. Each gate spawns a mutant-subprocess swarm, so gating N
     # drafts × an outer per-function pool can OOM a RAM-tight box (it did: the first cross-
     # family run was OOM-killed at gate_workers=3 × phase1=2). gate_workers=1 keeps the
     # concurrent-gate count at/below the level the sequential deepseek path runs safely.
@@ -898,7 +898,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
         # (measured ~5-11x vs the legacy per-mutant path, byte-equal verdicts). fail_fast is left
         # OFF: its sequential-tripwire stage loses the parallelism and measured NET SLOWER than
         # plain batched-full on RED drafts (0.33s vs 0.05s on a 17-mutant vacuous oracle).
-        # gate in a memory-capped, hard-kill SUBPROCESS — a memory-bomb / non-terminating reference
+        # gate in a memory-capped, hard-kill SUBPROCESS - a memory-bomb / non-terminating reference
         # would otherwise grow THIS process (in-process gating OOM'd the box at 29GB).
         v = _gate_subprocess(d["mod"], str(d["dir"]), gate_cap, entry["qualname"])
         return d, v
@@ -918,7 +918,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
             best = (d, v)
 
     # escalate-on-RED net (the harness's proven fallback): if no fast draft gated GREEN, spend
-    # ONE slow thinking-ON draft — near-certain GREEN — so every function gets a cross-family
+    # ONE slow thinking-ON draft - near-certain GREEN - so every function gets a cross-family
     # oracle. Fast for the ~90% that best-of-N nails; the slow tail pays only on the stubborn few.
     if adaptive_fallback and (best is None or not best[1]["green"]):
         r = _author_one(max_tokens=24000, temperature=0.2, stream=True,
@@ -945,7 +945,7 @@ def author_best_of_n(entry: dict, model: str, run_dir: Path, *, n: int = DEFAULT
     if best is not None:
         d, v = best
         # independent ref/battery disagreement on the SELECTED best (non-green, ref_passes False)
-        # is a spec-disagreement to escalate — distinct from a vacuous oracle.
+        # is a spec-disagreement to escalate - distinct from a vacuous oracle.
         rec.spec_disagreement = _is_spec_disagreement(v)
         rec.gate = v
         rec.oracle_path = str(d["dir"] / f"{d['mod']}.py")

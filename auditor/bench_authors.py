@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""auditor/bench_authors.py — multi-author CONVERGENCE bench: do M3 and deepseek, run against the same
-functions with the gate as the neutral arbiter, COVER MORE TOGETHER than either alone — and at what
+"""auditor/bench_authors.py - multi-author CONVERGENCE bench: do M3 and deepseek, run against the same
+functions with the gate as the neutral arbiter, COVER MORE TOGETHER than either alone - and at what
 output-token / dollar cost.
 
 The robust prior finding this operationalizes: M3 and deepseek green NEAR-DISJOINT sets of functions
-(overlap ~1/6 on dateutil), so their UNION ≈ 2× either alone. Author DIVERSITY — not any single
-author — is the coverage lever. This bench measures that union directly, plus the two efficiency dials:
+(overlap ~1/6 on dateutil), so their UNION ≈ 2× either alone. Author DIVERSITY - not any single
+author - is the coverage lever. This bench measures that union directly, plus the two efficiency dials:
   * output tokens  (think-OFF vs think-ON; deepseek reasoning_effort=low; a max_tokens cap),
-  * dollars        (M3 is free; deepseek billed — a cost-minimizing CASCADE runs deepseek only on the
+  * dollars        (M3 is free; deepseek billed - a cost-minimizing CASCADE runs deepseek only on the
                     functions M3 already failed, so the paid model only ever touches the residual).
 
 One UNIT = (function, author-config): author ONE oracle of the function's recall-best shape (single-shape
 keeps it ~3× cheaper than the 3-shape ladder AND holds the shape fixed so the author swap is the only
-variable), gate it (capped hard-kill subprocess — the SOLE authority; no author approves its own oracle),
+variable), gate it (capped hard-kill subprocess - the SOLE authority; no author approves its own oracle),
 record {green, strict, out_tok, cost, wall}. Coverage = gate-GREEN = non-vacuity, NOT correctness.
 
-Per function we run EVERY config, so the same function is authored by each — giving per-config coverage,
+Per function we run EVERY config, so the same function is authored by each - giving per-config coverage,
 the union, pairwise disjointness, the cascade, and exemplar lift (incl. CROSS-MODEL transfer: the
 exemplar corpus is deepseek-authored, so an M3 author with exemplar is learning from deepseek's wins).
 
@@ -38,13 +38,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import author as author_mod  # noqa: E402
 import coverage_exp as ce  # noqa: E402
-import exemplar_ab as eab  # noqa: E402 — reuse select_targets (single-shape, LOO exemplars)
+import exemplar_ab as eab  # noqa: E402 - reuse select_targets (single-shape, LOO exemplars)
 from gate_subprocess import _gate_subprocess  # noqa: E402
 from recall_strategy import StrategyRecall, shape_key as _shape_key  # noqa: E402
 from run import BudgetTracker  # noqa: E402
 
 # The author matrix. thinking: "off"->reasoning OFF; "on"/None-> provider default (M3 reasons, deepseek
-# reasons). reasoning_effort is the deepseek output-token dial (M3 ignores it — use thinking there).
+# reasons). reasoning_effort is the deepseek output-token dial (M3 ignores it - use thinking there).
 # exemplar: inject the LOO same-shape GREEN oracle (augmented generation, #1).
 CONFIGS: list[dict] = [
     {"label": "m3_thinkoff",    "model": "minimax-m3",     "thinking": "off", "reasoning_effort": None, "exemplar": False, "free": True},
@@ -71,7 +71,7 @@ async def _run_cell(tgt: dict, strategy: str, cfg: dict, run_dir: Path, *, gate_
                     budget: BudgetTracker, max_tokens: int, gate_cap: int, timeout: int = 300) -> dict:
     """Author + gate one (function, config) unit. Never raises; returns a verdict dict. A budget wall
     (deepseek only) returns {budget_stopped}; an author/gateway failure returns {error}; a gate that
-    can't render a verdict returns {gate_failed} — none of these is a RED, so the report excludes them."""
+    can't render a verdict returns {gate_failed} - none of these is a RED, so the report excludes them."""
     entry, repo = tgt["entry"], tgt["repo"]
     model = cfg["model"]
     exemplar = tgt["exemplars"].get(strategy) if cfg["exemplar"] else None
@@ -216,7 +216,7 @@ def report(run_dir: Path, labels: list[str]) -> dict:
                     "both": len(a & b), "union": len(a | b),
                     "jaccard": round(len(a & b) / len(a | b), 3) if (a | b) else 0.0}
     # cost-minimizing cascade: free authors (M3) first, then each deepseek config runs ONLY on the
-    # functions still uncovered — so the paid model's cost is summed over just that residual.
+    # functions still uncovered - so the paid model's cost is summed over just that residual.
     cascade = []
     prior_covered: set = set()
     ds_spend = 0.0
