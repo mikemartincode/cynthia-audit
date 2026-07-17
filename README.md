@@ -13,6 +13,19 @@ This builds on the agentic property-based-testing line of work
 rate when the model is allowed to judge its own work. The governing rule here: **the model
 proposes, mutants dispose.**
 
+## See it work (30 seconds, stdlib only, no API key)
+
+The model-free auditors run against nothing but the standard library:
+
+```bash
+python auditor/differential.py   # cross-parser differential over real URL/IDNA parsers -> JSON divergences
+python -m pytest auditor/test_differential.py auditor/test_complexity.py auditor/test_grammar.py -q   # 23 passing
+```
+
+`differential.py` runs several real parsers against the same inputs and reports where they
+disagree — the same divergence-hunting the full pipeline does, minus the model. The
+model-authoring paths need a gateway (see [Reproducing](#reproducing)); everything above does not.
+
 ## Read first
 
 - **[WRITEUP.md](WRITEUP.md)** - the main findings: four claims, each execution-backed, plus an
