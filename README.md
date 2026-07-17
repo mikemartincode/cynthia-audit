@@ -1,26 +1,29 @@
-# cynthia-audit — parallel real-repo bug auditor (built on cynthia-core)
+# cynthia-audit
 
-**Status:** scaffold + proven seed. The parallel harness is built by coreship Phase 4 (A01–A06).
+**LLM-authored spec oracles you never have to trust: a mutation gate is the sole authority.**
 
-## What this is
+A cheap model authors an independent spec oracle for each function of a real, shipping library.
+An oracle only counts if it passes on the real code **and** kills mutants of the function it claims
+to specify — vacuous, wrong, or hallucinated specs die mechanically, not by human review. Surviving
+divergences are triaged with cross-family voting and spec-vector ground truth before anything is
+called a finding. This attacks the known failure mode of agentic bug-finding (models reporting a
+high rate of invalid bugs when allowed to judge their own work; cf.
+[arXiv:2510.09907](https://arxiv.org/abs/2510.09907)). The rule: **the model proposes, mutants dispose.**
 
-A separate application that uses the `cynthia-core` mutation gate to audit a real, famous
-repository for bugs: index its functions, have a cheap model (DeepSeek) author an independent
-spec oracle per auditable function, mechanically prove each oracle non-vacuous with the mutation
-gate, run the real shipping code against the gate-passing oracles, and triage the divergences.
+Built as a standalone auditor on top of a private mutation-gate library. The model-authoring paths
+need an LLM gateway; the differential and cost auditors below need nothing but the standard library.
 
-## Why it lives OUTSIDE cynthia-core
+## See it work (30 seconds, stdlib only, no API key)
 
-`cynthia-core` is curated to be secret-free, infra-free, stdlib-core (see its `CLAIMS.md` and the
-coreship EXCLUDE list). This auditor uses the LiteLLM gateway + DeepSeek + a bearer key — exactly
-the proprietary coupling cynthia-core deliberately excludes. So the auditor imports `cynthia_core`
-as a **library** and keeps all gateway/key config in env. **Nothing here ever gets committed into
-cynthia-core, and no key is ever written to a file.**
+```bash
+python auditor/differential.py   # run several real URL/RFC-3986 parsers on the same inputs -> JSON divergences
+python -m pytest auditor/test_differential.py auditor/test_complexity.py auditor/test_grammar.py -q   # 23 passing
+```
 
-## Config (env only)
-
-    LITELLM_GATEWAY   gateway base URL          (required)
-    LITELLM_KEY       bearer token              (required)
+`differential.py` is the model-free core of the same divergence-hunting the full pipeline does:
+where two independent real parsers read the same authority boundary differently, that disagreement
+*is* the bug class (SSRF / request-smuggling / filter-bypass). RFC-permitted variation is folded out
+first, so only spec-pinned divergences survive.
 
 ## The proven seed
 
