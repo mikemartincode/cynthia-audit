@@ -3,7 +3,7 @@
 **Component:** `hyperlink.URL.click` (`src/hyperlink/_url.py`, the `NotImplementedError` at line 1627)
 **Affected:** hyperlink 21.0.0 (current PyPI release) and commit `978f2e6455` (2026-03-20). Long-standing.
 **Class:** correctness / robustness (crash on a valid input). **Not** a security vulnerability — see Impact.
-**Status:** reproduced standalone and hand-verified against RFC 3986. Reported as a correctness bug; no fix submitted.
+**Status:** reproduced standalone and hand-verified against RFC 3986. Disposition: a documented, deliberate `NotImplementedError` in hyperlink's own source -- recorded as a non-finding, NOT reported upstream (see Disposition).
 
 ## Summary
 
@@ -56,7 +56,7 @@ T.path   = remove_dot_segments(R.path);  T.query = R.query;
 
 i.e. the target is the reference itself. RFC 3986 §5.4.1 (Normal Examples), base
 `http://a/b/c/d;p?q`, lists `"g:h" = "g:h"` as the first example. The documented contract (RFC 3986
-§5) and the actual behavior (raise on a documented §5.4.1 case) disagree — that gap is the bug.
+§5) and the actual behavior (raise on a documented §5.4.1 case) disagree -- that gap is the discrepancy. But hyperlink raises it deliberately (see Disposition), so it is a documented limitation, not a latent defect.
 
 ## Impact (honest)
 
@@ -71,7 +71,7 @@ caller's error handling.
 
 ## Provenance (tool-assisted — disclosed)
 
-Found by the cynthia differential bug-auditor, then hand-verified:
+Found by the cynthia differential auditor, then hand-verified:
 
 - An oracle for `URL.click` was authored by `deepseek-v4-pro` and **mechanically validated by the
   mutation gate** — it killed 4/4 single-site AST mutants of its reference implementation
@@ -89,13 +89,12 @@ Found by the cynthia differential bug-auditor, then hand-verified:
 The auditor's value was finding the input and flagging it non-vacuously; the confirmation is the
 spec citation above.
 
-## Channel — decision pending (not auto-submitted)
+## Disposition — recorded non-finding (not filed)
 
-No PR or issue has been filed. AI-assisted bug reports are easy to get wrong and unwelcome when
-fired blindly at maintainers. Options, to decide deliberately:
-1. OSS issue to `python-hyper/hyperlink` with this repro + RFC citation (no PR, let maintainers fix).
-2. OSS issue **and** a small PR implementing the §5.2.1 scheme-present case.
-3. Portfolio/demo only — cite as a found-and-verified correctness bug without contacting upstream.
-
-Recommend (1): a clean, RFC-cited issue with a standalone repro is genuinely useful and low-risk;
-a PR touching reference-resolution semantics deserves more care than an unsolicited drive-by.
+hyperlink's source raises this case **deliberately**: `raise NotImplementedError("absolute URI
+with rootless path: %r")` is an explicit, named choice not to implement RFC 3986 §5.2.1's
+scheme-present branch -- erroring loudly rather than resolving incorrectly. A maintainer who wrote
+that raise already knows the case is unhandled, so this is a documented, intentional limitation,
+not a latent defect for an outside auditor to report. It is kept here as a recorded **non-finding**:
+the auditor's value was surfacing a genuine spec-vs-implementation gap, and triage's value was
+declining to escalate a deliberately-unimplemented case. No issue or PR is filed, and none should be.

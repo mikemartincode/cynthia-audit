@@ -18,12 +18,14 @@ already an absolute URI resolves to that absolute URI, regardless of whether its
 RFC 3986 5.4.1 (Normal Examples), base = "http://a/b/c/d;p?q":
     "g:h"  ->  "g:h"     (the FIRST listed normal example)
 
-The bug
--------
+The discrepancy (and its disposition)
+-------------------------------------
 hyperlink raises NotImplementedError("absolute URI with rootless path: ...") for every such
-reference instead of returning the reference. Any code that resolves a clicked/linked target
-against a base URL (a feed reader, a crawler, an HTML link rewriter) crashes on an ordinary
-mailto:/tel:/urn: link rather than resolving it.
+reference instead of returning the reference. That raise is EXPLICIT and DELIBERATE in hyperlink's
+own source (the maintainer named the unimplemented RFC 3986 5.2.1 scheme-present case rather than
+resolving it), so this is a documented, intentional limitation -- not a latent defect. It is kept
+as a recorded NON-FINDING: the auditor surfaced a genuine spec-vs-implementation gap; triage
+correctly declined to report a deliberately-unimplemented, clearly-erroring case upstream.
 """
 
 import sys
@@ -63,11 +65,12 @@ def main() -> int:
             print(f"  {ok}  click({ref!r}) = {got!r}  (RFC expects {rfc_expected!r})")
         print()
 
-    print(f"{crashed}/{len(CASES)} valid references crashed click() instead of resolving.")
+    print(f"{crashed}/{len(CASES)} valid references raised in click() instead of resolving.")
     if crashed:
-        print("BUG REPRODUCED: click() documents RFC 3986 section 5 but raises NotImplementedError "
-              "on absolute-URI references with a rootless path (5.2.1 says resolve to the "
-              "reference itself).")
+        print("DISCREPANCY REPRODUCED (documented as intentional in hyperlink): click() documents "
+              "RFC 3986 section 5 but deliberately raises NotImplementedError on absolute-URI "
+              "references with a rootless path (5.2.1 says resolve to the reference itself). "
+              "Recorded as a non-finding -- not filed upstream.")
         # exit 0: the script ran and demonstrated the divergence. (A future fixed hyperlink would
         # print 'ok' for every case and crashed==0 — i.e. the repro self-checks whether it still
         # reproduces.)

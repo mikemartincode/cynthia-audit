@@ -5,15 +5,17 @@
 - **Functions:** 61 public  ·  35 auditable (deterministic + spec/invariant basis)
 - **Oracles gate-GREEN:** 32 / 35 authored (the mutation gate proved each non-vacuous)
 - **Sweep candidates:** 707 (from 1875 raw disagreements, −474 invalid-input filtered)
-- **Triaged:** real-bug **5** · bad-oracle 327 · invalid-input 267 · spec-ambiguity 108
-- **Cross-family-verified real-bug findings:** **4** {'high': 0, 'medium': 4, 'low': 0}
+- **Triaged:** crash-flagged **5** · bad-oracle 327 · invalid-input 267 · spec-ambiguity 108
+- **Cross-family-verified crash-flag candidates:** **4** {'high': 0, 'medium': 4, 'low': 0}  (disposition below)
 - **Human-review queue (spec-ambiguity, not asserted bugs):** 16
 - **Spend:** $3.1643 total (authoring $2.4726 + triage $0.6917); cap $12.0, stopped=False
 - **Wall-clock:** 928s (author 0s + sweep 0s + triage 928s); sweep fanned across 4 worker processes
 
-## Real-bug findings (library crashes on a valid input — A07 must reproduce)
+## Crash-flag candidates (raise on a valid input) — disposition: documented-intentional non-finding
 
-4 finding(s) across 1 function(s): `URL.click`×4. Multiple inputs under one function are the SAME root cause shown by different minimal triggers — count findings by function, not by row.
+4 candidate(s) across 1 function(s): `URL.click`×4. Multiple inputs under one function are the SAME root cause shown by different minimal triggers — count by function, not by row.
+
+**Disposition:** all four rows are one root cause — hyperlink's deliberate `NotImplementedError` for the RFC 3986 §5.2.1 scheme-present rootless-path case (full analysis in `findings/url-click-rootless/`). That raise is explicit in the library's own source, so this is a documented, intentional limitation — recorded as a **non-finding** and NOT reported upstream. What the pipeline demonstrates here is the auditor surfacing a genuine spec-vs-implementation gap non-vacuously; the human triage's job was to decline to escalate a deliberately-unimplemented case.
 
 Each promotion required a CRASH divergence on a VALID input (never a value disagreement) plus corroboration from the cross-family second oracle and/or the independent spec re-derivation (`evidence` records which fired; an inconclusive cross-family vote still needs spec agreement to promote). Confidence is medium pending an independent A07 repro — none is asserted as a confirmed bug here.
 
