@@ -1,0 +1,7 @@
+# Runtime/test dependency for the auditor and the standalone repro.
+# The auditor's URL/RFC-3986 adapters and findings/url-click-rootless/repro.py
+# import hyperlink; the pytest suite imports those adapters transitively.
+hyperlink
+
+# Test runner.
+pytest
