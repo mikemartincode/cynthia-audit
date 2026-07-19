@@ -586,10 +586,10 @@ def _print_report(summary, real_bugs, review_queue):
     print("\n" + json.dumps(summary, indent=2))
     print(f"\nclassification: {summary['per_candidate_counts']}")
     print(f"deduped findings: {summary['findings_deduped']} | "
-          f"real-bug: {summary['real_bug_findings']} {summary['real_bug_by_confidence']} | "
+          f"crash-flag candidates: {summary['real_bug_findings']} {summary['real_bug_by_confidence']} | "
           f"human-review queue (spec-ambiguity/high): {len(review_queue)}")
     if real_bugs:
-        print("\nRANKED real-bug findings (library crashes on valid inputs — A07 must verify):")
+        print("\nRANKED crash-flag candidates (raise on valid inputs - triage disposition per finding):")
         for f in real_bugs:
             print(f"  [{f['confidence']:6s}] {f['qualname']}  input={f['minimal_input']}")
             print(f"           real={f['real_result']}  oracle={f['oracle_expected']}")
@@ -597,7 +597,7 @@ def _print_report(summary, real_bugs, review_queue):
             print(f"           vote={ev['cross_oracle_vote']} spec={ev['spec_rederivation']}"
                   f" crash={ev['is_crash_divergence']}")
     else:
-        print("\n0 real-bug findings — an honest, recorded outcome (the tool is a verifier first).")
+        print("\n0 crash-flag candidates - an honest, recorded outcome (the tool is a verifier first).")
     if review_queue:
         print(f"\nHUMAN-REVIEW queue — {len(review_queue)} value divergences where both "
               "independent checks side with the oracle (NOT bug claims; need RFC adjudication):")

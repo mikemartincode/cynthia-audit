@@ -73,13 +73,13 @@ def write_report(run_dir: Path, manifest: dict, s_sweep: dict, s_tri: dict, real
     L.append(f"- **Sweep candidates:** {s_sweep.get('candidates_recorded')} "
              f"(from {s_sweep.get('raw_disagreements')} raw disagreements, "
              f"−{s_sweep.get('filtered_invalid_input')} invalid-input filtered)")
-    L.append(f"- **Triaged:** real-bug **{counts.get('real-bug', 0)}** · "
+    L.append(f"- **Triaged:** crash-flagged **{counts.get('real-bug', 0)}** · "
              f"bad-oracle {counts.get('bad-oracle', 0)} · "
              f"invalid-input {counts.get('invalid-input', 0)} · "
              f"spec-ambiguity {counts.get('spec-ambiguity', 0)}")
-    L.append(f"- **Cross-family-verified real-bug findings:** "
+    L.append(f"- **Cross-family-verified crash-flag candidates:** "
              f"**{s_tri.get('real_bug_findings', 0)}** "
-             f"{s_tri.get('real_bug_by_confidence', {})}")
+             f"{s_tri.get('real_bug_by_confidence', {})}  (disposition per finding)")
     L.append(f"- **Human-review queue (spec-ambiguity, not asserted bugs):** "
              f"{s_tri.get('human_review_queue', len(review_q))}")
     L.append(f"- **Spend:** ${total_cost:.4f} total "
@@ -95,12 +95,14 @@ def write_report(run_dir: Path, manifest: dict, s_sweep: dict, s_tri: dict, real
         by_fn: dict[str, int] = {}
         for f in real_bugs:
             by_fn[f["qualname"]] = by_fn.get(f["qualname"], 0) + 1
-        L.append("## Real-bug findings (library crashes on a valid input — A07 must reproduce)")
+        L.append("## Crash-flag candidates (raise on a valid input) - triage disposition per finding")
         L.append("")
-        L.append(f"{len(real_bugs)} finding(s) across {len(by_fn)} function(s): "
+        L.append(f"{len(real_bugs)} candidate(s) across {len(by_fn)} function(s): "
                  + ", ".join(f"`{q}`×{n}" for q, n in sorted(by_fn.items())) + ". Multiple inputs "
-                 "under one function are the SAME root cause shown by different minimal triggers — "
-                 "count findings by function, not by row.")
+                 "under one function are the SAME root cause shown by different minimal triggers - "
+                 "count by function, not by row. A crash-flag is a spec-vs-implementation "
+                 "discrepancy surfaced by the auditor, NOT a confirmed bug: each still needs a human "
+                 "disposition (a deliberate, documented library limitation is a recorded non-finding).")
         L.append("")
         L.append("Each promotion required a CRASH divergence on a VALID input (never a value "
                  "disagreement) plus corroboration from the cross-family second oracle and/or the "
@@ -119,7 +121,7 @@ def write_report(run_dir: Path, manifest: dict, s_sweep: dict, s_tri: dict, real
                      f"crash-divergence `{ev.get('is_crash_divergence')}`")
             L.append("")
     else:
-        L.append("## No real-bug findings on this pass")
+        L.append("## No crash-flag candidates on this pass")
         L.append("")
         L.append(f"An honest, recorded outcome. Across {len(green)} gate-validated oracles and "
                  f"{s_sweep.get('candidates_recorded')} swept candidates, no library CRASH on a "
@@ -207,7 +209,7 @@ def main() -> int:
                                             vote_model=args.vote_model, spec_model=args.spec_model)
     walls["triage"] = time.time() - t
     total = author_cost + s_tri.get("spent_usd", 0.0)
-    print(f"[audit] triage: {s_tri['real_bug_findings']} real-bug "
+    print(f"[audit] triage: {s_tri['real_bug_findings']} crash-flag candidate(s) "
           f"{s_tri.get('real_bug_by_confidence', {})}, +${s_tri.get('spent_usd', 0.0):.4f} "
           f"(total ${total:.4f})", flush=True)
 
@@ -216,7 +218,7 @@ def main() -> int:
     serial_est = sum(elapsed)
     report = write_report(run_dir, manifest, s_sweep, s_tri, real_bugs, review_q, walls, serial_est)
     print(f"[audit] REPORT → {report}", flush=True)
-    print(f"[audit] DONE: {s_tri['real_bug_findings']} cross-family real-bug finding(s), "
+    print(f"[audit] DONE: {s_tri['real_bug_findings']} cross-family crash-flag candidate(s), "
           f"${total:.4f} total spend, {sum(walls.values()):.0f}s wall", flush=True)
     return 0
 
