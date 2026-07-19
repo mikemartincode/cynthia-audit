@@ -51,6 +51,14 @@ hyperlink's own source - so it is kept as a recorded non-finding, not reported u
 like this visible is the point: the gate stops the model from grading its own work, and triage stops
 the pipeline from inflating a documented limitation into a claimed defect.
 
+## Companion writeup
+
+The gate here only means something if the gate itself cannot be fooled.
+[`docs/red-teaming-the-verifier.md`](docs/red-teaming-the-verifier.md) is an honest account of
+adversarially reviewing a verifier and finding three ways to force a false pass -- a forgeable pass
+signal, an under-specified job that skipped safety stages, and an unsandboxed judge -- and making each
+one structurally impossible.
+
 ## Budget
 
 Hard cap: **$50 of DeepSeek** for the first full repo pass. Realistic spend for one repo is
